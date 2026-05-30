@@ -1,0 +1,3642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Course DAY 02 ｜ Akky先生のプログラミング教室</title>
+<style>
+/* =================================================================
+   DESIGN TOKENS — Navy × Off-white × 2 Accents (DAY 01と統一)
+   ================================================================= */
+:root {
+  --bg: #FAF8F3;
+  --bg-alt: #F4F1EA;
+  --paper: #FFFFFF;
+  --paper-alt: #FCFAF6;
+
+  --ink: #1A2D5C;
+  --ink-soft: #4A5878;
+  --ink-mid: #6B7A99;
+  --ink-muted: #8B95AD;
+  --ink-dim: #B8BFCC;
+
+  --line: #E8E4DA;
+  --line-soft: #F0EDE5;
+  --line-strong: #1A2D5C;
+
+  --accent: #FFC830;
+  --accent-soft: #FFF6D9;
+  --accent-deep: #E8AC1A;
+
+  --coral: #F26D5B;
+  --coral-soft: #FCE5DF;
+  --coral-deep: #D04E3D;
+
+  --green: #5DAB6E;
+  --green-soft: #E5F0E8;
+
+  --m-blue: #3D5FBA;
+  --m-purple: #7B6CC4;
+  --m-pink: #D67898;
+  --m-mint: #5BB5AA;
+
+  --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+  --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, Menlo, monospace;
+
+  --nav-w: 280px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+
+  --shadow-xs: 0 1px 2px rgba(26,45,92,0.04);
+  --shadow-sm: 0 2px 6px rgba(26,45,92,0.05);
+  --shadow: 0 4px 12px rgba(26,45,92,0.06);
+  --shadow-md: 0 8px 20px rgba(26,45,92,0.08);
+
+  --pop: 4px 4px 0 var(--ink);
+  --pop-sm: 2px 2px 0 var(--ink);
+}
+
+/* =================================================================
+   RESET & BASE
+   ================================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-feature-settings: 'palt';
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.85;
+  font-size: 15.5px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: var(--accent); color: var(--ink); }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(26,45,92,0.025) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* =================================================================
+   PROGRESS BAR
+   ================================================================= */
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 100;
+  background: var(--line-soft);
+  pointer-events: none;
+}
+.progress__bar {
+  height: 100%;
+  background: var(--ink);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* =================================================================
+   LAYOUT
+   ================================================================= */
+.app {
+  display: grid;
+  grid-template-columns: var(--nav-w) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 960px) {
+  .app { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   NAV (Sidebar)
+   ================================================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: var(--paper-alt);
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.nav::-webkit-scrollbar { width: 4px; }
+.nav::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+}
+
+.nav__brand-mark { width: 36px; height: 36px; flex-shrink: 0; }
+.nav__brand-text { line-height: 1.3; }
+
+.nav__brand-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.nav__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.nav__school {
+  background: var(--ink);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.nav__list { list-style: none; }
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin: 1px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.nav__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+  min-width: 22px;
+  font-weight: 700;
+}
+
+.nav__item:hover { color: var(--ink); background: var(--bg); }
+
+.nav__item.is-active {
+  color: var(--ink);
+  background: var(--bg);
+  font-weight: 700;
+}
+.nav__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nav__item.is-active .nav__num { color: var(--ink); }
+
+.nav__phase {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.18em;
+  margin: 18px 12px 6px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.nav__footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,45,92,0.4);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 960px) {
+  .nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  .nav.is-open { transform: translateX(0); }
+  .nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .backdrop.is-shown { display: block; }
+}
+
+/* =================================================================
+   MAIN
+   ================================================================= */
+.main { min-width: 0; padding: 0 64px; }
+
+@media (max-width: 960px) { .main { padding: 0 20px; } }
+
+.section {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 100px 0 80px;
+  scroll-margin-top: 20px;
+  position: relative;
+}
+
+/* =================================================================
+   HERO
+   ================================================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0;
+  position: relative;
+}
+
+.hero__school {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.hero__school::before { content: ''; width: 24px; height: 1px; background: var(--ink-soft); }
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.hero__eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--ink); border-radius: 50%; }
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  color: var(--ink);
+}
+.hero__title .hl { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl::after {
+  content: ''; position: absolute; bottom: 4px; left: -4px; right: -4px;
+  height: 18px; background: var(--accent); z-index: -1;
+}
+.hero__title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl-coral::after {
+  content: ''; position: absolute; bottom: 4px; left: -4px; right: -4px;
+  height: 18px; background: var(--coral); z-index: -1; opacity: 0.7;
+}
+
+.hero__lead {
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  max-width: 720px;
+}
+
+.hero__meta-item {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.hero__meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hero__meta-value { font-size: 14px; color: var(--ink); font-weight: 800; }
+
+.hero__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+.hero__scroll-line { width: 1px; height: 28px; background: var(--ink-muted); animation: scrollPulse 2s ease-in-out infinite; transform-origin: top; }
+@keyframes scrollPulse { 0%,100% { transform: scaleY(0.4); opacity: 0.3; } 50% { transform: scaleY(1); opacity: 1; } }
+
+.hero__mascot {
+  position: absolute;
+  top: 50%; right: 0;
+  transform: translateY(-50%);
+  width: clamp(180px, 26vw, 300px);
+  height: auto;
+  opacity: 0.92;
+  pointer-events: none;
+}
+@media (max-width: 880px) { .hero__mascot { display: none; } }
+
+/* =================================================================
+   SECTION HEADERS
+   ================================================================= */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.section-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent-deep); }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.section-title .hl { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl::after {
+  content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px;
+  height: 14px; background: var(--accent); z-index: -1;
+}
+.section-title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl-coral::after {
+  content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px;
+  height: 14px; background: var(--coral); opacity: 0.7; z-index: -1;
+}
+
+.section-lead {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  max-width: 700px;
+  margin-bottom: 56px;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.3;
+  font-weight: 800;
+  margin: 60px 0 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h3::before { content: ''; display: inline-block; width: 4px; height: 22px; background: var(--ink); flex-shrink: 0; }
+
+h4 { font-size: 17px; font-weight: 700; margin: 28px 0 12px; color: var(--ink); letter-spacing: 0.005em; }
+
+p { margin: 0 0 18px; font-size: 15.5px; line-height: 1.9; color: var(--ink-soft); }
+
+ul, ol { padding-left: 22px; margin: 0 0 22px; }
+li { margin-bottom: 8px; font-size: 15px; line-height: 1.85; color: var(--ink-soft); }
+
+strong { color: var(--ink); font-weight: 700; }
+
+em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 65%, var(--accent) 65%, var(--accent) 95%, transparent 95%);
+  padding: 0 2px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-alt);
+  color: var(--ink);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* =================================================================
+   PHASE BADGE
+   ================================================================= */
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 14px 5px 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+.phase-badge svg { width: 28px; height: 28px; }
+
+/* =================================================================
+   CARDS
+   ================================================================= */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+.card:hover { border-color: var(--ink-dim); box-shadow: var(--shadow-sm); }
+.card--soft { background: var(--bg-alt); box-shadow: none; }
+.card--soft:hover { border-color: var(--line); }
+.card--ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.card--ink * { color: var(--paper); }
+.card--ink strong { color: var(--accent); }
+.card--ink h4 { color: var(--accent); }
+.card--ink em { background: linear-gradient(180deg, transparent 65%, rgba(255,200,48,0.4) 65%); color: var(--accent); }
+
+/* =================================================================
+   GRID LAYOUTS
+   ================================================================= */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+@media (max-width: 760px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   TABLE
+   ================================================================= */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table th, .table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line-soft); }
+.table th {
+  background: var(--bg-alt);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.table tr:last-child td { border-bottom: none; }
+.table td { color: var(--ink-soft); }
+.table td strong { color: var(--ink); }
+.table tr:hover { background: var(--bg-alt); }
+
+/* =================================================================
+   CALLOUT
+   ================================================================= */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+.callout__label {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.callout p { margin: 0; color: var(--ink); font-weight: 500; }
+.callout strong { color: var(--ink); }
+.callout--warn { border-left-color: var(--coral-deep); background: var(--coral-soft); }
+.callout--warn .callout__label { background: var(--coral-deep); color: white; }
+.callout--gold { border-left-color: var(--accent-deep); background: var(--accent-soft); }
+.callout--gold .callout__label { background: var(--accent-deep); color: var(--ink); }
+.callout--insight { border-left-color: var(--ink); background: var(--bg-alt); }
+
+/* =================================================================
+   PILLS
+   ================================================================= */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; }
+.pill {
+  padding: 4px 12px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* =================================================================
+   WORK — pop shadow
+   ================================================================= */
+.work {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 36px 0;
+  position: relative;
+  box-shadow: var(--pop);
+}
+.work__head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.work__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.work__label::before { content: '✎'; font-size: 12px; }
+.work__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.4;
+  flex: 1;
+  margin: 0;
+}
+.work__title::before { display: none; }
+.work__desc { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 22px; line-height: 1.85; font-weight: 500; }
+
+.field { display: flex; flex-direction: column; margin-bottom: 14px; }
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+.input:focus, .textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,45,92,0.08); }
+.textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+.btn:hover { background: var(--ink); transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn--secondary { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn--secondary:hover { background: var(--bg-alt); }
+.btn--accent { background: var(--accent); color: var(--ink); }
+.btn--accent:hover { background: var(--accent-deep); }
+
+/* =================================================================
+   DETAILS / DEEP DIVE
+   ================================================================= */
+details.deep {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: 24px 0;
+  overflow: hidden;
+}
+details.deep summary {
+  padding: 16px 22px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+details.deep summary::-webkit-details-marker { display: none; }
+details.deep summary::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+details.deep[open] summary::before { content: '−'; }
+.deep__body { padding: 0 22px 20px; }
+.deep__body p:first-child { margin-top: 4px; }
+
+/* =================================================================
+   STEP
+   ================================================================= */
+.step { display: flex; gap: 18px; margin: 20px 0; align-items: flex-start; }
+.step__num {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 16px;
+}
+.step__body { flex: 1; padding-top: 4px; }
+.step__title { font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+
+/* =================================================================
+   COMPARE
+   ================================================================= */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+@media (max-width: 680px) { .compare { grid-template-columns: 1fr; } }
+.compare__side { border-radius: var(--radius); padding: 20px 22px; border: 1.5px solid var(--line); }
+.compare__side--good { background: var(--green-soft); border-color: var(--green); }
+.compare__side--bad { background: var(--coral-soft); border-color: var(--coral); }
+.compare__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  display: block;
+}
+.compare__side--good .compare__label { color: var(--green); }
+.compare__side--bad .compare__label { color: var(--coral-deep); }
+
+/* =================================================================
+   CHECKLIST
+   ================================================================= */
+.checklist { list-style: none; padding: 0; margin: 20px 0; }
+.checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.checklist__item::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  background: var(--green-soft);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+/* =================================================================
+   DAY 02 SPECIFIC COMPONENTS
+   ================================================================= */
+
+/* --- Recap chips (前回の振り返り) --- */
+.recap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+.recap__card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+.recap__card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--accent);
+}
+.recap__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-deep);
+  letter-spacing: 0.1em;
+}
+.recap__title { font-weight: 800; font-size: 15px; color: var(--ink); margin: 6px 0 6px; }
+.recap__desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+
+/* --- Agent comparison diagram --- */
+.agentbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 28px 0;
+}
+@media (max-width: 720px) { .agentbox { grid-template-columns: 1fr; } }
+.agentbox__col {
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+}
+.agentbox__col--passive { background: var(--bg-alt); }
+.agentbox__col--active { background: var(--ink); border-color: var(--ink); }
+.agentbox__col--active * { color: var(--paper); }
+.agentbox__col--active .agentbox__tag { background: var(--accent); color: var(--ink); }
+.agentbox__tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.agentbox__name { font-family: var(--font-display); font-size: 19px; font-weight: 800; margin-bottom: 14px; color: var(--ink); }
+.agentbox__col--active .agentbox__name { color: var(--paper); }
+.agentbox__flow { display: flex; flex-direction: column; gap: 8px; }
+.agentbox__node {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  text-align: center;
+}
+.agentbox__col--active .agentbox__node { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: var(--paper); }
+.agentbox__arrow { text-align: center; font-size: 14px; color: var(--ink-muted); line-height: 1; }
+.agentbox__col--active .agentbox__arrow { color: var(--accent); }
+.agentbox__loop {
+  border: 1.5px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agentbox__loop-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-align: center;
+  font-weight: 700;
+}
+
+/* --- Tool roster cards (4つのAI相棒) --- */
+.roster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+@media (max-width: 720px) { .roster { grid-template-columns: 1fr; } }
+.toolcard {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.toolcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--ink-dim); }
+.toolcard__icon { flex-shrink: 0; width: 54px; height: 54px; }
+.toolcard__body { flex: 1; }
+.toolcard__name { font-family: var(--font-display); font-size: 19px; font-weight: 800; color: var(--ink); margin: 0 0 2px; }
+.toolcard__maker { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-muted); letter-spacing: 0.05em; font-weight: 600; margin-bottom: 8px; }
+.toolcard__role {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+.toolcard__desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+.toolcard--chatgpt .toolcard__role { background: var(--green-soft); color: var(--green); }
+.toolcard--gemini .toolcard__role { background: #E5EAF7; color: var(--m-blue); }
+.toolcard--notebook .toolcard__role { background: #EEE9F7; color: var(--m-purple); }
+.toolcard--gamma .toolcard__role { background: var(--coral-soft); color: var(--coral-deep); }
+
+/* --- Theme Gacha (テーマガチャ) --- */
+.gacha {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 32px 34px;
+  margin: 32px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pop);
+}
+.gacha::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,200,48,0.16) 0%, transparent 70%);
+  pointer-events: none;
+}
+.gacha__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+}
+.gacha__title { font-family: var(--font-display); font-size: clamp(20px, 3vw, 26px); font-weight: 800; color: var(--paper); margin-bottom: 8px; }
+.gacha__desc { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 22px; max-width: 560px; }
+.gacha__desc strong { color: var(--accent); }
+.gacha__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--font-display);
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+.gacha__btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--accent-deep); }
+.gacha__btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--accent-deep); }
+.gacha__btn .gacha__dice { display: inline-block; font-size: 20px; }
+.gacha__btn.is-rolling .gacha__dice { animation: diceRoll 0.5s ease infinite; }
+@keyframes diceRoll { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+
+.gacha__results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 24px; }
+@media (max-width: 680px) { .gacha__results { grid-template-columns: 1fr; } }
+.gacha__results:empty { display: none; }
+
+.theme-opt {
+  background: var(--paper);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: themePop 0.4s ease backwards;
+}
+.theme-opt:nth-child(1) { animation-delay: 0.05s; }
+.theme-opt:nth-child(2) { animation-delay: 0.13s; }
+.theme-opt:nth-child(3) { animation-delay: 0.21s; }
+.theme-opt:nth-child(4) { animation-delay: 0.29s; }
+@keyframes themePop { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.theme-opt:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.theme-opt.is-selected { border-color: var(--ink); box-shadow: var(--pop-sm); }
+.theme-opt.is-selected::after { content: '✓ 選択中'; font-family: var(--font-mono); font-size: 10px; font-weight: 800; color: var(--green); letter-spacing: 0.05em; }
+.theme-opt__type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.theme-opt__type--propose { background: var(--accent-soft); color: var(--accent-deep); }
+.theme-opt__type--debate { background: var(--coral-soft); color: var(--coral-deep); }
+.theme-opt__type--predict { background: #E5EAF7; color: var(--m-blue); }
+.theme-opt__type--research { background: var(--green-soft); color: var(--green); }
+.theme-opt__text { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.5; }
+
+.gacha__chosen {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px dashed rgba(255,255,255,0.35);
+  border-radius: var(--radius);
+  color: var(--paper);
+  font-size: 14px;
+  display: none;
+}
+.gacha__chosen.is-shown { display: block; }
+.gacha__chosen strong { color: var(--accent); }
+
+/* --- Chat comparison (ChatGPT vs Gemini) --- */
+.chatcompare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 720px) { .chatcompare { grid-template-columns: 1fr; } }
+.chatwin {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-xs);
+}
+.chatwin__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+}
+.chatwin__bar svg { width: 22px; height: 22px; }
+.chatwin--gpt .chatwin__bar { background: var(--green-soft); }
+.chatwin--gem .chatwin__bar { background: #E5EAF7; }
+.chatwin__body { padding: 16px; min-height: 120px; }
+.chatwin__msg {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.chatwin__placeholder { color: var(--ink-muted); font-size: 13px; font-style: italic; }
+.chatcompare__ask { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+
+/* --- Chat thread demonstrator (リアルな会話例) --- */
+.thread {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 18px;
+  margin: 18px 0;
+  box-shadow: var(--shadow-xs);
+}
+.thread__turn { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+.thread__turn:last-child { margin-bottom: 0; }
+.thread__who {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  font-family: var(--font-mono);
+}
+.thread__who--user { background: var(--ink); color: var(--accent); }
+.thread__who--ai { background: var(--accent); color: var(--ink); }
+.thread__bubble {
+  flex: 1;
+  border-radius: 12px;
+  padding: 11px 15px;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.thread__turn--user .thread__bubble { background: var(--bg-alt); color: var(--ink); }
+.thread__turn--ai .thread__bubble { background: var(--paper-alt); border: 1px solid var(--line-soft); color: var(--ink-soft); }
+.thread__bubble strong { color: var(--ink); }
+.thread__note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-style: italic;
+  padding-left: 40px;
+}
+
+/* --- Good vs weak prompt comparison --- */
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 760px) { .vs { grid-template-columns: 1fr; } }
+.vs__card {
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line);
+  overflow: hidden;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+.vs__head {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vs__card--weak { border-color: var(--coral); }
+.vs__card--weak .vs__head { background: var(--coral-soft); color: var(--coral-deep); }
+.vs__card--strong { border-color: var(--green); }
+.vs__card--strong .vs__head { background: var(--green-soft); color: var(--green); }
+.vs__body { padding: 16px; flex: 1; }
+.vs__prompt {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+.vs__result { font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
+.vs__result strong { color: var(--ink); }
+.vs__verdict {
+  margin-top: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+.vs__card--weak .vs__verdict { background: var(--coral-soft); color: var(--coral-deep); }
+.vs__card--strong .vs__verdict { background: var(--green-soft); color: var(--green); }
+
+/* --- Essence banner (各章の本質) --- */
+.essence {
+  position: relative;
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin: 28px 0;
+  overflow: hidden;
+}
+.essence::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -8%;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(255,200,48,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+.essence__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.essence__text {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.6vw, 23px);
+  font-weight: 800;
+  line-height: 1.55;
+  color: var(--paper);
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.essence__text .mark {
+  background: linear-gradient(180deg, transparent 60%, rgba(255,200,48,0.45) 60%);
+  padding: 0 3px;
+}
+.essence__sub {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.82);
+}
+.essence__text strong, .essence__sub strong { color: var(--accent); }
+
+/* --- Try-first prompt (まず自分で) --- */
+.tryfirst {
+  border: 2px dashed var(--m-blue);
+  border-radius: var(--radius);
+  background: #F2F5FC;
+  padding: 18px 22px;
+  margin: 22px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.tryfirst__icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  background: var(--m-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.tryfirst__body { flex: 1; }
+.tryfirst__title { font-weight: 800; font-size: 15px; color: var(--m-blue); margin-bottom: 4px; }
+.tryfirst__body p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+/* --- Axis concept (AIに任せる/自分が握る) --- */
+.axis {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  margin: 26px 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  box-shadow: var(--pop);
+}
+@media (max-width: 680px) { .axis { grid-template-columns: 1fr; } }
+.axis__side { padding: 22px 24px; }
+.axis__side--ai { background: var(--bg-alt); }
+.axis__side--you { background: var(--ink); }
+.axis__side--you * { color: var(--paper); }
+.axis__mid {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  padding: 0 18px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+}
+@media (max-width: 680px) { .axis__mid { writing-mode: horizontal-tb; padding: 10px; } }
+.axis__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.axis__side--ai .axis__label { color: var(--ink-soft); }
+.axis__side--you .axis__label { color: var(--accent); }
+.axis__list { list-style: none; padding: 0; margin: 0; }
+.axis__list li {
+  font-size: 14px;
+  padding: 6px 0 6px 22px;
+  position: relative;
+  line-height: 1.6;
+}
+.axis__side--ai .axis__list li::before { content: '⚙'; position: absolute; left: 0; color: var(--ink-mid); }
+.axis__side--you .axis__list li::before { content: '★'; position: absolute; left: 0; color: var(--accent); }
+.axis__side--you .axis__list li { color: rgba(255,255,255,0.92); }
+.axis__note { font-size: 12px; margin-top: 12px; font-style: italic; }
+.axis__side--ai .axis__note { color: var(--ink-mid); }
+.axis__side--you .axis__note { color: rgba(255,255,255,0.7); }
+
+/* --- Tool category card (ツールはカテゴリーで) --- */
+.toolcat {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-xs);
+}
+.toolcat__head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.toolcat__icon { width: 42px; height: 42px; flex-shrink: 0; }
+.toolcat__cat { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--ink); line-height: 1.3; }
+.toolcat__role { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.05em; }
+.toolcat__desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin: 0 0 10px; }
+.toolcat__ex {
+  font-size: 12px;
+  color: var(--ink-mid);
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+.toolcat__ex strong { color: var(--ink); }
+
+/* --- Step phase navigation banner (大ステップ表示) --- */
+.bigstep {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  margin: 0 0 28px;
+}
+.bigstep__badge {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 6px 14px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+.bigstep__text { color: var(--paper); font-size: 14px; font-weight: 600; }
+.bigstep__text strong { color: var(--accent); }
+
+/* --- Memo work variant --- */
+.work--memo { border-style: dashed; box-shadow: none; background: var(--paper-alt); }
+
+/* --- Caution points box (各ステップの気をつけポイント) --- */
+.cautions {
+  background: var(--paper);
+  border: 1.5px solid var(--accent-deep);
+  border-radius: var(--radius);
+  padding: 4px 0 8px;
+  margin: 26px 0;
+  overflow: hidden;
+}
+.cautions__head {
+  background: var(--accent);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  margin: -4px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cautions__list { list-style: none; padding: 0 20px; margin: 0; }
+.cautions__list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.cautions__list li:last-child { border-bottom: none; }
+.cautions__list li::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  margin-top: 1px;
+}
+.cautions__list li strong { color: var(--ink); }
+
+/* --- Enriched tool card (詳細版) --- */
+.tooldetail {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  margin: 18px 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.tooldetail__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.tooldetail__icon { width: 48px; height: 48px; flex-shrink: 0; }
+.tooldetail__title { flex: 1; }
+.tooldetail__cat { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.tooldetail__role { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.08em; margin-top: 2px; }
+.tooldetail__ex {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+  border-radius: 100px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.tooldetail__body { padding: 16px 22px; }
+.tooldetail__body p { margin: 0 0 12px; font-size: 14px; line-height: 1.75; }
+.tooldetail__feats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin: 0; }
+@media (max-width: 600px){ .tooldetail__feats { grid-template-columns: 1fr; } }
+.tooldetail__feat {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.55;
+}
+.tooldetail__feat::before { content: '▸'; position: absolute; left: 0; color: var(--accent-deep); font-weight: 800; }
+.tooldetail__feat strong { color: var(--ink); }
+.tooldetail__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tooldetail__tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+.tooldetail__tag--good { background: var(--green-soft); color: var(--green); }
+.tooldetail__tag--watch { background: var(--coral-soft); color: var(--coral-deep); }
+
+/* --- Challenge brief (最終チャレンジ要件) --- */
+.brief {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 28px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pop);
+}
+.brief::before {
+  content: '';
+  position: absolute;
+  bottom: -40%; left: -8%;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(242,109,91,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.brief__label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--coral);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.brief__mission {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 27px);
+  font-weight: 900;
+  color: var(--paper);
+  line-height: 1.4;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.brief__mission .hl-y { background: linear-gradient(180deg, transparent 58%, var(--accent) 58%); color: var(--paper); padding: 0 3px; }
+.brief__sub { font-size: 13.5px; color: rgba(255,255,255,0.75); margin: 0 0 22px; }
+.brief__sub strong, .brief__mission strong { color: var(--accent); }
+.brief__conds { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px){ .brief__conds { grid-template-columns: 1fr; } }
+.brief__cond {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.brief__cond-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+}
+.brief__cond-text { color: var(--paper); font-size: 13.5px; line-height: 1.6; }
+.brief__cond-text strong { color: var(--accent); }
+
+/* --- Sparring simulator (壁打ち) --- */
+.spar {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+.spar__lenses { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.spar__lens {
+  padding: 8px 16px;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--line);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.spar__lens:hover { border-color: var(--ink-dim); color: var(--ink); }
+.spar__lens.is-active { background: var(--ink); color: var(--accent); border-color: var(--ink); }
+.spar__output {
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  min-height: 90px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.spar__output .spar__q { font-weight: 800; color: var(--ink); display: block; margin-bottom: 6px; }
+.spar__placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* --- Fact-check steps --- */
+.factsteps { counter-reset: fc; margin: 24px 0; }
+.factstep {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.factstep::before {
+  counter-increment: fc;
+  content: counter(fc);
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--coral);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 15px;
+}
+.factstep__body { flex: 1; }
+.factstep__title { font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 3px; }
+.factstep__desc { font-size: 13.5px; color: var(--ink-soft); margin: 0; line-height: 1.7; }
+
+/* --- Source-grounded diagram (NotebookLM) --- */
+.sourcebox { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 720px) { .sourcebox { grid-template-columns: 1fr; } }
+.sourcebox__card { border-radius: var(--radius); padding: 20px; border: 1.5px solid var(--line); background: var(--paper); }
+.sourcebox__head { font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sourcebox__card--wide { background: var(--bg-alt); }
+.sourcebox__card--narrow { background: #EEE9F7; border-color: var(--m-purple); }
+
+/* --- Timeline (時間の地図) --- */
+.timemap { margin: 24px 0; }
+.timerow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.timerow__time {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--accent-soft);
+  padding: 6px 12px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  min-width: 66px;
+  text-align: center;
+}
+.timerow__label { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+.timerow__sub { font-size: 12.5px; color: var(--ink-muted); }
+
+/* --- Flow steps (探究の5ステップ) --- */
+.flowmap {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+.flowmap__step {
+  flex: 1;
+  min-width: 130px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  text-align: center;
+  position: relative;
+}
+.flowmap__icon { width: 40px; height: 40px; margin: 0 auto 8px; }
+.flowmap__num { font-family: var(--font-mono); font-size: 10px; font-weight: 800; color: var(--accent-deep); letter-spacing: 0.1em; }
+.flowmap__name { font-weight: 800; font-size: 14px; color: var(--ink); margin: 2px 0 4px; }
+.flowmap__tool { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 600; }
+
+/* --- Phase banner (You do タイムキープ用) --- */
+.phasebanner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--accent-soft);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin: 24px 0;
+}
+.phasebanner__time {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.phasebanner__text { font-size: 14px; color: var(--ink); font-weight: 600; }
+.phasebanner__text strong { color: var(--ink); }
+
+/* --- Mascot says (aila吹き出し) --- */
+.ailasays {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.ailasays__avatar { flex-shrink: 0; width: 52px; height: 52px; }
+.ailasays__bubble { flex: 1; }
+.ailasays__bubble p { margin: 0; font-size: 14.5px; color: var(--ink-soft); line-height: 1.8; }
+.ailasays__name { font-family: var(--font-mono); font-size: 10.5px; font-weight: 800; color: var(--ink); letter-spacing: 0.08em; margin-bottom: 4px; }
+
+/* --- Closing --- */
+.closing { text-align: center; padding: 40px 0; }
+.closing__kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.closing__message {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.5vw, 44px);
+  line-height: 1.3;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.closing__message .hl { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl::after { content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px; height: 14px; background: var(--accent); z-index: -1; }
+.closing__message .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl-coral::after { content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px; height: 14px; background: var(--coral); opacity: 0.7; z-index: -1; }
+
+/* --- Reveal animation --- */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* --- prompt output (再利用) --- */
+.prompter__output {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  margin: 16px 0;
+  min-height: 60px;
+}
+
+/* --- mono prompt block --- */
+.promptblock {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  margin: 14px 0;
+  position: relative;
+}
+.promptblock__label {
+  position: absolute;
+  top: -9px; left: 14px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+<button class="nav-toggle" id="navToggle" aria-label="メニュー">☰</button>
+<div class="backdrop" id="backdrop"></div>
+
+<!-- =====================================================================
+     SVG SPRITES — DAY 01のマスコット世界観を継承＋探究verを追加
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- AILA SPROUT (LEARN) - yellow -->
+    <symbol id="aila-sprout" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4.5" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4.5" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.8" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.8" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <path d="M 50 6 Q 44 2 42 8 Q 48 9 50 6" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.4"/>
+      <path d="M 50 6 Q 56 2 58 8 Q 52 9 50 6" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.4"/>
+      <line x1="44" y1="62" x2="56" y2="62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MIND (THINK) - purple, circuit -->
+    <symbol id="aila-mind" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5"/>
+      <line x1="30" y1="40" x2="40" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="60" y1="40" x2="70" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="30" y1="65" x2="70" y2="65" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <ellipse cx="38" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <ellipse cx="62" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.2" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.2" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="20" y1="50" x2="14" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="11" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="80" y1="50" x2="86" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="89" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <path d="M 44 62 L 56 62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MAKER (CREATE) - coral -->
+    <symbol id="aila-maker" viewBox="0 0 100 100">
+      <polygon points="56,18 84,34 84,66 56,82 28,66 28,34" fill="#D67898" stroke="#1A2D5C" stroke-width="2" opacity="0.45"/>
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="40" cy="46" r="1.6" fill="#1A2D5C"/>
+      <circle cx="64" cy="46" r="1.6" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <polygon points="50,3 47,7 50,5 53,7" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+      <path d="M 42 60 Q 50 66 58 60" stroke="#1A2D5C" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <line x1="80" y1="68" x2="92" y2="80" stroke="#1A2D5C" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="92,80 96,82 94,86 90,84" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+    </symbol>
+
+    <!-- AILA EXPLORER (DAY02 NEW) - mint, magnifier + compass -->
+    <symbol id="aila-explorer" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#5BB5AA" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="40" cy="47" r="4.2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="47" r="4.2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="41" cy="47" r="1.7" fill="#1A2D5C"/>
+      <circle cx="63" cy="47" r="1.7" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <path d="M 43 61 Q 50 67 57 61" stroke="#1A2D5C" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- magnifier in hand -->
+      <line x1="80" y1="55" x2="74" y2="55" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="90" cy="55" r="9" fill="rgba(255,200,48,0.3)" stroke="#1A2D5C" stroke-width="2.5"/>
+      <line x1="97" y1="62" x2="103" y2="68" stroke="#1A2D5C" stroke-width="3" stroke-linecap="round"/>
+      <line x1="20" y1="50" x2="14" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="11" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+    </symbol>
+
+    <!-- HERO MASCOT (large explorer) -->
+    <symbol id="aila-hero" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="125" fill="#5BB5AA" opacity="0.08"/>
+      <polygon points="165,60 240,103 240,187 165,230 90,187 90,103" fill="#5BB5AA" stroke="#1A2D5C" stroke-width="2.5" opacity="0.3"/>
+      <polygon points="150,45 225,88 225,172 150,215 75,172 75,88" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="3"/>
+      <line x1="90" y1="105" x2="110" y2="105" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="190" y1="105" x2="210" y2="105" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="90" y1="160" x2="210" y2="160" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <circle cx="125" cy="130" r="13" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="175" cy="130" r="13" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="128" cy="128" r="5" fill="#1A2D5C"/>
+      <circle cx="178" cy="128" r="5" fill="#1A2D5C"/>
+      <circle cx="130" cy="126" r="1.6" fill="white"/>
+      <circle cx="180" cy="126" r="1.6" fill="white"/>
+      <line x1="150" y1="45" x2="150" y2="26" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="150" cy="20" r="6" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="150" cy="20" r="2" fill="#FFC830"/>
+      <path d="M 130 168 Q 150 180 170 168" stroke="#1A2D5C" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- magnifier -->
+      <line x1="225" y1="140" x2="214" y2="140" stroke="#1A2D5C" stroke-width="3"/>
+      <circle cx="245" cy="140" r="18" fill="rgba(255,200,48,0.25)" stroke="#1A2D5C" stroke-width="3.5"/>
+      <line x1="258" y1="153" x2="270" y2="165" stroke="#1A2D5C" stroke-width="5" stroke-linecap="round"/>
+      <line x1="75" y1="130" x2="60" y2="130" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="54" cy="130" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+
+    <!-- BRAND LOGO MARK -->
+    <symbol id="brand-logo" viewBox="0 0 36 36">
+      <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+      <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+      <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+      <line x1="14" y1="23" x2="22" y2="23" stroke="#FFC830" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- TOOL ICONS (抽象アイコン・商標を避けた独自デザイン) -->
+    <!-- ChatGPT: 対話の吹き出し -->
+    <symbol id="icon-chatgpt" viewBox="0 0 60 60">
+      <rect x="6" y="10" width="48" height="48" rx="14" fill="#5DAB6E" opacity="0.12"/>
+      <path d="M 16 18 h 22 a 6 6 0 0 1 6 6 v 10 a 6 6 0 0 1 -6 6 h -12 l -8 7 v -7 h -2 a 6 6 0 0 1 -6 -6 v -10 a 6 6 0 0 1 6 -6 z" fill="#FFFFFF" stroke="#5DAB6E" stroke-width="2.5"/>
+      <circle cx="22" cy="29" r="2.2" fill="#5DAB6E"/>
+      <circle cx="30" cy="29" r="2.2" fill="#5DAB6E"/>
+      <circle cx="38" cy="29" r="2.2" fill="#5DAB6E"/>
+    </symbol>
+    <!-- Gemini: 検索＋星 -->
+    <symbol id="icon-gemini" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#3D5FBA" opacity="0.12"/>
+      <circle cx="26" cy="26" r="12" fill="none" stroke="#3D5FBA" stroke-width="3"/>
+      <line x1="35" y1="35" x2="46" y2="46" stroke="#3D5FBA" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 26 20 L 28 25 L 33 26 L 28 27 L 26 32 L 24 27 L 19 26 L 24 25 Z" fill="#FFC830" stroke="#3D5FBA" stroke-width="1"/>
+    </symbol>
+    <!-- NotebookLM: ノート＋ソース -->
+    <symbol id="icon-notebook" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#7B6CC4" opacity="0.12"/>
+      <rect x="16" y="14" width="28" height="34" rx="3" fill="#FFFFFF" stroke="#7B6CC4" stroke-width="2.5"/>
+      <line x1="22" y1="14" x2="22" y2="48" stroke="#7B6CC4" stroke-width="2"/>
+      <line x1="28" y1="23" x2="39" y2="23" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="30" x2="39" y2="30" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="37" x2="34" y2="37" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <!-- Gamma: スライド -->
+    <symbol id="icon-gamma" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#F26D5B" opacity="0.12"/>
+      <rect x="14" y="16" width="32" height="22" rx="3" fill="#FFFFFF" stroke="#F26D5B" stroke-width="2.5"/>
+      <line x1="20" y1="23" x2="33" y2="23" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="29" x2="28" y2="29" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+      <rect x="35" y="26" width="6" height="6" rx="1" fill="#FFC830"/>
+      <line x1="30" y1="38" x2="30" y2="44" stroke="#F26D5B" stroke-width="2.5"/>
+      <line x1="22" y1="44" x2="38" y2="44" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- FLOW ICONS -->
+    <symbol id="fi-spar" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#FFF6D9" stroke="#1A2D5C" stroke-width="2"/>
+      <path d="M 13 16 h 9 a 3 3 0 0 1 3 3 v 4 a 3 3 0 0 1 -3 3 h -5 l -4 3 v -3 a 3 3 0 0 1 -3 -3 v -4 a 3 3 0 0 1 3 -3 z" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="fi-search" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#E5EAF7" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="18" cy="18" r="7" fill="none" stroke="#1A2D5C" stroke-width="2.2"/>
+      <line x1="23" y1="23" x2="28" y2="28" stroke="#1A2D5C" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fi-organize" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#EEE9F7" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="13" y1="15" x2="27" y2="15" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="13" y1="20" x2="27" y2="20" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="13" y1="25" x2="22" y2="25" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fi-slide" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#FCE5DF" stroke="#1A2D5C" stroke-width="2"/>
+      <rect x="11" y="13" width="18" height="13" rx="2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="20" y1="26" x2="20" y2="29" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+    <symbol id="fi-present" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#E5F0E8" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="20" cy="16" r="4" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.6"/>
+      <path d="M 13 29 Q 13 22 20 22 Q 27 22 27 29 Z" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- =====================================================================
+       SIDEBAR NAVIGATION
+       ===================================================================== -->
+  <nav class="nav" id="nav">
+    <div class="nav__brand">
+      <svg class="nav__brand-mark"><use href="#brand-logo"/></svg>
+      <div class="nav__brand-text">
+        <div class="nav__brand-title">AI COURSE</div>
+        <div class="nav__brand-sub">DAY 02 / 2026</div>
+      </div>
+    </div>
+
+    <div class="nav__school">Akky先生のプログラミング教室</div>
+
+    <ul class="nav__list">
+      <li><a class="nav__item is-active" href="#hero"><span class="nav__num">00</span>OPENING</a></li>
+      <li><a class="nav__item" href="#ch0"><span class="nav__num">01</span>準備・基本の考え方</a></li>
+      <li><div class="nav__phase">STEP 1 — 一緒に体験</div></li>
+      <li><a class="nav__item" href="#ch1"><span class="nav__num">①</span>壁打ち・発想</a></li>
+      <li><a class="nav__item" href="#ch2"><span class="nav__num">②</span>リサーチ</a></li>
+      <li><a class="nav__item" href="#ch3"><span class="nav__num">③</span>整理・自分の意見</a></li>
+      <li><a class="nav__item" href="#ch4"><span class="nav__num">④</span>スライド作成</a></li>
+      <li><a class="nav__item" href="#ch5"><span class="nav__num">⑤</span>発表準備</a></li>
+      <li><div class="nav__phase">STEP 2 — 自分で実践</div></li>
+      <li><a class="nav__item" href="#step2"><span class="nav__num">▶</span>本番チャレンジ</a></li>
+      <li><div class="nav__phase">STEP 3 — 発表</div></li>
+      <li><a class="nav__item" href="#step3"><span class="nav__num">★</span>発表・振り返り</a></li>
+      <li><a class="nav__item" href="#closing"><span class="nav__num">07</span>CLOSING</a></li>
+    </ul>
+
+    <div class="nav__footer">
+      AI COURSE · DAY 02<br>
+      90 MIN / STUDENT
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       MAIN CONTENT
+       ===================================================================== -->
+  <main class="main">
+
+    <!-- ============================================
+         HERO (OPENING)
+         ============================================ -->
+    <section class="section hero" id="hero">
+      <div class="hero__school">AKKY先生のプログラミング教室</div>
+      <div class="hero__eyebrow">AI COURSE · DAY 02 · 2026</div>
+
+      <h1 class="hero__title">
+        AIと、<br>
+        <span class="hl">探究</span>しよう。<br>
+        <span class="hl-coral">調べて、考えて、伝える。</span>
+      </h1>
+
+      <p class="hero__lead">
+        前回、君はAIで「作る」を体験した。<br>
+        今日はAIを<strong>"考える相棒"</strong>にして、ひとつの問いを深く掘り下げる。<br>
+        これは、世界中の大人もまだ習得しきれていない、最先端の頭の使い方だ。
+      </p>
+
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">DURATION</div>
+          <div class="hero__meta-value">90 MIN</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">PARTNERS</div>
+          <div class="hero__meta-value">4つのAI</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">OUTPUT</div>
+          <div class="hero__meta-value">発表スライド</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">FLOW</div>
+          <div class="hero__meta-value">調べ→考え→伝える</div>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        SCROLL
+        <div class="hero__scroll-line"></div>
+      </div>
+
+      <svg class="hero__mascot"><use href="#aila-hero"/></svg>
+    </section>
+    <!-- =================================================
+         CHAPTER 0 — RECAP + α
+         ================================================= -->
+    <section class="section" id="ch0">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        OPENING · 準備する
+      </div>
+      <div class="section-tag">準備 ｜ 振り返り＋今日の基本</div>
+      <h2 class="section-title">前回の<span class="hl">振り返り</span>と、<br>今日の冒険のはじまり。</h2>
+      <p class="section-lead">
+        まずは前回学んだことを高速で思い出そう。そのあと、前回さらっとしか触れなかった<strong>2つの超重要トピック</strong>——「AIエージェント」と「プロンプトの心構え」——を押さえてから、今日の冒険に出発する。
+      </p>
+
+      <h3>前回のダイジェスト</h3>
+      <p>第1回「AIを知り、自分のサイトを創ろう」で学んだ4つの柱。覚えてる？</p>
+
+      <div class="recap">
+        <div class="recap__card">
+          <div class="recap__num">RECAP 01</div>
+          <div class="recap__title">AIの歴史</div>
+          <p class="recap__desc">AIは2022年に突然現れたんじゃない。80年の挑戦の積み重ね。今は第4次ブームの真っ最中。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 02</div>
+          <div class="recap__title">AIの仕組み</div>
+          <p class="recap__desc">生成AIは「確率器」。次に来る確率が一番高い言葉を選び続けて、文章を作っている。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 03</div>
+          <div class="recap__title">プロンプトの基本</div>
+          <p class="recap__desc">役割・背景・タスク・条件・出力形式。この5要素を意識すると答えが激変する。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 04</div>
+          <div class="recap__title">ハルシネーション</div>
+          <p class="recap__desc">AIはもっともらしい嘘をつく。だから人間の目でファクトチェックが必要。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">前回の合言葉</div>
+        <p><strong>「AIは万能の魔法じゃなく、確率で答えを出す便利な道具」</strong>。この感覚を忘れずに、今日はその道具をもっと深く使いこなす。</p>
+      </div>
+
+      <h3>前回の"こぼれ話"を、ここで補強する</h3>
+      <p>前回は時間の都合で深く触れられなかったけど、2026年のAIを語る上で外せない話が2つある。今日の探究の土台になるので、しっかり押さえよう。</p>
+
+      <h4>補強① いま世界が注目する「AIエージェント」とは？</h4>
+      <p>これまで君が使ってきたAI（ChatGPTなど）は、<strong>「聞かれたら答える」</strong>タイプだった。でも今、AIは新しい段階に入っている。それが<em>AIエージェント</em>だ。</p>
+      <p>AIエージェントは、<strong>目標を与えると、自分で計画を立て、必要な道具（ツール）を使い、いくつもの手順を実行して、ゴールまでたどり着く</strong>AI。人がいちいち指示しなくても、自分で考えて動く。</p>
+
+      <div class="agentbox">
+        <div class="agentbox__col agentbox__col--passive">
+          <span class="agentbox__tag">これまでのAI</span>
+          <div class="agentbox__name">聞かれたら答える</div>
+          <div class="agentbox__flow">
+            <div class="agentbox__node">人が質問する</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">AIが答える</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">人が次の質問をする</div>
+          </div>
+          <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">毎回、人が指示しないと動かない。<br>物知りな先生タイプ。</p>
+        </div>
+        <div class="agentbox__col agentbox__col--active">
+          <span class="agentbox__tag">AIエージェント</span>
+          <div class="agentbox__name">自分で考えて動く</div>
+          <div class="agentbox__flow">
+            <div class="agentbox__node">人が「目標」を伝える</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__loop">
+              <div class="agentbox__loop-label">― AIが自分で回す ―</div>
+              <div class="agentbox__node">計画を立てる</div>
+              <div class="agentbox__node">道具を使う・調べる</div>
+              <div class="agentbox__node">実行する</div>
+              <div class="agentbox__node">結果を見て直す</div>
+            </div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">ゴール達成！</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のたとえ話</div>
+          <p>たとえるなら、これまでのAIは「質問に答えてくれる物知りな先生」。AIエージェントは「『文化祭の買い出しをして』と頼むと、予算を確認して、お店を調べて、買い物リストを作って、注文までやってくれる超優秀な助手」だよ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">なぜ重要？</div>
+        <p>2026年、AIは「すごいね」と眺める段階から<strong>「仕事を任せる」段階</strong>へ移っている。世界の調査会社も2026年を「AIエージェントの年」と位置づけているんだ。君たちが大人になる頃には、エージェントと一緒に働くのが当たり前になっているだろう。</p>
+      </div>
+
+      <h4>補強② プロンプトを作るときの「3つの心構え」</h4>
+      <p>前回「5つの要素」を学んだね。今日はその手前にある、もっと大事な<strong>"心構え"</strong>を3つ押さえる。これができると、AIとの対話が一気に上達する。</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">🪄 ①「魔法のプロンプト」はない</h4>
+          <p style="margin:0;font-size:14px;">ネットにあふれる「これさえ使えば完璧！」は幻想。どんなテーマにも効く万能の呪文は<strong>存在しない</strong>。1回で完璧を狙わず、対話しながら育てる。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">🧑‍💼 ② 人に頼むように伝える</h4>
+          <p style="margin:0;font-size:14px;">AIは賢いけど、君のことを何も知らない。<strong>今日入った新入社員</strong>に頼むつもりで、背景と具体を丁寧に。「いい感じにして」では伝わらない。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">🎯 ③ 出力を予想しながら書く</h4>
+          <p style="margin:0;font-size:14px;">「こう書いたら、たぶんこう返ってくる」と<strong>予想しながら</strong>書く。予想とのズレが学びになる。AIとの対話は実験だ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">確率器だから</div>
+        <p>同じ質問でも、AIの答えは毎回少し変わる。これはバグじゃなく、AIが<strong>確率で言葉を選んでいる証拠</strong>。だから「1回ダメでも気にせず、何度か試す」が正解だよ。</p>
+      </div>
+
+      <h3>今日いちばん大事な考え方 ─ AIに「任せる」と、自分が「握る」</h3>
+      <p>今日の探究をする前に、これだけは頭に入れてほしい。AIを使うときは、いつも<strong>2つの軸</strong>を分けて考える。<em>労力（手間）はAIに任せ、判断（決めること）は自分が握る</em>。この線引きができる人が、AIに使われずにAIを使いこなす人になる。</p>
+
+      <div class="axis">
+        <div class="axis__side axis__side--ai">
+          <div class="axis__label">⚙ AIに任せていい（労力）</div>
+          <ul class="axis__list">
+            <li>たくさんの案を出す（広げる）</li>
+            <li>情報を素早く下調べする</li>
+            <li>長い文章を要約・整理する</li>
+            <li>デザインや体裁を整える</li>
+          </ul>
+          <p class="axis__note">量・速さ・見た目は、AIが得意</p>
+        </div>
+        <div class="axis__mid">握るのは自分</div>
+        <div class="axis__side axis__side--you">
+          <div class="axis__label">★ 自分が握る（判断）</div>
+          <ul class="axis__list">
+            <li>どの案を選ぶか（収束）</li>
+            <li>何を信じ、何を捨てるか</li>
+            <li>何が一番大事か</li>
+            <li>結局、何を伝えたいか</li>
+          </ul>
+          <p class="axis__note">「どうすべきか」は、君にしか決められない</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">今日の合言葉</div>
+        <p><strong>「広げる・調べる・作る」はAIに。「選ぶ・信じる・決める」は自分に。</strong>このあとの壁打ち・リサーチ・整理・スライド作成、ぜんぶこの一つの考え方の練習だよ。</p>
+      </div>
+
+      <h3>道具の紹介 ─ AIには「種類」がある</h3>
+      <p>AIの道具は、これからもどんどん新しいものが出てくる。だから大事なのは<strong>製品の名前じゃなく「どんな種類があるか」</strong>を知ること。今日はこの4種類を使う。例として2026年5月時点の代表的なツールを挙げるけど、変わってもいい。種類と「得意・苦手」がわかれば、新しい道具もすぐ使えるようになる。</p>
+
+      <div class="tooldetail">
+        <div class="tooldetail__top">
+          <svg class="tooldetail__icon"><use href="#icon-chatgpt"/></svg>
+          <div class="tooldetail__title">
+            <div class="tooldetail__cat">① 対話・発想系AI</div>
+            <div class="tooldetail__role">IDEATION ｜ アイデアを広げる相棒</div>
+          </div>
+          <span class="tooldetail__ex">例：ChatGPT</span>
+        </div>
+        <div class="tooldetail__body">
+          <p>人と話すように自然な会話ができるAI。<strong>アイデアを広げる壁打ち相手</strong>として一番使いやすい。文章を書くのも、わかりやすく説明するのも得意。</p>
+          <div class="tooldetail__feats">
+            <div class="tooldetail__feat"><strong>読みやすい文章</strong>づくりが得意</div>
+            <div class="tooldetail__feat">順を追った<strong>説明や考える手順</strong>が丁寧</div>
+            <div class="tooldetail__feat">勉強を手伝う<strong>学習モード</strong>もある</div>
+            <div class="tooldetail__feat">画像を作る・読み取ることもできる</div>
+          </div>
+          <div class="tooldetail__tags">
+            <span class="tooldetail__tag tooldetail__tag--good">◎ 発想・文章・説明</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">△ 最新の出来事は苦手なことも</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tooldetail">
+        <div class="tooldetail__top">
+          <svg class="tooldetail__icon"><use href="#icon-gemini"/></svg>
+          <div class="tooldetail__title">
+            <div class="tooldetail__cat">② 検索・リサーチ系AI</div>
+            <div class="tooldetail__role">RESEARCH ｜ 最新の事実を調べる</div>
+          </div>
+          <span class="tooldetail__ex">例：Gemini</span>
+        </div>
+        <div class="tooldetail__body">
+          <p>Web検索とつながっていて、<strong>最新情報を出典つき</strong>で調べられる。リサーチの主役。最新の事実に関しては"知ったかぶり"が比較的少なく、長い資料や画像・動画もまとめて扱える。</p>
+          <div class="tooldetail__feats">
+            <div class="tooldetail__feat">Google検索と連携、<strong>最新情報に強い</strong></div>
+            <div class="tooldetail__feat">答えに<strong>出典リンク</strong>を付けてくれる</div>
+            <div class="tooldetail__feat">とても<strong>長い文章</strong>もまとめて読める</div>
+            <div class="tooldetail__feat">画像・音声・動画も理解できる</div>
+          </div>
+          <div class="tooldetail__tags">
+            <span class="tooldetail__tag tooldetail__tag--good">◎ 最新の事実・調べもの</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">△ 出典は自分で要確認</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tooldetail">
+        <div class="tooldetail__top">
+          <svg class="tooldetail__icon"><use href="#icon-notebook"/></svg>
+          <div class="tooldetail__title">
+            <div class="tooldetail__cat">③ 資料・整理系AI</div>
+            <div class="tooldetail__role">ORGANIZE ｜ 集めた資料だけで考える</div>
+          </div>
+          <span class="tooldetail__ex">例：NotebookLM</span>
+        </div>
+        <div class="tooldetail__body">
+          <p>自分が読み込ませた資料（ソース）<strong>だけ</strong>をもとに答える、専属の物知り博士。世界中の知識から答える①②と違い、<strong>渡した資料に忠実</strong>だから嘘をつきにくい。要約や整理にぴったり。</p>
+          <div class="tooldetail__feats">
+            <div class="tooldetail__feat">資料を<strong>要約</strong>・どこに書いてあるか提示</div>
+            <div class="tooldetail__feat"><strong>マインドマップ</strong>で関係を図にする</div>
+            <div class="tooldetail__feat">2人のAIが対話する<strong>音声解説</strong>を生成</div>
+            <div class="tooldetail__feat">スライド・クイズ・要点ノートも作れる</div>
+          </div>
+          <div class="tooldetail__tags">
+            <span class="tooldetail__tag tooldetail__tag--good">◎ 正確な整理・復習</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">△ 渡した資料の外は答えない</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tooldetail">
+        <div class="tooldetail__top">
+          <svg class="tooldetail__icon"><use href="#icon-gamma"/></svg>
+          <div class="tooldetail__title">
+            <div class="tooldetail__cat">④ スライド生成系AI</div>
+            <div class="tooldetail__role">SLIDES ｜ 発表資料を一気に作る</div>
+          </div>
+          <span class="tooldetail__ex">例：Gamma</span>
+        </div>
+        <div class="tooldetail__body">
+          <p>伝えたい内容を文章で渡すと、<strong>デザイン込みのスライドを1分ほどで自動生成</strong>。デザインの知識がなくても、見栄えのいい発表資料が作れる。あとから「ここを直して」と会話で修正もできる。</p>
+          <div class="tooldetail__feats">
+            <div class="tooldetail__feat">指示から<strong>約90秒</strong>でスライド完成</div>
+            <div class="tooldetail__feat">デザイン・レイアウトを<strong>自動調整</strong></div>
+            <div class="tooldetail__feat">画像生成も<strong>中で完結</strong></div>
+            <div class="tooldetail__feat">PowerPoint・PDFに書き出せる</div>
+          </div>
+          <div class="tooldetail__tags">
+            <span class="tooldetail__tag tooldetail__tag--good">◎ 速い・きれい・手軽</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">△ 中身と構成は自分が決める</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のひとこと</div>
+          <p>道具の名前はすぐ変わるし、新しいものも出てくる。でも「対話・検索・整理・スライド」という<strong>種類（役割）</strong>は変わりにくい。さらに今は、君の代わりに自分で考えて動く<strong>AIエージェント</strong>や、声・画像・動画をまとめて扱う<strong>マルチモーダルAI</strong>も登場している。大事なのは「この作業にはどの種類のAIか?」で選べること。それができれば、どんな新しい道具が来ても怖くないよ。</p>
+        </div>
+      </div>
+
+      <details class="deep">
+        <summary>もっと知りたい：同じ"種類"でも、ツールによって違う</summary>
+        <div class="deep__body">
+          <p>同じ「検索・リサーチ系」でも、調べることに特化したツール（Perplexityなど）もある。同じ「スライド生成系」でも、資料から作るのが得意なもの・ゼロから作るのが得意なものがある。だから本当の上級者は、<strong>「種類」で大きく選んでから、「その中のどれが今回に合うか」</strong>でもう一段選ぶ。</p>
+          <p>でも最初は欲張らなくていい。まずは「対話・検索・整理・スライド」の4種類を、1つずつ代表選手で使えるようになろう。それが全ての土台になる。</p>
+        </div>
+      </details>
+
+      <h3>今日の進め方は「3ステップ」</h3>
+      <p>いきなり一人でやるのは大変。今日は<strong>3段階</strong>で進むよ。「見て→自分でやって→発表する」の順で、体に覚えさせよう。</p>
+
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">先生と一緒に、一周ぜんぶ体験する</div>
+          <p style="margin:0;">共通テーマ「<strong>AIを使った新しいゲームを提案しよう</strong>」で、壁打ち→リサーチ→整理→スライド→発表準備を、先生と一緒に一通りやってみる。各場面で「AIに任せる／自分が握る」を確認しながら進む。<strong>今日の中心はここ。</strong></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">自分で、本番のチャレンジに挑む</div>
+          <p style="margin:0;">ステップ1で学んだことを活かして、<strong>全員共通のチャレンジ</strong>に一人で挑戦する。お題は「AIを使った"全く新しいゲーム"を企画して提案しなさい」。先生がタイムキーパーをするので、時計を見ながら進める。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">「社長」に企画をプレゼンする</div>
+          <p style="margin:0;">君は新人プランナー、聞き手は<strong>ゲーム会社の社長</strong>（＝みんなと先生）。作った企画書で売り込もう。社長を「作ってみたい！」と思わせたら勝ちだ。</p>
+        </div>
+      </div>
+
+      <!-- CHALLENGE PREVIEW -->
+      <div class="gacha">
+        <div class="gacha__label">🎮 STEP 2 のチャレンジ予告</div>
+        <div class="gacha__title">君は新人プランナー。<br>"全く新しいAIゲーム"を社長に提案せよ。</div>
+        <p class="gacha__desc">ステップ2は、全員このお題に挑戦する。ステップ1のデモ（AIゲーム提案）の本番版だ。人とかぶらない自分だけの企画を考え、最後は「ゲーム会社の社長」にプレゼンする。くわしい条件は、ステップ1を終えたあとのSTEP 2ページで発表！ まずは目の前のステップ1に集中しよう。</p>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">大切な約束</div>
+        <p>今日もずっと守るルール：<strong>本名・住所・学校名・友達の個人情報は、絶対にAIに入力しない。</strong>テーマと関係ない自分の秘密も入れないこと。</p>
+      </div>
+    </section>
+    <!-- =================================================
+         CHAPTER 1 — SPARRING / IDEATION
+         ================================================= -->
+    <section class="section" id="ch1">
+      <div class="bigstep">
+        <span class="bigstep__badge">STEP 1</span>
+        <span class="bigstep__text">ここから<strong>先生と一緒に一周</strong>。共通テーマ「AIを使った新しいゲームを提案しよう」で、①壁打ち→②リサーチ→③整理→④スライド→⑤発表準備を体験するよ。</span>
+      </div>
+
+      <!-- THEME GACHA (STEP 1 練習テーマ) -->
+      <div class="gacha">
+        <div class="gacha__label">🎲 THEME GACHA</div>
+        <div class="gacha__title">まず、自分の「練習テーマ」を引こう</div>
+        <p class="gacha__desc">先生は共通テーマ（AIゲーム提案）でお手本を見せるよ。でも、ただ見るだけだと身につかない。だから君は<strong>自分のテーマ</strong>を1つ持って、お手本と同じ流れを手元で小さく試そう。ボタンを押すと、先生が選んだ30個から<strong>ランダムで4つ</strong>出てくる。気になるものを1つ選んでね（提案・賛否・予測・調査のいろいろなタイプが混ざるよ）。</p>
+        <button class="gacha__btn" id="gachaBtn"><span class="gacha__dice">🎲</span> テーマを引く！</button>
+        <div class="gacha__results" id="gachaResults"></div>
+        <div class="gacha__chosen" id="gachaChosen"></div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のひとこと</div>
+          <p>「見るだけ」より「見て、すぐ自分のテーマで試す」方が、何倍も身につく。お手本（AIゲーム提案）と、自分の練習テーマ。この2本立てでステップ1を進めよう。STEP 2の本番（全員でAIゲームを企画）は、このあとだよ。</p>
+        </div>
+      </div>
+
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-explorer"/></svg>
+        STEP 1 · 一緒に体験する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ①壁打ち</div>
+      <h2 class="section-title">AIと<span class="hl">壁打ち</span>。<br>一人では見えない角度を見る。</h2>
+      <p class="section-lead">
+        「壁打ち」と聞くと、テニスの壁みたいに"跳ね返すだけ"を想像するかもしれない。でも本当に役立つAIは、跳ね返すだけじゃない。<strong>こちらの考えの"穴"を突いてくる</strong>。一人で考えると、人はどうしても自分の好きな方向にばかり考えてしまう。AIはそれを揺さぶる相手なんだ。
+      </p>
+
+      <div class="essence">
+        <div class="essence__label">★ この技術の本質</div>
+        <p class="essence__text">壁打ちとは「AIに考えてもらう」ことではない。<br><span class="mark">AIを使って、自分一人では見えない角度を、むりやり見る</span>ことだ。</p>
+        <p class="essence__sub">だから、上手な人ほどAIに「賛成して」ではなく「反論して」「弱点を教えて」と頼む。ほめてもらうためじゃなく、自分の考えを強くするために使う。</p>
+      </div>
+
+      <h3>いちばん大事なコツ ─ まず「自分の頭」で考える</h3>
+      <p>これは最新の研究でもはっきりわかったこと。<strong>最初からAIに丸投げした人より、まず自分で少し考えてからAIに相談した人の方が、最後に良い考えにたどり着いた</strong>。AIを開く前の1分が、勝負を分けるんだ。</p>
+
+      <div class="tryfirst">
+        <div class="tryfirst__icon">🧠</div>
+        <div class="tryfirst__body">
+          <div class="tryfirst__title">「1分ルール」</div>
+          <p>AIに聞く前に、まず自分で1分だけ考えてメモする。「自分はこう思う」を持ってからぶつけると、AIの答えを<strong>うのみにせず、比べられる</strong>。これが思考力を育てる順番。</p>
+        </div>
+      </div>
+
+      <h3>「発散」と「収束」── 広げてから、絞る</h3>
+      <p>良い考えには2つのフェーズがある。まず<strong>広げて</strong>、それから<strong>絞る</strong>。この順番を混ぜないのがコツ。AIは「広げる」のが超得意。でも「どれを選ぶか」は——</p>
+
+      <div class="grid-2">
+        <div class="card card--soft">
+          <h4 style="margin-top:0;">📤 発散（ひろげる）＝AIが得意</h4>
+          <p style="margin:0;font-size:14px;">とにかく数を出す。<strong>質より量</strong>。「20個出して」と言えば、自分では思いつかない角度も出てくる。ここはAIに思い切り手伝ってもらう。</p>
+        </div>
+        <div class="card card--soft">
+          <h4 style="margin-top:0;">📥 収束（しぼる）＝自分の仕事</h4>
+          <p style="margin:0;font-size:14px;">出た中から「どれがいいか」を選ぶ。これは<em>自分で決める</em>。なぜなら「何を大事と思うか」は、君にしか決められないから。AIに選ばせた瞬間、それは君の考えじゃなくなる。</p>
+        </div>
+      </div>
+
+      <h3>実例で見る ─ 同じテーマ、ぜんぜん違う壁打ち</h3>
+      <p>「AIを使った新しいゲームを提案しよう」というテーマで、2人の生徒がAIと壁打ちした。何が違う？</p>
+
+      <div class="vs">
+        <div class="vs__card vs__card--weak">
+          <div class="vs__head">😐 もったいない壁打ち</div>
+          <div class="vs__body">
+            <div class="vs__prompt">面白いゲームのアイデアちょうだい</div>
+            <p class="vs__result"><strong>AI：</strong>「①パズルゲーム ②レースゲーム ③RPG…」<br>→ ありきたりな答え。これをそのまま使って終わり。</p>
+            <div class="vs__verdict">✗ AIに丸投げ。自分の頭が動いていない</div>
+          </div>
+        </div>
+        <div class="vs__card vs__card--strong">
+          <div class="vs__head">😎 効く壁打ち</div>
+          <div class="vs__body">
+            <div class="vs__prompt">「AIが負けてくれるゲーム」を考え中。
+まず弱点を5つ指摘して。
+そのあと改善案も出して。</div>
+            <p class="vs__result"><strong>AI：</strong>「弱点①わざと負けるとバレて冷める ②達成感が薄い…改善案は…」<br>→ 自分の案を<strong>持った上で</strong>、AIに穴を突かせている。</p>
+            <div class="vs__verdict">✓ 自分の考え＋AIの挑発で深まる</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA の気づき</div>
+          <p>右の子は、AIに「正解」を聞いてない。<strong>自分のアイデアの弱点</strong>を聞いている。AIを"ほめ役"じゃなく"きびしいコーチ"にすると、考えはぐっと強くなるよ。</p>
+        </div>
+      </div>
+
+      <h3>AIを"挑発者"にする問いかけ集</h3>
+      <p>壁打ちで詰まったら、こんな風に聞いてみよう。どれも「自分の考えを揺さぶる」ための問いだ。ボタンを押すと、なぜ効くのかがわかるよ。</p>
+
+      <!-- SPARRING SIMULATOR -->
+      <div class="spar">
+        <div class="spar__lenses">
+          <button class="spar__lens is-active" data-lens="more">あと5個出して</button>
+          <button class="spar__lens" data-lens="opposite">逆の立場では？</button>
+          <button class="spar__lens" data-lens="age">別の人の目線で</button>
+          <button class="spar__lens" data-lens="weak">弱点は？</button>
+          <button class="spar__lens" data-lens="extreme">もし極端だと？</button>
+          <button class="spar__lens" data-lens="borrow">別分野から借りる</button>
+        </div>
+        <div class="spar__output" id="sparOutput"></div>
+      </div>
+
+      <h3>もうひとつの実験 ─ ChatGPTとGemini、両方に聞く</h3>
+      <p>同じ問いを2つのAIに投げると、答えの"個性"が違う。下のボタンで体験してみよう。<strong>「どっちが正解か」ではなく「どう違うか」</strong>に注目して。</p>
+
+      <!-- CHAT COMPARISON -->
+      <div class="chatcompare__ask">
+        <button class="btn" id="chatAsk">▶ 同じ問いを2つのAIに投げる</button>
+        <button class="btn btn--secondary" id="chatReset">↻ リセット</button>
+      </div>
+      <p style="font-size:13px;color:var(--ink-muted);margin-top:-8px;">問い：「AIを使った新しいゲームのアイデアを出して」</p>
+
+      <div class="chatcompare">
+        <div class="chatwin chatwin--gpt">
+          <div class="chatwin__bar"><svg><use href="#icon-chatgpt"/></svg> ChatGPT</div>
+          <div class="chatwin__body" id="gptBody">
+            <div class="chatwin__placeholder">↑ ボタンを押すと、ここに答えが表示されます</div>
+          </div>
+        </div>
+        <div class="chatwin chatwin--gem">
+          <div class="chatwin__bar"><svg><use href="#icon-gemini"/></svg> Gemini</div>
+          <div class="chatwin__body" id="gemBody">
+            <div class="chatwin__placeholder">↑ ボタンを押すと、ここに答えが表示されます</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">今日の大事な学び</div>
+        <p>どちらが「正解」でもない。<strong>問いによって、得意なAIが違う</strong>。これが「AIには個性がある」「最強の1つは存在しない」という発見。だから上級者は、目的でAIを<em>使い分ける</em>んだ。</p>
+      </div>
+
+      <div class="cautions">
+        <div class="cautions__head">⚠ 壁打ちで気をつける5つのポイント</div>
+        <ul class="cautions__list">
+          <li><strong>まず自分で1分考える。</strong>AIを開く前に、自分の最初の考えを持つ。これがないと丸投げになる。</li>
+          <li><strong>「賛成して」ではなく「反論して」。</strong>ほめてもらうのではなく、弱点・反対意見を出させる。</li>
+          <li><strong>広げるはAI、選ぶは自分。</strong>たくさん出させていい。でも、どれを採用するかは自分で決める。</li>
+          <li><strong>一往復で止めない。</strong>返ってきた答えにまた質問を返す。良い発想は3〜4回目に出てくる。</li>
+          <li><strong>個人情報は入れない。</strong>本名・住所・学校名・友達の情報は書かない。</li>
+        </ul>
+      </div>
+
+      <!-- WORK 1 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 1 記録 · ①壁打ち</span>
+          <h3 class="work__title">壁打ちの成果を保存しよう</h3>
+        </div>
+        <p class="work__desc">あとで見返せるように、実際の<strong>やりとりと結果</strong>を残そう。主役は君の最初の考えと、最後に選んだ案だ。</p>
+
+        <div class="tryfirst" style="margin-top:0;margin-bottom:18px;">
+          <div class="tryfirst__icon">①</div>
+          <div class="tryfirst__body">
+            <div class="tryfirst__title">まず、AIを開かずに書く（1分）</div>
+            <p>自分のテーマについて、今アタマにある考えを、ヘタでもいいから自分の言葉で。</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">★</span>自分の練習テーマ（上のガチャで選んだもの）</label>
+          <input class="input" id="w1theme" placeholder="ガチャで引いたテーマが入ります（手で書いてもOK）">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">A</span>AIに聞く前の、自分の最初の考え</label>
+          <textarea class="textarea" id="w1first" placeholder="例：AIが審判をするスポーツゲームを作りたい。公平に遊べそうだから。"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">B</span>AIに投げた質問・深堀りの問いかけ（実際の言葉で）</label>
+          <textarea class="textarea" id="w1challenge" placeholder="例：①このアイデアの弱点を5つ教えて　②逆に面白くない理由は？　③別の年齢の人ならどう遊ぶ？"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">C</span>AIから返ってきたアイデア・指摘（おもしろかったもの）</label>
+          <textarea class="textarea" id="w1ideas" placeholder="例：AIが出した案 → 表情を読むゲーム／声で操作するゲーム／弱点指摘「判定に納得できないと冷める」"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">D</span>その指摘で、考えはどう変わった？</label>
+          <textarea class="textarea" id="w1change" placeholder="例：「判定に納得できないと冷める」と言われ、"判定の理由を見せる機能"を足すことにした。"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">E</span>最終的に自分が選んだ案（自分の収束）</label>
+          <input class="input" id="w1final" placeholder="例：判定理由が見える「納得できるAI審判ゲーム」">
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w1', ['w1theme','w1first','w1challenge','w1ideas','w1change','w1final'])">💾 保存</button>
+          <span id="w1status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 AとEを見比べてみて。考えが「変わった・深まった」なら、それが壁打ちが成功したしるしだよ。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 2 — RESEARCH
+         ================================================= -->
+    <section class="section" id="ch2">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-explorer"/></svg>
+        STEP 1 · 一緒に体験する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ②リサーチ</div>
+      <h2 class="section-title">AIで<span class="hl-coral">リサーチ</span>。<br>集めるより、"疑う"。</h2>
+      <p class="section-lead">
+        昔は「情報を持っている人」が強かった。でも今は、AIに聞けば情報は何でも一瞬で出てくる。だから本当に大事な力が変わった。<strong>「どの情報を信じるかを、自分で決められること」</strong>——これがAI時代のリサーチの正体だ。
+      </p>
+
+      <div class="essence">
+        <div class="essence__label">★ この技術の本質</div>
+        <p class="essence__text">AIリサーチとは「答えを集める」ことではない。<br><span class="mark">AIに素早く下調べさせ、人間は"それは本当か?"を確かめる</span>こと。</p>
+        <p class="essence__sub">AIは確率で言葉を選ぶから、もっともらしい嘘（ハルシネーション）を必ず混ぜる。だから「集める作業」はAIに任せ、君は「本当かどうかを見抜く作業」に時間を使う。これが新しい分業だ。</p>
+      </div>
+
+      <h3>「調べる」のが得意なAIと、苦手なAI</h3>
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <span class="compare__label">⚠ 普通のチャットAI</span>
+          <p style="margin:0;font-size:14px;">学習した時点までの知識で答える。<strong>最新の出来事は知らない</strong>ことがある。しかも、知らないことも"知ってるフリ"で答えてしまう（＝ハルシネーション）。</p>
+        </div>
+        <div class="compare__side compare__side--good">
+          <span class="compare__label">✓ 検索とつながったAI</span>
+          <p style="margin:0;font-size:14px;">質問されると<strong>リアルタイムでWebを検索</strong>して、最新情報をもとに答える。出典（情報のもと）も示してくれる。Geminiがこのタイプ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">今日のリサーチは</div>
+        <p><strong>Gemini</strong>を使う。GeminiはGoogle検索とつながっていて、最新情報を出典つきで返してくれるから「調べる」にぴったり。さらに面白いのは、<em>同じGeminiでも「ただ質問する」のと「検索を使って答えさせる」のとで、答えの新しさと正確さが変わる</em>こと。試してみよう。</p>
+      </div>
+
+      <h3>こわい実例 ─ AIは平気で"それっぽい嘘"をつく</h3>
+      <p>これは実際によくある会話。なぜ右の聞き方が安全なのか、考えてみて。</p>
+
+      <div class="vs">
+        <div class="vs__card vs__card--weak">
+          <div class="vs__head">😱 あぶない聞き方</div>
+          <div class="vs__body">
+            <div class="vs__prompt">日本の食品ロスは何万トン？</div>
+            <p class="vs__result"><strong>AI：</strong>「約650万トンです」<br>（…でも、いつの数字? どこ調べ? 本当に正しい? <strong>何もわからない</strong>）</p>
+            <div class="vs__verdict">✗ 数字だけ受け取って、確かめようがない</div>
+          </div>
+        </div>
+        <div class="vs__card vs__card--strong">
+          <div class="vs__head">🛡 安全な聞き方</div>
+          <div class="vs__body">
+            <div class="vs__prompt">日本の食品ロスの量を、
+出典のリンクと、何年のデータかを
+付けて教えて。</div>
+            <p class="vs__result"><strong>AI：</strong>「◯◯省2023年度発表で約472万トン。出典：[リンク]」<br>→ <strong>リンクを開いて自分で確認できる</strong>。</p>
+            <div class="vs__verdict">✓ 出典つきだから、自分で裏が取れる</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA の警告</div>
+          <p>AIは「わかりません」と言うのが苦手で、知らないことも自信満々に答えちゃう。だから魔法の合言葉は<strong>「出典は？ いつの情報？」</strong>。これを聞くクセをつけるだけで、ダマされなくなるよ。</p>
+        </div>
+      </div>
+
+      <h3>ファクトチェックの「4ステップ」</h3>
+      <p>「本当かどうか確かめる」を、誰でもできる<strong>手順</strong>にしたのがこれ。AIの答えを使う前に、必ずこの4つを通そう。これが探検家の必須技術だ。</p>
+
+      <div class="factsteps">
+        <div class="factstep">
+          <div class="factstep__body">
+            <div class="factstep__title">出典（ソース）を必ず開く</div>
+            <p class="factstep__desc">AIが「○○です」と言ったら、その根拠リンクを1つ以上クリックして、元の記事を自分の目で見る。リンクがなければ「出典を教えて」と聞く。</p>
+          </div>
+        </div>
+        <div class="factstep">
+          <div class="factstep__body">
+            <div class="factstep__title">いつの情報か確認する</div>
+            <p class="factstep__desc">古い情報がそのまま出ることがある。記事の日付をチェック。「2026年の最新」と思ったら数年前のデータだった、はよくある話。</p>
+          </div>
+        </div>
+        <div class="factstep">
+          <div class="factstep__body">
+            <div class="factstep__title">複数のソースで裏を取る（クロスチェック）</div>
+            <p class="factstep__desc">1つのサイトだけを信じない。2つ以上の別々の情報源で同じことが言われているか確認する。</p>
+          </div>
+        </div>
+        <div class="factstep">
+          <div class="factstep__body">
+            <div class="factstep__title">一次情報を探す</div>
+            <p class="factstep__desc">「○○新聞によると…」の又聞きより、できるだけ大元（公式サイト、政府の発表、本人の発言）にあたる。それが一番信頼できる。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <span class="compare__label">❌ やってはいけない</span>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;">
+            <li>AIの答えをコピペしてそのまま「事実」として使う</li>
+            <li>出典を確認せずに発表に載せる</li>
+            <li>個人情報をAIに入力して調べさせる</li>
+          </ul>
+        </div>
+        <div class="compare__side compare__side--good">
+          <span class="compare__label">✅ こうしよう</span>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;">
+            <li>必ず出典リンクを開いて確認</li>
+            <li>日付と情報源をメモする</li>
+            <li>2つ以上のソースで確かめる</li>
+          </ul>
+        </div>
+      </div>
+
+      <details class="deep">
+        <summary>もっと知りたい：世の中には"リサーチ専門のAI"もある</summary>
+        <div class="deep__body">
+          <p>実は、調べることに特化したAI（Perplexityなど）も世の中にはあるんだ。質問すると、出典をとても細かく示しながら答えてくれるのが得意。今日は使わないけど、「目的によって専門のAIがある」ことは覚えておこう。</p>
+          <p>でも一番大事なのは、どのツールを使うかより、<strong>「出典を自分の目で確認する」という姿勢そのもの</strong>。これさえあれば、どんなAIを使っても情報に振り回されない。</p>
+        </div>
+      </details>
+
+      <div class="promptblock">
+        <span class="promptblock__label">リサーチのサンプルプロンプト</span>今、AIを使ったゲームにはどんな種類がありますか？
+最新の例を、出典（情報のもと）のリンクつきで教えてください。
+いつの情報かも書いてください。</div>
+
+      <div class="cautions">
+        <div class="cautions__head">⚠ リサーチで気をつける5つのポイント</div>
+        <ul class="cautions__list">
+          <li><strong>「出典は？ いつの情報？」を必ず聞く。</strong>これがリサーチの魔法の合言葉。</li>
+          <li><strong>出典リンクは自分で開く。</strong>AIの要約だけで判断せず、元のページを自分の目で確かめる。</li>
+          <li><strong>2つ以上のサイトで裏を取る。</strong>1つの情報だけを信じない（クロスチェック）。</li>
+          <li><strong>古い情報に注意。</strong>「最新」と思ったら数年前のデータだった、はよくある。</li>
+          <li><strong>あやしい情報は捨てる勇気。</strong>確認できないものは、思い切って使わない。</li>
+        </ul>
+      </div>
+
+      <!-- WORK 2 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 1 記録 · ②リサーチ</span>
+          <h3 class="work__title">調べた成果を保存＆"裁判"にかけよう</h3>
+        </div>
+        <p class="work__desc">調べたことを記録し、君が裁判官になってAIの答えを取り調べる。最後に「採用」か「却下」かを<strong>自分で判決</strong>しよう。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>リサーチAIに投げた質問（実際の言葉で）</label>
+          <textarea class="textarea" id="w2query" placeholder="例：「AIを使ったゲームの最新の例を、出典リンクと何年の情報か付けて教えて」"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>調べてわかった「事実」（容疑者）</label>
+          <input class="input" id="w2fact" placeholder="例：日本の食品ロスは年間約472万トン">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>出典は？ いつの情報？（証拠①）</label>
+          <input class="input" id="w2source" placeholder="例：◯◯省の公式サイト・2023年度のデータ">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>別のサイトでも確かめた結果（証拠②クロスチェック）</label>
+          <input class="input" id="w2cross" placeholder="例：新聞社のサイトでも同じ472万トンだった／少し違う数字だった">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>判決 ─ この情報、発表に使う？</label>
+          <select class="input" id="w2verdict">
+            <option value="">選んでね</option>
+            <option value="採用：出典も確認でき、別サイトとも一致した">⚖️ 採用（出典OK・裏も取れた）</option>
+            <option value="保留：もう少し確かめる必要がある">🤔 保留（あと一歩、確認が必要）</option>
+            <option value="却下：出典が不明、または情報が食い違った">🚫 却下（あやしい・確認できない）</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w2', ['w2query','w2fact','w2source','w2cross','w2verdict'])">💾 保存</button>
+          <span id="w2status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 「却下」も立派な判断。あやしい情報を見抜いて捨てられることこそ、本物のリサーチ力だよ。</p>
+      </div>
+    </section>
+    <!-- =================================================
+         CHAPTER 3 — ORGANIZE
+         ================================================= -->
+    <section class="section" id="ch3">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-explorer"/></svg>
+        STEP 1 · 一緒に体験する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ③整理</div>
+      <h2 class="section-title">AIで<span class="hl">整理</span>。<br>「何が大事か」を、自分で決める。</h2>
+      <p class="section-lead">
+        整理を「情報をきれいに並べること」だと思うと、半分しか見えていない。本当の整理とは、たくさんの情報の中から<strong>「自分は何を大事だと思うか」を決める</strong>こと。つまり整理は、作業じゃなくて<em>判断</em>なんだ。
+      </p>
+
+      <div class="essence">
+        <div class="essence__label">★ この技術の本質</div>
+        <p class="essence__text">整理とは「AIに片づけさせる」ことではない。<br><span class="mark">AIに材料を並べさせ、"どれが大事か"の判断は自分が握る</span>こと。</p>
+        <p class="essence__sub">並べるのはAIが得意。でも「何を大事とするか」は、君の価値観そのもの。ここをAIに丸投げした瞬間、それはもう"君の考え"じゃなくなる。</p>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">研究でわかった"こわい罠"</div>
+        <p>AIに整理を任せすぎると、人は<strong>「わかった気」になるだけで、実は頭が働いていない</strong>ことが研究でわかっている。これを「考えることのアウトソーシング（外注）」と呼ぶ。便利さと引きかえに、自分の考える力が育たなくなる。だから——<strong>整理はAI、判断は自分</strong>。</p>
+      </div>
+
+      <h3>整理を助けるプロンプト</h3>
+      <p>「並べる」作業はAIに任せよう。便利な頼み方の例。</p>
+      <div class="card card--soft">
+        <ul style="margin:0;padding-left:20px;">
+          <li>「この内容の<strong>要点を3つ</strong>にまとめて」</li>
+          <li>「<strong>賛成意見と反対意見を表</strong>で整理して」</li>
+          <li>「<strong>小学生にもわかるように</strong>言い換えて」</li>
+          <li>「発表用に『<strong>問題→原因→解決策</strong>』の順で並べ直して」</li>
+          <li>「これを<strong>重要な順にランキング</strong>して」</li>
+        </ul>
+      </div>
+
+      <h3>新しい相棒「NotebookLM」を使う</h3>
+      <p>ここで3つ目の相棒、<strong>NotebookLM</strong>を導入する。これは普通のチャットAIとは<em>性格がまるで違う</em>。なぜ違うかというと——<strong>「自分が信じると決めた資料だけ」で考える</strong>からだ。これは知的に自立する練習でもある。</p>
+
+      <div class="sourcebox">
+        <div class="sourcebox__card sourcebox__card--wide">
+          <div class="sourcebox__head"><svg width="22" height="22"><use href="#icon-chatgpt"/></svg> ChatGPT / Gemini</div>
+          <p style="margin:0;font-size:13.5px;">世界中の知識から答える。<br><strong>広く・浅く・なんでも</strong>。<br>でも、知らないことは"知ってるフリ"で答えることも（ハルシネーション）。</p>
+        </div>
+        <div class="sourcebox__card sourcebox__card--narrow">
+          <div class="sourcebox__head"><svg width="22" height="22"><use href="#icon-notebook"/></svg> NotebookLM</div>
+          <p style="margin:0;font-size:13.5px;">自分が読み込ませた資料（ソース）<strong>だけ</strong>をもとに答える。<br><strong>狭く・深く・正確に</strong>。<br>だから嘘をつきにくい「自分専用の物知り博士」になる。</p>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のたとえ話</div>
+          <p>ChatGPTやGeminiは「世界中の本を読んだ先生」。NotebookLMは「君が渡した資料だけを完璧に覚えた専属アシスタント」。リサーチで集めた信頼できる記事を渡せば、その中身に絞って正確に整理してくれるよ。</p>
+        </div>
+      </div>
+
+      <h4>NotebookLMにできること（2026年版）</h4>
+      <table class="table">
+        <thead>
+          <tr><th style="width:140px;">機能</th><th>何ができる？</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>要約</strong></td><td>読み込ませた資料の要点を自動でまとめる</td></tr>
+          <tr><td><strong>チャット</strong></td><td>資料の内容を質問すると、どの資料のどこに書いてあるか示しながら答える</td></tr>
+          <tr><td><strong>マインドマップ</strong></td><td>資料の内容を、関係がひと目でわかる図に整理する</td></tr>
+          <tr><td><strong>音声概要</strong></td><td>2人のAIが対話形式で資料を解説するポッドキャストを自動生成。"ながら聴き"で復習できる</td></tr>
+          <tr><td><strong>スライド／レポート</strong></td><td>資料をもとに発表用スライドや、まとまったレポートを作る</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:13.5px;color:var(--ink-mid);">※ NotebookLMの音声概要は2人のAIホストが対話形式で解説してくれて、ダウンロードしてオフラインでも聴ける。マインドマップは複雑な情報を階層で整理して、全体像をひと目でつかめるようにしてくれる。</p>
+
+      <h3>いちばん大事 ─ AIの意見と、自分の意見を分ける</h3>
+      <p>AIがどんなに上手にまとめても、それは<strong>AIの整理</strong>。「で、自分はどう思うのか？」を考えるのが、<em>人間の一番大事な仕事</em>だ。</p>
+
+      <div class="grid-2">
+        <div class="card" style="border-color:var(--m-blue);">
+          <h4 style="margin-top:0;color:var(--m-blue);">🤖 AIが言ったこと</h4>
+          <p style="margin:0;font-size:14px;">AIが調べて、整理してくれた情報。これは「材料」。事実かどうかは自分で確認済みのもの。</p>
+        </div>
+        <div class="card" style="border-color:var(--coral);">
+          <h4 style="margin-top:0;color:var(--coral-deep);">🙋 自分が考えたこと</h4>
+          <p style="margin:0;font-size:14px;">その材料を見て、自分はどう思うか。どう提案したいか。これが発表の<strong>主役</strong>になる。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">習慣にしよう</div>
+        <p>これからAIを使うときは、いつも頭の中で2つを分ける。<strong>「AIが言ったこと」と「自分が考えたこと」</strong>。この線引きができる人が、AIに使われずにAIを使いこなす人になる。</p>
+      </div>
+
+      <div class="cautions">
+        <div class="cautions__head">⚠ 整理で気をつける5つのポイント</div>
+        <ul class="cautions__list">
+          <li><strong>並べるはAI、選ぶは自分。</strong>要約・整理はAIに任せ、何が大事かは自分で決める。</li>
+          <li><strong>「わかった気」に注意。</strong>AIのまとめを読んだだけで満足しない。自分の言葉で言い直せるか確かめる。</li>
+          <li><strong>「捨てる」ことを恐れない。</strong>全部使おうとしない。今回のテーマに関係ないものは外す。</li>
+          <li><strong>整理系AIには信頼できる資料だけ渡す。</strong>あやしい情報を入れると、整理結果もあやしくなる。</li>
+          <li><strong>最後は必ず「自分の意見」を持つ。</strong>AIの整理で終わらせず、「で、自分はどう思う？」まで進む。</li>
+        </ul>
+      </div>
+
+      <!-- WORK 3 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 1 記録 · ③整理</span>
+          <h3 class="work__title">「拾う・捨てる・決める」を保存</h3>
+        </div>
+        <p class="work__desc">今日のハイライト。AIが並べた材料から、自分で<strong>拾うもの・捨てるもの</strong>を選び、最後に自分の意見を出す。「捨てる」判断こそが、君の価値観だ。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>整理AIに出した指示（実際の言葉で）</label>
+          <input class="input" id="w3prompt" placeholder="例：「集めた情報の要点を5つにまとめて、重要な順に並べて」">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>AIが整理してくれた要点（材料を全部）</label>
+          <textarea class="textarea" id="w3ai" placeholder="例：①食品ロスの量　②主な原因　③家庭でできる工夫　④コンビニの取り組み　⑤世界の状況"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>この中で、自分が"一番大事"だと思うのは？（拾う）</label>
+          <input class="input" id="w3keep" placeholder="例：③家庭でできる工夫。自分たちにすぐできることだから。">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>逆に、今回は"使わない"と決めたのは？ なぜ？（捨てる）</label>
+          <input class="input" id="w3drop" placeholder="例：⑤世界の状況は、今回の発表のテーマからは外れるので使わない。">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>だから、自分の意見・提案は？（決める）</label>
+          <textarea class="textarea" id="w3me" placeholder="例：私は「家庭の食べ残しを減らす1週間チャレンジ」を提案したい。理由は…"></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w3', ['w3prompt','w3ai','w3keep','w3drop','w3me'])">💾 保存</button>
+          <span id="w3status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 ③と④が、AIにはできない「君だけの判断」。同じ材料でも、人によって拾うものが違う。それが個性だよ。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 4 — CREATE SLIDES
+         ================================================= -->
+    <section class="section" id="ch4">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        STEP 1 · 一緒に体験する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ④スライド作成</div>
+      <h2 class="section-title">AIで<span class="hl-coral">伝える</span>。<br>"何を言いたいか"は、ゆずらない。</h2>
+      <p class="section-lead">
+        スライド作りを「見た目をきれいにする作業」だと思うと、もったいない。本当の資料作成とは、<strong>自分の頭の中にある考えを、相手の頭の中で再現させる</strong>こと——つまりコミュニケーションの設計だ。デザインはAIに任せていい。でも「何を伝えたいか」だけは、君が握る。
+      </p>
+
+      <div class="essence">
+        <div class="essence__label">★ この技術の本質</div>
+        <p class="essence__text">資料作成とは「AIに作らせる」ことではない。<br><span class="mark">伝えたい"核"を自分で決め、表現の手間はAIに肩代わりさせる</span>こと。</p>
+        <p class="essence__sub">デザインも文章も、今やAIが一瞬で作る。だから人間に残る本当の仕事は2つだけ。<strong>「何を伝えたいか（メッセージ）」と「どの順で見せるか（構成）」</strong>。これは"自分が何を言いたいか"を分かっていないと決められない。</p>
+      </div>
+
+      <h3>2つの作り方 ─ ゼロから? 資料から?</h3>
+      <p>スライド生成系AIには、大きく2つのアプローチがある。どちらも結果は「スライド」だけど、作り方の発想が違う。</p>
+      <div class="grid-2">
+        <div class="card" style="border-color:var(--coral);">
+          <h4 style="margin-top:0;color:var(--coral-deep);">🎨 ゼロから作るタイプ</h4>
+          <p style="margin:0 0 8px;font-size:14px;">作りたい内容を<strong>文章で指示</strong>すると、デザイン・レイアウト・文章まで込みで、プロ品質のスライドを自動生成。</p>
+          <p style="margin:0 0 8px;font-size:13px;color:var(--ink-mid);">→ 自分のアイデアや言葉を起点に作りたいとき</p>
+          <div class="toolcat__ex">例：<strong>Gamma</strong> など</div>
+        </div>
+        <div class="card" style="border-color:var(--m-purple);">
+          <h4 style="margin-top:0;color:var(--m-purple);">📚 資料から作るタイプ</h4>
+          <p style="margin:0 0 8px;font-size:14px;">リサーチで集めて<strong>読み込ませた資料</strong>から、直接スライドや音声概要を生成。「調べたことを、そのまま発表に」。</p>
+          <p style="margin:0 0 8px;font-size:13px;color:var(--ink-mid);">→ 集めた資料に忠実に作りたいとき</p>
+          <div class="toolcat__ex">例：<strong>NotebookLM</strong> など</div>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">どっちを使う？</div>
+        <p>自分の意見やアイデアを起点にしたいなら「ゼロから作るタイプ」。資料をたくさん集めたなら「資料から作るタイプ」でソースに忠実に。今日は前者で試して、余裕があれば後者も。両方やると違いがよくわかる。</p>
+      </div>
+
+      <h3>作る前に ─ "たった一言"を決める</h3>
+      <p>スライドを作り始める前に、自分に問いかけよう。<strong>「結局、いちばん伝えたいことは一言でいうと何?」</strong>。これが決まっていないと、どんなにきれいなスライドも"中身のない資料"になる。逆にここが決まれば、AIへの指示も一気にうまくなる。</p>
+
+      <div class="vs">
+        <div class="vs__card vs__card--weak">
+          <div class="vs__head">😐 核がないと…</div>
+          <div class="vs__body">
+            <div class="vs__prompt">食品ロスについてスライド作って</div>
+            <p class="vs__result"><strong>AI：</strong>情報を詰め込んだだけの、どこかで見たようなスライド。<br>→ 「で、結局何が言いたいの?」と聞かれて困る。</p>
+            <div class="vs__verdict">✗ 伝えたい核がないから、ぼやける</div>
+          </div>
+        </div>
+        <div class="vs__card vs__card--strong">
+          <div class="vs__head">😎 核があると…</div>
+          <div class="vs__body">
+            <div class="vs__prompt">「食べ残しは1週間で減らせる」と
+伝えたい。問題→提案→効果の
+流れで、5枚、中学生向けに。</div>
+            <p class="vs__result"><strong>AI：</strong>一本筋の通った、説得力あるスライド。<br>→ 自分の主張がはっきり伝わる。</p>
+            <div class="vs__verdict">✓ 核が決まっているから、刺さる</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>良いスライドを作るプロンプトのコツ</h3>
+      <p>Gammaも、具体的に指示するほど良いスライドになる。「いい感じに」じゃ伝わらないのは、前回学んだ通り。</p>
+      <div class="card card--soft">
+        <ul style="margin:0;padding-left:20px;">
+          <li>「<strong>中学生にもわかる言葉</strong>で」</li>
+          <li>「スライドは<strong>5枚以内</strong>で」</li>
+          <li>「『<strong>問題 → 原因 → 提案</strong>』の流れで」</li>
+          <li>「1枚目は<strong>インパクトのあるタイトル</strong>に」</li>
+        </ul>
+      </div>
+
+      <div class="promptblock">
+        <span class="promptblock__label">Gammaのサンプルプロンプト</span>「AIを使った新しいゲーム」の提案スライドを作ってください。
+・5枚以内
+・流れは「こんな問題がある→アイデア→遊び方→面白さ→まとめ」
+・小学生〜高校生にもわかる言葉で
+・1枚目はワクワクするタイトルに</div>
+
+      <h3>最重要ルール ─ AIが作ったものに、必ず手を入れる</h3>
+      <p>AIが作ったスライドを<strong>そのまま使うのは"作らされた人"</strong>。君は"作る人"になろう。必ず最低1か所は自分で編集する。これは見た目の問題じゃない。<strong>「これは私の作品だ」という宣言</strong>なんだ。</p>
+
+      <div class="checklist">
+        <li class="checklist__item">見出しを、自分の言葉に変える</li>
+        <li class="checklist__item">キャッチコピーを練り直す</li>
+        <li class="checklist__item">スライドの順番を入れ替える</li>
+        <li class="checklist__item">自分が一番伝えたい1枚を足す</li>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のひとこと</div>
+          <p>画像が足りなかったら、ChatGPTで挿絵を作るのもアリ。ただし著作権に気をつけて、<strong>自分用に新しく生成したもの</strong>を使ってね。ネットの画像を勝手にコピーして使うのはNGだよ。</p>
+        </div>
+      </div>
+
+      <div class="cautions">
+        <div class="cautions__head">⚠ スライド作成で気をつける5つのポイント</div>
+        <ul class="cautions__list">
+          <li><strong>作る前に"核"を一言で決める。</strong>「結局、何が言いたいか」がないと、きれいでも中身がない資料になる。</li>
+          <li><strong>具体的に指示する。</strong>「いい感じに」はNG。枚数・流れ・対象・トーンを伝えるほど良くなる。</li>
+          <li><strong>メッセージと構成は自分が決める。</strong>デザインはAIに任せていい。でも「何を・どの順で」は譲らない。</li>
+          <li><strong>必ず最低1か所、自分で手を入れる。</strong>これが「私の作品」にする宣言。そのまま使わない。</li>
+          <li><strong>画像は著作権に注意。</strong>ネットの画像を勝手に使わず、自分用に生成したものを使う。</li>
+        </ul>
+      </div>
+
+      <!-- WORK 4 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 1 記録 · ④スライド作成</span>
+          <h3 class="work__title">"核"とプロンプトを保存しよう</h3>
+        </div>
+        <p class="work__desc">まず伝えたい一言を決める。それからAIに作らせ、最後に必ず自分の手を入れて「自分の作品」にする。<strong>投げたプロンプトはそのまま記録</strong>しておくと、次に活かせる。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>いちばん伝えたいこと（一言で！）</label>
+          <input class="input" id="w4core" placeholder="例：食べ残しは、1週間のチャレンジで減らせる">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>使ったツール</label>
+          <input class="input" id="w4tool" placeholder="例：Gamma など">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>スライド生成AIに出した指示（実際のプロンプトをそのまま）</label>
+          <textarea class="textarea" id="w4prompt" placeholder="例：「『食べ残しは1週間で減らせる』と伝えたい提案スライドを作って。5枚以内。流れは 問題→原因→提案→効果→まとめ。中学生にもわかる言葉で。1枚目はインパクトのあるタイトルに」"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>自分で手を入れたところ（"私の作品"の証）</label>
+          <input class="input" id="w4edit" placeholder="例：1枚目のタイトルを自分の言葉に変えた／伝えたい1枚を足した">
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w4', ['w4core','w4tool','w4prompt','w4edit'])">💾 保存</button>
+          <span id="w4status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 ①の"核"が、スライド全体の背骨になる。発表のとき、これを最初と最後に言うと一気に伝わるよ。</p>
+      </div>
+    </section>
+    <!-- =================================================
+         CHAPTER 5 — PRESENT PREP (STEP 1 final phase)
+         ================================================= -->
+    <section class="section" id="ch5">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        STEP 1 · 一緒に体験する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ⑤発表準備</div>
+      <h2 class="section-title">発表の<span class="hl">準備</span>をして、<br>一周をしめくくる。</h2>
+      <p class="section-lead">
+        スライドができたら、最後は<strong>「どう伝えるか」</strong>の準備。ここまでで、先生と一緒に一周ぜんぶ体験したことになる。流れを振り返って、発表のコツをつかもう。このあと、いよいよ<strong>自分のテーマ（ステップ2）</strong>だ。
+      </p>
+
+      <h3>探究の全体マップ</h3>
+      <p>今日、君が通ってきた5つの流れ。バラバラの作業に見えて、ぜんぶ1本の道でつながっていた。</p>
+
+      <div class="flowmap">
+        <div class="flowmap__step">
+          <svg class="flowmap__icon"><use href="#fi-spar"/></svg>
+          <div class="flowmap__num">①</div>
+          <div class="flowmap__name">壁打ち</div>
+          <div class="flowmap__tool">対話・発想系</div>
+        </div>
+        <div class="flowmap__step">
+          <svg class="flowmap__icon"><use href="#fi-search"/></svg>
+          <div class="flowmap__num">②</div>
+          <div class="flowmap__name">リサーチ</div>
+          <div class="flowmap__tool">検索・リサーチ系</div>
+        </div>
+        <div class="flowmap__step">
+          <svg class="flowmap__icon"><use href="#fi-organize"/></svg>
+          <div class="flowmap__num">③</div>
+          <div class="flowmap__name">整理</div>
+          <div class="flowmap__tool">資料・整理系</div>
+        </div>
+        <div class="flowmap__step">
+          <svg class="flowmap__icon"><use href="#fi-slide"/></svg>
+          <div class="flowmap__num">④</div>
+          <div class="flowmap__name">スライド</div>
+          <div class="flowmap__tool">スライド生成系</div>
+        </div>
+        <div class="flowmap__step">
+          <svg class="flowmap__icon"><use href="#fi-present"/></svg>
+          <div class="flowmap__num">⑤</div>
+          <div class="flowmap__name">発表</div>
+          <div class="flowmap__tool">YOU!</div>
+        </div>
+      </div>
+
+      <div class="essence">
+        <div class="essence__label">★ 5つを貫く、たった1つの本質</div>
+        <p class="essence__text">壁打ちも、リサーチも、整理も、スライドも、ぜんぶ同じことの練習だった。<br><span class="mark">AIが賢くなるほど、「何を問い、何を信じ、何を伝えたいか」を決める力だけが、君に残る。</span></p>
+        <p class="essence__sub">AIには自分の意志がない。だから「広げて」「調べて」「まとめて」「作って」と<strong>方向を与える人間</strong>が必要になる。今日の流れは全部、その"方向を決める人"になるための練習だったんだ。<strong>「広げる・調べる・作る」はAIに、「選ぶ・信じる・決める」は自分に。</strong></p>
+      </div>
+
+      <h3>発表のコツ</h3>
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">① テーマと結論を先に</h4>
+          <p style="margin:0;font-size:14px;">「私のテーマは○○で、結論は△△です」と最初に言うと、聞く人が分かりやすい。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">② 根拠を1つ見せる</h4>
+          <p style="margin:0;font-size:14px;">調べてわかった事実を1つ示すと、説得力が出る。「○○によると…」。出典も言えると完璧。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">③ 自分の考えで締める</h4>
+          <p style="margin:0;font-size:14px;">最後は「だから私はこう思う」で終わる。AIの情報じゃなく、君の意見で。</p>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のひとこと</div>
+          <p>発表は「うまく話す」より「自分の考えが伝わる」ことが大事。スライドの④で決めた"たった一言の核"を、最初と最後にしっかり言えば、それだけで立派な発表になるよ。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 2 — SELF PRACTICE
+         ================================================= -->
+    <section class="section" id="step2">
+      <div class="bigstep">
+        <span class="bigstep__badge">STEP 2</span>
+        <span class="bigstep__text">ここからは<strong>自分の番</strong>。全員共通のチャレンジに、①〜⑤の流れで一人で挑もう。先生がタイムキーパーをするよ。</span>
+      </div>
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-explorer"/></svg>
+        STEP 2 · 自分でやってみる
+      </div>
+      <div class="section-tag">STEP 2 ｜ 本番チャレンジ</div>
+      <h2 class="section-title">本番チャレンジ。<br><span class="hl-coral">君だけ</span>のゲームを企画せよ。</h2>
+      <p class="section-lead">
+        ステップ1で体験した流れを、今度は本番のお題で。困ったら、各章の「本質」「実例」「気をつけポイント」に戻っていい。大事なのは完璧さじゃなく、<strong>自分でハンドルを握って一周する</strong>ことだ。
+      </p>
+
+      <!-- CHALLENGE BRIEF -->
+      <div class="brief">
+        <div class="brief__label">🎮 MISSION</div>
+        <p class="brief__mission">君は新人ゲームプランナー。<br>AIを使った<span class="hl-y">"全く新しいゲーム"</span>を<br><span class="hl-y">ゲーム会社の社長</span>に提案せよ。</p>
+        <p class="brief__sub">①壁打ち→②リサーチ→③整理→④スライド の流れで企画書を1つにまとめ、最後に「社長」（＝クラスのみんなと先生）の前でプレゼンする。社長を「やってみたい！」と思わせたら勝ち。次の<strong>4つの条件</strong>を必ず満たすこと。</p>
+        <div class="brief__conds">
+          <div class="brief__cond">
+            <span class="brief__cond-num">1</span>
+            <span class="brief__cond-text"><strong>人とかぶらない。</strong>どこかで見たゲームじゃなく、君だけのオリジナルであること。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">2</span>
+            <span class="brief__cond-text"><strong>遊ぶ人（ターゲット）を決める。</strong>「誰に遊んでほしいか」をはっきりさせること。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">3</span>
+            <span class="brief__cond-text"><strong>新しさと面白さの両立。</strong>珍しいだけでなく、ちゃんと面白いこと。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">4</span>
+            <span class="brief__cond-text"><strong>最新のAI技術を上手に活用。</strong>AIだからできる遊びになっていること。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のヒント ─ 「最新のAI技術」って？</div>
+          <p>今のAIは、声で会話できたり（音声）、写真や動画を見て理解したり（マルチモーダル）、目標を与えると自分で動いたり（AIエージェント）できる。たとえば「君の表情を読むAI」「声で物語が変わるAI」「対戦相手として育つAI」——こんな"AIだからできる遊び"を考えてみよう。①の壁打ちで、AIに「最新のAIでできる新しい遊び方は？」と聞くのもアリだよ。</p>
+        </div>
+      </div>
+
+      <h3>進めかたの「時間の地図」</h3>
+      <p>一人でやるフェーズは、時計を意識するのが成功の鍵。<strong>1つの工程で沼にハマらない</strong>こと。区切りが来たら、思い切って次へ。先生が時間を知らせてくれるよ。</p>
+
+      <div class="timemap">
+        <div class="timerow">
+          <div class="timerow__time">〜8分</div>
+          <div><div class="timerow__label">① 壁打ち（ゲームのアイデア出し）</div><div class="timerow__sub">対話・発想系AIで広げる → 人とかぶらない案を自分で選ぶ</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜10分</div>
+          <div><div class="timerow__label">② リサーチ（最新AI技術・似たゲーム）</div><div class="timerow__sub">検索系AIで調べ、出典を確認 → 信じるか自分で判断</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜7分</div>
+          <div><div class="timerow__label">③ 整理（4条件を満たすか確認）</div><div class="timerow__sub">AIに並べさせ → 何が大事かを自分で決める</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜15分</div>
+          <div><div class="timerow__label">④ スライド作成（企画書）</div><div class="timerow__sub">核を決めてAIに作らせ → 自分で手を入れる</div></div>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">よくある失敗</div>
+        <p><strong>「リサーチで時間を使いすぎて、スライドが完成しない」</strong>が一番もったいない。調べるのは楽しいけど、発表できなければ意味がない。時間が来たら、集めた情報で勝負しよう。</p>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">迷ったら、これを思い出す</div>
+        <p>各フェーズでいつも自分に聞く。<strong>「いまAIに任せていいのはどこ? 自分が決めるべきはどこ?」</strong> 広げる・調べる・作るはAI。選ぶ・信じる・決めるは自分。</p>
+      </div>
+
+      <!-- WORK: STEP2 challenge record -->
+      <div class="work work--memo">
+        <div class="work__head">
+          <span class="work__label">STEP 2 企画記録</span>
+          <h3 class="work__title">ゲーム企画と、4条件チェック</h3>
+        </div>
+        <p class="work__desc">自分のゲーム企画を書きとめ、最後に4つの条件を満たせたか自分でチェックしよう。気づいたこともメモしてね。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>ゲームのタイトル・どんなゲーム？</label>
+          <textarea class="textarea" id="s2game" placeholder="例：「ひょうじょうバトル」── 自分の表情をAIが読んで、感情で戦う対戦ゲーム"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>遊ぶ人（ターゲット）は誰？ ＝条件②</label>
+          <input class="input" id="s2target" placeholder="例：ゲームが苦手な小学校低学年の子と、その家族">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>どんな"最新AI技術"を使う？ ＝条件④</label>
+          <input class="input" id="s2tech" placeholder="例：表情を読み取るAI（マルチモーダル）／声で反応するAI">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>4条件チェック（自分で確認！）</label>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c1"> ① 人とかぶらない（オリジナル）</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c2"> ② 遊ぶ人を決めた</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c3"> ③ 新しさと面白さが両立</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c4"> ④ 最新AI技術を活用</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>やってみて気づいたこと（うまくいった点・難しかった点）</label>
+          <textarea class="textarea" id="s2note" placeholder="例：壁打ちで「逆に怖いゲームは？」と聞いたら発想が広がった／似たゲーム探しに時間がかかった"></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('s2', ['s2game','s2target','s2tech','s2note'], ['s2c1','s2c2','s2c3','s2c4'])">💾 保存</button>
+          <span id="s2status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 4つ全部にチェックが付いたら、発表の準備OK！ 足りないところは、もう一度そのフェーズに戻ってみよう。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 3 — PRESENT & REFLECT
+         ================================================= -->
+    <section class="section" id="step3">
+      <div class="bigstep">
+        <span class="bigstep__badge">STEP 3</span>
+        <span class="bigstep__text">いよいよ<strong>社長プレゼン</strong>。君は新人プランナー、聞き手は「ゲーム会社の社長」だ。企画を売り込もう！ 発表のあとは、今日全体を振り返る。</span>
+      </div>
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-hero"/></svg>
+        STEP 3 · 発表する
+      </div>
+      <div class="section-tag">STEP 3 ｜ 社長プレゼン・振り返り</div>
+      <h2 class="section-title">社長に<span class="hl">プレゼン</span>。<br>そして振り返る。</h2>
+      <p class="section-lead">
+        作った企画書（スライド）で、君のゲームを<strong>「ゲーム会社の社長」（＝クラスのみんなと先生）</strong>に提案しよう。目標は、社長に<strong>「それ、作ってみたい！」</strong>と言わせること。プレゼンが終わったら、今日いちばん大事な「振り返り」だ。
+      </p>
+
+      <h3>社長を動かすプレゼンのコツ</h3>
+      <p>社長は忙しい。だらだら説明しても聞いてくれない。<strong>短く・はっきり・ワクワクさせる</strong>のがコツ。この順番で話すと刺さるよ。</p>
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">① どんなゲームか一言で</h4>
+          <p style="margin:0;font-size:14px;">「これは"○○なゲーム"です」と最初に結論。社長は最初の10秒で興味を持つか決める。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">② 誰がなぜ夢中になるか</h4>
+          <p style="margin:0;font-size:14px;">ターゲット（条件②）と面白さ（条件③）を語る。「この人たちがこう楽しむ」と具体的に。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">③ AIだからできる、を強調</h4>
+          <p style="margin:0;font-size:14px;">条件④の見せ場。「最新のAIを使うから、今までになかった遊びができる」と熱く。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">社長は鋭い質問をする</div>
+        <p>いい社長は「それ、他のゲームと何が違うの?」「本当に面白い?」と聞いてくる。これは<strong>STEP 1の壁打ちでAIにやらせた"挑発"と同じ</strong>。事前に自分でツッコミを想定して、答えを用意しておくと強い。聞き手の人は、ぜひ社長になりきって質問してあげよう。</p>
+      </div>
+
+      <h3>発表のあとに ─ 友達のプレゼンと比べてみよう</h3>
+      <p>同じお題なのに、出てくるゲームは全員バラバラのはず。<strong>同じお題・同じAIでも、人によって全く違う企画になる</strong>。その違いこそが、君が「自分で決めた」証拠だ。「どの企画が一番ワクワクしたか」も考えてみよう。</p>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-hero"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA の感想欄</div>
+          <p>友達のプレゼンで「いいな」「その手があったか」と思ったところは、下のメモに書いておこう。人の使い方やアイデアから学べることは、本当にたくさんあるよ。</p>
+        </div>
+      </div>
+
+      <!-- WORK 5: reflection -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 3 ふりかえり</span>
+          <h3 class="work__title">今日の探究をふりかえろう</h3>
+        </div>
+        <p class="work__desc">メタ認知（自分のやり方を見つめ直すこと）は、いちばん成長につながる。正直に書いてみよう。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>AIに任せた部分は？（労力）</label>
+          <input class="input" id="w5ai" placeholder="例：アイデア出し、情報集め、スライドのデザイン">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>自分で決めた部分は？（判断）</label>
+          <input class="input" id="w5me" placeholder="例：どの案を選ぶか、何を信じるか、最終的な提案">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>どの種類のAIを、どう使い分けた？</label>
+          <textarea class="textarea" id="w5tools" placeholder="例：発想は対話系、調べるのは検索系、整理は資料系、スライドは生成系"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>発表してみて・友達の発表を見て、思ったこと</label>
+          <textarea class="textarea" id="w5peer" placeholder="例：同じテーマでも結論が違って面白かった／あの聞き方を真似したい"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>今日、いちばん「自分が方向を決めた！」と思える瞬間は？</label>
+          <textarea class="textarea" id="w5direction" placeholder="例：AIがいい案を出してきたけど、自分はあえて違う案を選んだとき。理由は…"></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w5', ['w5ai','w5me','w5tools','w5peer','w5direction'])">💾 保存</button>
+          <span id="w5status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 ⑤こそが今日の主役。AIは道具で、ハンドルを握っていたのは君だ。その感覚を覚えておこう。</p>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-explorer"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA から、次回への問い</div>
+          <p>「AIにもっとうまく頼むには？」「AIエージェントに、何を任せてみたい？」——この問いを持ち帰ってね。次回また一緒に深めよう。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CLOSING
+         ================================================= -->
+    <section class="section" id="closing">
+      <div class="closing">
+        <div class="closing__kicker">CLOSING</div>
+        <h2 class="closing__message">
+          AIは、君の<span class="hl">考える力</span>を<br>
+          消すためじゃない。<br>
+          <span class="hl-coral">広げる</span>ためにある。
+        </h2>
+        <p style="max-width:600px;margin:0 auto 32px;font-size:15px;line-height:2;color:var(--ink-soft);">
+          90分、お疲れさまでした。<br>
+          今日、君はAIと一緒に、調べて、考えて、伝えた。<br>
+          4つのAIを相棒に、ひとつの問いを深く掘り下げた。<br><br>
+          でも、最後に「自分はどう思うか」を決めたのは、<em>君自身</em>だ。<br><br>
+          AIに答えを"もらう"人ではなく、<br>
+          <em>AIを使って、自分の問いを"深める"人</em>になってほしい。<br><br>
+          調べて、考えて、伝える。<br>
+          この力は、どんな時代でも、君の武器になる。
+        </p>
+
+        <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <div style="padding:10px 20px;border:1.5px solid var(--ink);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink);font-weight:700;">DAY 02 / COMPLETE</div>
+          <div style="padding:10px 20px;border:1.5px solid var(--line);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">NEXT: DAY 03</div>
+        </div>
+
+        <p style="margin-top:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">— Akky先生のプログラミング教室 —</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// =========================================================================
+// UNIVERSAL UTILITIES
+// =========================================================================
+const storage = {
+  set(key, val) { try { localStorage.setItem('ai_course_d2_' + key, JSON.stringify(val)); } catch(e) {} },
+  get(key) { try { const v = localStorage.getItem('ai_course_d2_' + key); return v ? JSON.parse(v) : null; } catch(e) { return null; } }
+};
+
+function saveWork(key, fieldIds, checkIds) {
+  const data = {};
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  if (checkIds) {
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) data[id] = el.checked;
+    });
+  }
+  storage.set(key, data);
+  const status = document.getElementById(key + 'status');
+  if (status) {
+    status.textContent = '✔ 保存しました';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+  }
+}
+
+function loadWork(key, fieldIds, checkIds) {
+  const data = storage.get(key);
+  if (!data) return;
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && data[id] !== undefined) el.value = data[id];
+  });
+  if (checkIds) {
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) el.checked = data[id];
+    });
+  }
+}
+
+// Progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// Nav active state
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav__item');
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.toggle('is-active', item.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => navObserver.observe(s));
+
+// Reveal on scroll
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+// Mobile nav
+const navEl = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+const backdrop = document.getElementById('backdrop');
+navToggle.addEventListener('click', () => {
+  navEl.classList.toggle('is-open');
+  backdrop.classList.toggle('is-shown');
+});
+backdrop.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+});
+navItems.forEach(item => item.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+}));
+
+// =========================================================================
+// THEME GACHA (STEP 1 練習テーマ) — type-controlled random
+// =========================================================================
+const THEMES = {
+  propose: [
+    "修学旅行で行くなら国内のどこ？ 行き先とプランを根拠つきで提案しよう",
+    "文化祭／学園祭の集客を2倍にするには？ 企画を提案しよう",
+    "自分の住む町のおすすめ観光プランを作ろう",
+    "学校に新しい部活を作るなら？ どんな部活で、なぜ必要かを提案しよう",
+    "地元の名産品を全国に広めるアイデアを考えて提案しよう",
+    "学校の昼休みをもっと楽しくする新しい過ごし方を提案しよう",
+    "読書が好きになる図書室にするには？ 改造プランを提案しよう",
+    "災害にそなえて、家庭でできる準備を提案しよう"
+  ],
+  debate: [
+    "SNSの利用は何歳からが適切？ あなたの考えと理由は？",
+    "制服は必要？ 不要？ どちらの立場で、なぜそう思う？",
+    "学校にスマホを持ち込んでいい？ ルールを見直すならどうする？",
+    "宿題は必要？ いらない？ あなたの意見を根拠つきで",
+    "おこづかいは「定額制」と「お手伝い報酬制」、どっちがいい？",
+    "動物園は必要？ 賛成・反対の両方を調べて、自分の立場を決めよう",
+    "ゲームの時間制限は、子どもにとって良いこと？ 悪いこと？",
+    "給食は「全部食べるべき」か「残してもいい」か、あなたの考えは？"
+  ],
+  predict: [
+    "100年後の学校はどうなっている？ 予測と理想を語ろう",
+    "AIに任せていい仕事／人間がやるべき仕事の境界線はどこ？",
+    "もし1,000万円もらえたら、世の中をよくするために何に使う？",
+    "10年後、なくなっているもの・新しく生まれるものは何だと思う？",
+    "未来の食べ物はどうなる？ 食べてみたい未来の食事を考えよう",
+    "もし1日だけ大人になれたら何をする？ そこから見える「大人の役割」とは",
+    "宇宙で暮らす時代が来たら、どんな問題が起きて、どう解決する？"
+  ],
+  research: [
+    "食品ロスを減らすために、自分たちにできることは？ 現状を調べて提案",
+    "世界で人気の日本の文化は何？ なぜ人気なのかを調べよう",
+    "身近な「リサイクルの工夫」を調べて、すごいと思った例を紹介しよう",
+    "自分の好きなスポーツ／趣味の歴史を調べて、面白い発見を発表しよう",
+    "AIは今どんなことに使われている？ 身近な活用例を調べよう",
+    "世界の小学生は何を食べている？ 給食や朝ごはんを調べて比べよう",
+    "身の回りの「すごい技術」を1つ選んで、仕組みを調べて説明しよう"
+  ]
+};
+const TYPE_META = {
+  propose:  { label: "提案型", cls: "propose" },
+  debate:   { label: "賛否型", cls: "debate" },
+  predict:  { label: "予測型", cls: "predict" },
+  research: { label: "調査型", cls: "research" }
+};
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rollThemes() {
+  // 4タイプから1つずつ選び、多様性を保証
+  const types = ['propose', 'debate', 'predict', 'research'];
+  return types.map(t => ({ type: t, text: pick(THEMES[t]) }));
+}
+
+const gachaBtn = document.getElementById('gachaBtn');
+const gachaResults = document.getElementById('gachaResults');
+const gachaChosen = document.getElementById('gachaChosen');
+
+if (gachaBtn) {
+  gachaBtn.addEventListener('click', () => {
+    gachaBtn.classList.add('is-rolling');
+    if (gachaChosen) gachaChosen.classList.remove('is-shown');
+    setTimeout(() => {
+      gachaBtn.classList.remove('is-rolling');
+      const picks = rollThemes();
+      gachaResults.innerHTML = picks.map(p => {
+        const m = TYPE_META[p.type];
+        return `<button class="theme-opt" data-theme="${p.text.replace(/"/g,'&quot;')}">
+          <span class="theme-opt__type theme-opt__type--${m.cls}">${m.label}</span>
+          <span class="theme-opt__text">${p.text}</span>
+        </button>`;
+      }).join('');
+      gachaBtn.querySelector('.gacha__dice').textContent = '🎲';
+      gachaResults.querySelectorAll('.theme-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          gachaResults.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          const txt = opt.getAttribute('data-theme');
+          gachaChosen.innerHTML = `決めた！ 練習テーマ → <strong>${txt}</strong><br><span style="font-size:12.5px;opacity:0.85;">このテーマで、お手本と同じ流れを手元で試そう。下のワークにも書いておけるよ。</span>`;
+          gachaChosen.classList.add('is-shown');
+          storage.set('practiceTheme', txt);
+          // 壁打ちワークの「最初の考え」欄の上部に練習テーマを補助表示
+          const t = document.getElementById('w1theme');
+          if (t) t.value = txt;
+        });
+      });
+    }, 600);
+  });
+}
+
+// =========================================================================
+// SPARRING SIMULATOR (Chapter 1)
+// =========================================================================
+const sparData = {
+  more:     { q: "「ほかに、あと5個アイデアを出して」", a: "数を増やすと、最初に思いつかなかった面白い角度が出てくる。発散フェーズの基本の問いかけ。" },
+  opposite: { q: "「逆の立場の人なら、どう考える？」", a: "反対側から見ると、自分の考えの弱点や、見落としていた視点が見えてくる。" },
+  age:      { q: "「小学生／お年寄り／外国人の目線だと、どう見える？」", a: "別の立場になりきって考えると、アイデアの幅が一気に広がる。" },
+  weak:     { q: "「このアイデアの弱点は？ うまくいかない理由は？」", a: "弱点を先に知ると、アイデアをより強くできる。AIを「きびしい相談相手」にする使い方。" },
+  extreme:  { q: "「もし予算が10倍あったら？ 逆にゼロだったら？」", a: "条件を極端にすると、固定観念がはずれて、思い切ったアイデアが出る。" },
+  borrow:   { q: "「スポーツ／料理／宇宙など、全然違う分野からヒントを借りると？」", a: "遠い分野のしくみを持ち込むと、誰も思いつかなかった新しい組み合わせが生まれる。" }
+};
+const sparOutput = document.getElementById('sparOutput');
+const sparLenses = document.querySelectorAll('.spar__lens');
+
+function showSpar(lens) {
+  if (!sparOutput) return;
+  const d = sparData[lens];
+  sparOutput.innerHTML = `<span class="spar__q">${d.q}</span>${d.a}`;
+}
+sparLenses.forEach(btn => {
+  btn.addEventListener('click', () => {
+    sparLenses.forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    showSpar(btn.dataset.lens);
+  });
+});
+showSpar('more');
+
+// =========================================================================
+// CHAT COMPARISON (Chapter 1)
+// =========================================================================
+const gptBody = document.getElementById('gptBody');
+const gemBody = document.getElementById('gemBody');
+const chatAsk = document.getElementById('chatAsk');
+const chatReset = document.getElementById('chatReset');
+
+const gptAnswer = "いいですね！ ワクワクするアイデアを出してみます✨<br>① AIがあなたの表情を読んで難しさを変える「きもち連動ゲーム」<br>② AIが即興で物語を作る「即興ものがたり冒険」<br>③ 描いた絵をAIが動かす「お絵かきバトル」<br>…どれか深掘りしましょうか？";
+const gemAnswer = "AIを活用したゲームのアイデアを、最新の事例も踏まえて挙げます。<br>① AI対戦相手が強さを自動調整する対戦ゲーム<br>② 音声会話でAIキャラと協力する探索ゲーム<br>③ プレイヤーの行動を学習してステージが変化するゲーム<br>※参考：AIゲームに関する最新記事（出典リンク付きで提示）";
+
+function typeInto(el, html) {
+  el.innerHTML = '<div class="chatwin__msg" style="opacity:0.5;">考え中…</div>';
+  setTimeout(() => {
+    el.innerHTML = `<div class="chatwin__msg">${html}</div>`;
+  }, 500);
+}
+
+if (chatAsk) {
+  chatAsk.addEventListener('click', () => {
+    typeInto(gptBody, gptAnswer);
+    setTimeout(() => typeInto(gemBody, gemAnswer), 250);
+  });
+}
+if (chatReset) {
+  chatReset.addEventListener('click', () => {
+    gptBody.innerHTML = '<div class="chatwin__placeholder">↑ ボタンを押すと、ここに答えが表示されます</div>';
+    gemBody.innerHTML = '<div class="chatwin__placeholder">↑ ボタンを押すと、ここに答えが表示されます</div>';
+  });
+}
+
+// =========================================================================
+// INITIALIZE
+// =========================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  loadWork('w1', ['w1theme','w1first','w1challenge','w1ideas','w1change','w1final']);
+  loadWork('w2', ['w2query','w2fact','w2source','w2cross','w2verdict']);
+  loadWork('w3', ['w3prompt','w3ai','w3keep','w3drop','w3me']);
+  loadWork('w4', ['w4core','w4tool','w4prompt','w4edit']);
+  loadWork('s2', ['s2game','s2target','s2tech','s2note'], ['s2c1','s2c2','s2c3','s2c4']);
+  loadWork('w5', ['w5ai','w5me','w5tools','w5peer','w5direction']);
+
+  // 練習テーマを引き直さなくても、前回の選択をバナーに復元
+  const pt = storage.get('practiceTheme');
+  if (pt && gachaChosen) {
+    gachaChosen.innerHTML = `前回の練習テーマ → <strong>${pt}</strong><br><span style="font-size:12.5px;opacity:0.85;">引き直したいときは上のボタンをもう一度押してね。</span>`;
+    gachaChosen.classList.add('is-shown');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,4421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Course DAY 01 ｜ Akky先生のプログラミング教室</title>
+<style>
+/* =================================================================
+   DESIGN TOKENS — Refined: Navy × Off-white × 2 Accents
+   ================================================================= */
+:root {
+  /* Backgrounds — calm, sophisticated */
+  --bg: #FAF8F3;
+  --bg-alt: #F4F1EA;
+  --paper: #FFFFFF;
+  --paper-alt: #FCFAF6;
+
+  /* Ink — navy as primary text/UI color */
+  --ink: #1A2D5C;
+  --ink-soft: #4A5878;
+  --ink-mid: #6B7A99;
+  --ink-muted: #8B95AD;
+  --ink-dim: #B8BFCC;
+
+  /* Lines */
+  --line: #E8E4DA;
+  --line-soft: #F0EDE5;
+  --line-strong: #1A2D5C;
+
+  /* Accents — only 2 */
+  --accent: #FFC830;       /* warm yellow — main highlight */
+  --accent-soft: #FFF6D9;
+  --accent-deep: #E8AC1A;
+
+  --coral: #F26D5B;        /* coral — secondary highlight */
+  --coral-soft: #FCE5DF;
+  --coral-deep: #D04E3D;
+
+  /* Functional only — used sparingly */
+  --green: #5DAB6E;
+  --green-soft: #E5F0E8;
+
+  /* Mascot / illustration palette — used inside SVGs only */
+  --m-blue: #3D5FBA;
+  --m-purple: #7B6CC4;
+  --m-pink: #D67898;
+  --m-mint: #5BB5AA;
+
+  /* Fonts */
+  --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+  --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, Menlo, monospace;
+
+  /* Layout */
+  --nav-w: 280px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+
+  /* Shadows — subtle by default */
+  --shadow-xs: 0 1px 2px rgba(26,45,92,0.04);
+  --shadow-sm: 0 2px 6px rgba(26,45,92,0.05);
+  --shadow: 0 4px 12px rgba(26,45,92,0.06);
+  --shadow-md: 0 8px 20px rgba(26,45,92,0.08);
+
+  /* Pop shadow — reserved for special emphasis */
+  --pop: 4px 4px 0 var(--ink);
+  --pop-sm: 2px 2px 0 var(--ink);
+}
+
+/* =================================================================
+   RESET & BASE
+   ================================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-feature-settings: 'palt';
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.85;
+  font-size: 15.5px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: var(--accent); color: var(--ink); }
+
+/* Subtle decoration only */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(26,45,92,0.025) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* =================================================================
+   PROGRESS BAR
+   ================================================================= */
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 100;
+  background: var(--line-soft);
+  pointer-events: none;
+}
+.progress__bar {
+  height: 100%;
+  background: var(--ink);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* =================================================================
+   LAYOUT
+   ================================================================= */
+.app {
+  display: grid;
+  grid-template-columns: var(--nav-w) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 960px) {
+  .app { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   NAV (Sidebar)
+   ================================================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: var(--paper-alt);
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.nav::-webkit-scrollbar { width: 4px; }
+.nav::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+}
+
+.nav__brand-mark {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+}
+
+.nav__brand-text { line-height: 1.3; }
+
+.nav__brand-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.nav__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.nav__school {
+  background: var(--ink);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.nav__list { list-style: none; }
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin: 1px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.nav__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+  min-width: 22px;
+  font-weight: 700;
+}
+
+.nav__item:hover {
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.nav__item.is-active {
+  color: var(--ink);
+  background: var(--bg);
+  font-weight: 700;
+}
+.nav__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nav__item.is-active .nav__num { color: var(--ink); }
+
+.nav__phase {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.18em;
+  margin: 18px 12px 6px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.nav__footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,45,92,0.4);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 960px) {
+  .nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  .nav.is-open { transform: translateX(0); }
+  .nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .backdrop.is-shown { display: block; }
+}
+
+/* =================================================================
+   MAIN
+   ================================================================= */
+.main {
+  min-width: 0;
+  padding: 0 64px;
+}
+
+@media (max-width: 960px) {
+  .main { padding: 0 20px; }
+}
+
+.section {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 100px 0 80px;
+  scroll-margin-top: 20px;
+  position: relative;
+}
+
+/* =================================================================
+   HERO
+   ================================================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0;
+  position: relative;
+}
+
+.hero__school {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+
+.hero__school::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--ink-soft);
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+
+.hero__eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  color: var(--ink);
+}
+
+.hero__title .hl {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.hero__title .hl::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: -4px;
+  right: -4px;
+  height: 18px;
+  background: var(--accent);
+  z-index: -1;
+}
+
+.hero__title .hl-coral {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.hero__title .hl-coral::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: -4px;
+  right: -4px;
+  height: 18px;
+  background: var(--coral);
+  z-index: -1;
+  opacity: 0.7;
+}
+
+.hero__lead {
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  max-width: 720px;
+}
+
+.hero__meta-item {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.hero__meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hero__meta-value {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+
+.hero__scroll-line {
+  width: 1px; height: 28px;
+  background: var(--ink-muted);
+  animation: scrollHint 2s ease-in-out infinite;
+}
+
+@keyframes scrollHint {
+  0%, 100% { transform: scaleY(0.3); transform-origin: top; opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.hero__mascot {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+@media (max-width: 1100px) {
+  .hero__mascot { display: none; }
+}
+
+/* =================================================================
+   SECTION HEADINGS
+   ================================================================= */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.section-tag::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent-deep);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.section-title .hl {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.section-title .hl::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: -3px;
+  right: -3px;
+  height: 14px;
+  background: var(--accent);
+  z-index: -1;
+}
+
+.section-title .hl-coral {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.section-title .hl-coral::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: -3px;
+  right: -3px;
+  height: 14px;
+  background: var(--coral);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+.section-lead {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  max-width: 700px;
+  margin-bottom: 56px;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.3;
+  font-weight: 800;
+  margin: 60px 0 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 22px;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: var(--ink);
+  letter-spacing: 0.005em;
+}
+
+p {
+  margin: 0 0 18px;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+ul, ol { padding-left: 22px; margin: 0 0 22px; }
+li { margin-bottom: 8px; font-size: 15px; line-height: 1.85; color: var(--ink-soft); }
+
+strong { color: var(--ink); font-weight: 700; }
+
+em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 65%, var(--accent) 65%, var(--accent) 95%, transparent 95%);
+  padding: 0 2px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-alt);
+  color: var(--ink);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* =================================================================
+   PHASE BADGE
+   ================================================================= */
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 14px 5px 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+
+.phase-badge svg {
+  width: 28px; height: 28px;
+}
+
+/* =================================================================
+   CARDS
+   ================================================================= */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--ink-dim);
+  box-shadow: var(--shadow-sm);
+}
+
+.card--soft { background: var(--bg-alt); box-shadow: none; }
+.card--soft:hover { border-color: var(--line); }
+
+.card--ink {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.card--ink * { color: var(--paper); }
+.card--ink strong { color: var(--accent); }
+.card--ink h4 { color: var(--accent); }
+.card--ink em {
+  background: linear-gradient(180deg, transparent 65%, rgba(255,200,48,0.4) 65%);
+  color: var(--accent);
+}
+
+/* =================================================================
+   GRID LAYOUTS
+   ================================================================= */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 12px; }
+  .grid-auto { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   STATS
+   ================================================================= */
+.stat {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.stat__value--accent { color: var(--accent-deep); }
+.stat__value--coral { color: var(--coral-deep); }
+
+.stat__label {
+  font-size: 12.5px;
+  color: var(--ink-mid);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* =================================================================
+   TABLES
+   ================================================================= */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.table th, .table td {
+  padding: 13px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+
+.table th {
+  background: var(--bg-alt);
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table td { color: var(--ink-soft); }
+.table td strong { color: var(--ink); }
+.table tr:hover { background: var(--bg-alt); }
+
+/* =================================================================
+   CALLOUTS
+   ================================================================= */
+.callout {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.callout__label {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.callout p { margin: 0; color: var(--ink); font-weight: 500; }
+.callout strong { color: var(--ink); }
+
+.callout--warn { border-left-color: var(--coral-deep); background: var(--coral-soft); }
+.callout--warn .callout__label { background: var(--coral-deep); color: white; }
+
+.callout--gold { border-left-color: var(--accent-deep); background: var(--accent-soft); }
+.callout--gold .callout__label { background: var(--accent-deep); color: var(--ink); }
+
+.callout--insight { border-left-color: var(--ink); background: var(--bg-alt); }
+
+/* =================================================================
+   PILLS
+   ================================================================= */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; }
+.pill {
+  padding: 4px 12px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* =================================================================
+   WORK — KEEPS POP SHADOW (emphasis)
+   ================================================================= */
+.work {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 36px 0;
+  position: relative;
+  box-shadow: var(--pop);
+}
+
+.work__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.work__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.work__label::before {
+  content: '✎';
+  font-size: 12px;
+}
+
+.work__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.4;
+  flex: 1;
+  margin: 0;
+}
+
+.work__title::before { display: none; }
+
+.work__desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  line-height: 1.85;
+  font-weight: 500;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(26,45,92,0.08);
+}
+
+.textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.btn:hover {
+  background: var(--ink);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn--secondary {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+.btn--secondary:hover { background: var(--bg-alt); }
+
+.btn--accent { background: var(--accent); color: var(--ink); }
+.btn--accent:hover { background: var(--accent-deep); }
+
+/* =================================================================
+   DETAILS / DEEP DIVE
+   ================================================================= */
+details.deep {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+details.deep summary {
+  padding: 16px 22px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+details.deep summary::-webkit-details-marker { display: none; }
+
+details.deep summary::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+details.deep[open] summary::before { content: '−'; }
+
+details.deep summary:hover { background: var(--bg-alt); }
+
+.deep__body {
+  padding: 0 22px 22px;
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+.deep__body p { color: var(--ink-soft); }
+
+/* =================================================================
+   PORTRAIT GRID
+   ================================================================= */
+.portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.portrait {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+
+.portrait:hover {
+  border-color: var(--ink-dim);
+  box-shadow: var(--shadow-sm);
+}
+
+.portrait svg {
+  width: 100%;
+  max-width: 150px;
+  margin: 0 auto 12px;
+  border-radius: var(--radius-sm);
+}
+
+.portrait__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.portrait__years {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.portrait__role {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.portrait__country {
+  display: inline-block;
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+/* =================================================================
+   TIMELINE
+   ================================================================= */
+.epoch {
+  position: relative;
+  padding-left: 90px;
+  margin: 24px 0;
+}
+
+.epoch__year {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 70px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+}
+
+.epoch__year-num {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.epoch__year-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.epoch__year--accent { background: var(--accent); }
+
+.epoch__content {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-xs);
+}
+
+.epoch__title {
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.2vw, 21px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.epoch__title-sub {
+  font-size: 0.7em;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.epoch__desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.epoch__example {
+  background: var(--bg-alt);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.epoch__example strong { color: var(--ink); }
+
+.epoch__keywords {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.epoch__kw {
+  font-size: 10px;
+  padding: 3px 9px;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.epoch--winter .epoch__year { background: var(--bg-alt); border-style: dashed; }
+.epoch--winter .epoch__content { background: var(--bg-alt); border-style: dashed; }
+
+@media (max-width: 640px) {
+  .epoch { padding-left: 60px; }
+  .epoch__year { width: 50px; padding: 8px 4px; }
+  .epoch__year-num { font-size: 13px; }
+}
+
+/* =================================================================
+   AI WAVE CHART
+   ================================================================= */
+.wave-chart {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 24px 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.wave-chart svg {
+  width: 100%;
+  height: auto;
+}
+
+/* =================================================================
+   GIANTS (3 Companies)
+   ================================================================= */
+.giants {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 22px 0;
+}
+
+@media (max-width: 768px) { .giants { grid-template-columns: 1fr; } }
+
+.giant {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.giant:hover {
+  border-color: var(--ink-dim);
+  box-shadow: var(--shadow-sm);
+}
+
+.giant::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--ink);
+}
+
+.giant__logo {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  margin: 6px 0 14px;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.giant__name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.giant__country {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+}
+
+.giant__model {
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.giant__model-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.giant__model-name {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.giant__desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  font-weight: 500;
+}
+
+.giant__desc strong { color: var(--ink); }
+
+/* =================================================================
+   FORECAST (AI 2027) — KEEPS POP SHADOW
+   ================================================================= */
+.forecast {
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 32px;
+  margin: 30px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pop);
+  color: var(--paper);
+}
+
+.forecast::before {
+  content: 'AI 2027';
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 900;
+  color: rgba(255,200,48,0.15);
+  letter-spacing: -0.04em;
+}
+
+.forecast__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.3vw, 23px);
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.forecast__year {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  align-items: center;
+}
+
+.forecast__year:last-child { border-bottom: none; }
+
+.forecast__year-num {
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 800;
+  color: var(--paper);
+  letter-spacing: 0.02em;
+}
+
+.forecast__year-text {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.75;
+  font-weight: 500;
+}
+
+.forecast__year-text strong { color: var(--accent); }
+
+.forecast__year--now .forecast__year-num {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 4px 10px;
+  border-radius: 100px;
+  display: inline-block;
+}
+
+/* =================================================================
+   COMPARE
+   ================================================================= */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 22px 0;
+}
+
+@media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+
+.compare__side {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-xs);
+  background: var(--paper);
+}
+
+.compare__side--bad { border-left: 3px solid var(--coral-deep); }
+.compare__side--good { border-left: 3px solid var(--green); }
+
+.compare__label {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.compare__side--bad .compare__label { background: var(--coral-soft); color: var(--coral-deep); }
+.compare__side--good .compare__label { background: var(--green-soft); color: var(--green); }
+
+.compare__content {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.compare__content strong { color: var(--ink); font-weight: 700; }
+
+/* =================================================================
+   MODEL TILES
+   ================================================================= */
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.model-tile {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.15s ease;
+}
+
+.model-tile:hover {
+  border-color: var(--ink-dim);
+}
+
+.model-tile__icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+  background: var(--bg-alt);
+}
+
+.model-tile__type {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.model-tile__name {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.model-tile__desc {
+  font-size: 11.5px;
+  color: var(--ink-mid);
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+/* =================================================================
+   NEURAL NET DIAGRAM
+   ================================================================= */
+.neural-container {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin: 24px 0;
+  box-shadow: var(--shadow-xs);
+  overflow-x: auto;
+}
+
+.neural-svg {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* =================================================================
+   SIMULATOR
+   ================================================================= */
+.sim {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius);
+  padding: 26px;
+  margin: 24px 0;
+  font-family: var(--font-mono);
+  box-shadow: var(--shadow-sm);
+}
+
+.sim__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sim__dot {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: simPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes simPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.sim__label {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.sim__input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  color: var(--paper);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.sim__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.08);
+}
+
+.sim__predictions {
+  background: rgba(255,255,255,0.04);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  min-height: 150px;
+}
+
+.sim__pred-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  font-size: 13px;
+  animation: fadeInRow 0.4s ease both;
+}
+
+@keyframes fadeInRow {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.sim__pred-word {
+  min-width: 130px;
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.sim__pred-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sim__pred-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.sim__pred-pct {
+  min-width: 56px;
+  text-align: right;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sim__placeholder {
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+  text-align: center;
+  padding: 30px 0;
+  font-size: 13px;
+}
+
+.sim__examples {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.sim__ex {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  padding: 5px 11px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  transition: all 0.15s ease;
+  font-weight: 600;
+}
+
+.sim__ex:hover {
+  background: var(--accent);
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
+/* =================================================================
+   PROMPT BUILDER OUTPUT
+   ================================================================= */
+.prompter__output {
+  background: var(--ink);
+  color: var(--accent);
+  padding: 20px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  min-height: 90px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* =================================================================
+   QUIZ
+   ================================================================= */
+.quiz {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 26px 30px;
+  margin: 26px 0;
+  box-shadow: var(--pop);
+}
+
+.quiz__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.3vw, 22px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.quiz__sub {
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.quiz__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+}
+
+.quiz__dot {
+  flex: 1;
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.quiz__dot.is-done { background: var(--green); }
+.quiz__dot.is-current { background: var(--accent-deep); }
+
+.quiz__q {
+  background: var(--bg-alt);
+  border-left: 3px solid var(--ink);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 13px 18px;
+  margin-bottom: 18px;
+}
+
+.quiz__q-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.quiz__q-text {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.8;
+  font-weight: 600;
+}
+
+.quiz__a {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 22px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  position: relative;
+  font-weight: 500;
+}
+
+.quiz__a::before {
+  content: 'AI ANSWER';
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 4px;
+  letter-spacing: 0.15em;
+}
+
+.quiz__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quiz__btn {
+  padding: 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+
+.quiz__btn:hover:not(:disabled) {
+  background: var(--bg-alt);
+}
+
+.quiz__btn:disabled { cursor: not-allowed; opacity: 0.5; }
+.quiz__btn.is-correct { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.quiz__btn.is-wrong { background: var(--coral-soft); border-color: var(--coral-deep); color: var(--coral-deep); }
+
+.quiz__feedback {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  line-height: 1.85;
+  display: none;
+  font-weight: 500;
+}
+
+.quiz__feedback.is-shown { display: block; }
+.quiz__feedback.is-good { background: var(--green-soft); border-color: var(--green); }
+.quiz__feedback.is-bad { background: var(--coral-soft); border-color: var(--coral-deep); }
+.quiz__feedback strong { display: block; margin-bottom: 6px; font-size: 14.5px; color: var(--ink); }
+.quiz__feedback .fb-body { color: var(--ink-soft); margin-top: 6px; }
+
+.quiz__next {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quiz__complete-score {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 80px);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.quiz__complete-msg {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.quiz__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  font-weight: 700;
+  margin: 0 auto;
+}
+
+/* =================================================================
+   LIVE PREVIEW
+   ================================================================= */
+.preview {
+  margin: 26px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-xs);
+}
+
+.preview__tabs {
+  display: flex;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+}
+
+.preview__tab {
+  padding: 12px 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+}
+
+.preview__tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+  background: var(--paper);
+}
+
+.preview__panel { display: none; height: 420px; }
+.preview__panel.is-active { display: block; }
+
+.preview__code {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--paper-alt);
+  border: none;
+  resize: none;
+}
+
+.preview__code:focus { outline: none; }
+.preview__frame { width: 100%; height: 100%; border: none; background: white; }
+
+.preview__actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-alt);
+  border-top: 1px solid var(--line);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* =================================================================
+   GALLERY
+   ================================================================= */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.gallery__item {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.gallery__item:hover {
+  border-color: var(--ink-dim);
+  box-shadow: var(--shadow-sm);
+}
+
+.gallery__thumb {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--paper);
+}
+
+.gallery__info {
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.gallery__title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.gallery__tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* =================================================================
+   STEP BLOCKS
+   ================================================================= */
+.step {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+}
+
+.step__num {
+  position: absolute;
+  top: -14px;
+  left: 22px;
+  background: var(--ink);
+  color: var(--accent);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  box-shadow: var(--shadow);
+}
+
+.step__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 12px 0 8px 28px;
+}
+
+.step__body {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  font-weight: 500;
+}
+
+/* =================================================================
+   CHECKLIST
+   ================================================================= */
+.checklist {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.checklist__item {
+  display: flex;
+  gap: 12px;
+  padding: 7px 0;
+  align-items: flex-start;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.checklist__item input[type="checkbox"] {
+  width: 18px; height: 18px;
+  margin-top: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--ink);
+}
+
+/* =================================================================
+   CLOSING
+   ================================================================= */
+.closing {
+  text-align: center;
+  padding: 100px 0 80px;
+  position: relative;
+}
+
+.closing__kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--ink-muted);
+  margin-bottom: 22px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.closing__message {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.3;
+  font-weight: 900;
+  margin-bottom: 32px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+/* =================================================================
+   SCROLL REVEAL
+   ================================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* =================================================================
+   PRINT
+   ================================================================= */
+@media print {
+  .nav, .nav-toggle, .progress, .hero__scroll, .hero__mascot { display: none !important; }
+  .app { grid-template-columns: 1fr; }
+  .main { padding: 0; }
+  body { color: black; background: white; }
+  body::before { display: none; }
+  .section { page-break-inside: avoid; padding: 30px 0; }
+  details.deep[open] summary::before { content: '▼'; }
+}
+
+/* =================================================================
+   DIAGRAM (包含関係の図解)
+   ================================================================= */
+.diagram-wrap {
+  margin: 40px 0 60px;
+}
+
+.box {
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.box:hover > .box__head > .box__title {
+  transform: translateX(4px);
+}
+
+.box__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.box__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2.5vw, 22px);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  transition: transform 0.2s ease;
+}
+
+.box__en {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.box__desc {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  font-weight: 500;
+  max-width: 90%;
+}
+
+.box-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .box-row { flex-direction: column; }
+  .box { padding: 20px; }
+}
+
+/* Layer 1: AI (最も外側) */
+.box--ai {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: var(--pop);
+}
+
+/* Layer 2-A: エキスパートシステム (ルールベース) */
+.box--expert {
+  flex: 1;
+  background: var(--bg-alt);
+  border: 2px dashed var(--ink-dim);
+  border-radius: var(--radius);
+}
+
+/* Layer 2-B: Machine Learning (機械学習) */
+.box--ml {
+  flex: 2;
+  background: var(--paper-alt);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+/* Layer 3: Neural Networks (NN) */
+.box--nn {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-deep);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+
+/* Layer 4: Deep Learning (DL) */
+.box--dl {
+  background: var(--accent);
+  border: 1px solid var(--ink);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+
+/* Layer 5: Generative AI (生成AI) */
+.box--genai {
+  background: var(--coral);
+  border: 1px solid var(--ink);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.2);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+.box--genai .box__title,
+.box--genai .box__desc,
+.box--genai .box__en { color: var(--paper); }
+
+/* =================================================================
+   PILLS (具体例タグ)
+   ================================================================= */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.pill {
+  padding: 4px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+.box--expert .pill { background: var(--paper); }
+.box--nn .pill { background: var(--paper); border-color: var(--accent-deep); }
+.box--dl .pill { background: rgba(255,255,255,0.5); border-color: var(--ink); }
+.box--genai .pill { background: var(--coral-deep); color: white; border-color: rgba(0,0,0,0.1); }
+
+/* =================================================================
+   CALLOUT
+   ================================================================= */
+.callout {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin: 30px 0;
+  box-shadow: var(--shadow-xs);
+}
+.callout__label {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.callout p { margin: 0; color: var(--ink); font-weight: 500; font-size: 14.5px; line-height: 1.8; }
+.callout strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<button class="nav-toggle" id="navToggle" aria-label="メニュー">≡</button>
+<div class="backdrop" id="backdrop"></div>
+
+<!-- ============================================
+     SVG SYMBOLS
+     ============================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- AILA SPROUT (LEARN) - blue, simple -->
+    <symbol id="aila-sprout" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.6" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.6" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="44" y1="62" x2="56" y2="62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MIND (THINK) - purple, with circuit -->
+    <symbol id="aila-mind" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5"/>
+      <line x1="30" y1="40" x2="40" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="60" y1="40" x2="70" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="30" y1="65" x2="70" y2="65" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <ellipse cx="38" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <ellipse cx="62" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.2" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.2" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="20" y1="50" x2="14" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="11" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="80" y1="50" x2="86" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="89" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <path d="M 44 62 L 56 62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MAKER (CREATE) - coral, with depth -->
+    <symbol id="aila-maker" viewBox="0 0 100 100">
+      <polygon points="56,18 84,34 84,66 56,82 28,66 28,34" fill="#D67898" stroke="#1A2D5C" stroke-width="2" opacity="0.45"/>
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="40" cy="46" r="1.6" fill="#1A2D5C"/>
+      <circle cx="64" cy="46" r="1.6" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <polygon points="50,3 47,7 50,5 53,7" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+      <path d="M 42 60 Q 50 66 58 60" stroke="#1A2D5C" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <line x1="80" y1="68" x2="92" y2="80" stroke="#1A2D5C" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="92,80 96,82 94,86 90,84" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+    </symbol>
+
+    <!-- HERO MASCOT (large) -->
+    <symbol id="aila-hero" viewBox="0 0 280 280">
+      <circle cx="140" cy="140" r="120" fill="#FFC830" opacity="0.08"/>
+      <polygon points="155,55 230,98 230,182 155,225 80,182 80,98" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5" opacity="0.35"/>
+      <polygon points="140,40 215,83 215,167 140,210 65,167 65,83" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="3"/>
+      <line x1="80" y1="100" x2="100" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="180" y1="100" x2="200" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="80" y1="155" x2="200" y2="155" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <circle cx="115" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="165" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="118" cy="122" r="5" fill="#1A2D5C"/>
+      <circle cx="168" cy="122" r="5" fill="#1A2D5C"/>
+      <circle cx="120" cy="120" r="1.5" fill="white"/>
+      <circle cx="170" cy="120" r="1.5" fill="white"/>
+      <line x1="140" y1="40" x2="140" y2="22" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="140" cy="16" r="6" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="140" cy="16" r="2" fill="#FFC830"/>
+      <path d="M 120 165 Q 140 176 160 165" stroke="#1A2D5C" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <line x1="65" y1="125" x2="52" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="46" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="215" y1="125" x2="228" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="234" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+
+    <!-- BRAND LOGO MARK -->
+    <symbol id="brand-logo" viewBox="0 0 36 36">
+      <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+      <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+      <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+      <line x1="14" y1="23" x2="22" y2="23" stroke="#FFC830" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- =====================================================================
+       SIDEBAR NAVIGATION
+       ===================================================================== -->
+  <nav class="nav" id="nav">
+    <div class="nav__brand">
+      <svg class="nav__brand-mark"><use href="#brand-logo"/></svg>
+      <div class="nav__brand-text">
+        <div class="nav__brand-title">AI COURSE</div>
+        <div class="nav__brand-sub">DAY 01 / 2026</div>
+      </div>
+    </div>
+
+    <div class="nav__school">Akky先生のプログラミング教室</div>
+
+    <ul class="nav__list">
+      <li><a class="nav__item is-active" href="#hero"><span class="nav__num">00</span>OPENING</a></li>
+      <li><div class="nav__phase">学ぶ — LEARN</div></li>
+      <li><a class="nav__item" href="#ch1"><span class="nav__num">01</span>AIの歴史</a></li>
+      <li><a class="nav__item" href="#ch2"><span class="nav__num">02</span>AIの現在地</a></li>
+      <li><a class="nav__item" href="#ch3"><span class="nav__num">03</span>AIの種類</a></li>
+      <li><a class="nav__item" href="#ch4"><span class="nav__num">04</span>AIの仕組み</a></li>
+      <li><div class="nav__phase">考える — THINK</div></li>
+      <li><a class="nav__item" href="#ch5"><span class="nav__num">05</span>AI活用の基本</a></li>
+      <li><a class="nav__item" href="#ch6"><span class="nav__num">06</span>AIの危険性</a></li>
+      <li><div class="nav__phase">創る — CREATE</div></li>
+      <li><a class="nav__item" href="#ch7"><span class="nav__num">07</span>サイト制作</a></li>
+      <li><a class="nav__item" href="#closing"><span class="nav__num">08</span>CLOSING</a></li>
+    </ul>
+
+    <div class="nav__footer">
+      AI COURSE · DAY 01<br>
+      90 MIN / STUDENT
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       MAIN CONTENT
+       ===================================================================== -->
+  <main class="main">
+
+    <!-- ============================================
+         HERO (OPENING)
+         ============================================ -->
+    <section class="section hero" id="hero">
+      <div class="hero__school">AKKY先生のプログラミング教室</div>
+      <div class="hero__eyebrow">AI COURSE · DAY 01 · 2026</div>
+
+      <h1 class="hero__title">
+        AIを<span class="hl">知り</span>、<br>
+        自分のサイトを<br>
+        <span class="hl-coral">創ろう</span>。
+      </h1>
+
+      <p class="hero__lead">
+        AIって、結局なにをしているの？ どうやって使えば、自分の"やりたい"が形になる？<br>
+        この90分で、AIの本質を知り、最新の世界情勢を押さえ、自分だけのWebサイトを創ります。
+      </p>
+
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">DURATION</div>
+          <div class="hero__meta-value">90 MIN</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">CHAPTERS</div>
+          <div class="hero__meta-value">7 SECTIONS</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">OUTPUT</div>
+          <div class="hero__meta-value">Webサイト</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">PHASE</div>
+          <div class="hero__meta-value">学ぶ→考える→創る</div>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        SCROLL
+        <div class="hero__scroll-line"></div>
+      </div>
+
+      <svg class="hero__mascot"><use href="#aila-hero"/></svg>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 1 — AI HISTORY
+         ================================================= -->
+    <section class="section" id="ch1">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        LEARN PHASE · 学ぶ
+      </div>
+      <div class="section-tag">CHAPTER 01</div>
+      <h2 class="section-title">AIの<span class="hl">歴史</span>。<br>80年の挑戦の物語。</h2>
+      <p class="section-lead">
+        AIは2022年に突然現れたわけじゃない。コンピュータの誕生から80年、世界中の天才たちが冬の時代を乗り越えて積み上げた挑戦の結晶です。今日のAIは、君が思っているより<strong>ずっと多様な人たち</strong>の手で作られてきました。
+      </p>
+
+      <h3>始まり — 6人の先駆者</h3>
+      <p>「コンピュータの父」と聞いて、誰を思い浮かべますか？ チューリング？ ノイマン？ 実は、コンピュータとAIの歴史には、<strong>世界中の様々な背景の人々</strong>が大きく貢献しています。日本人もその中に含まれます。</p>
+
+      <div class="portrait-grid">
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="32" ry="38" fill="#F5D4B8"/>
+            <path d="M 48 60 Q 48 30 80 25 Q 112 30 112 60 Q 115 50 110 40 Q 100 25 80 22 Q 60 25 50 40 Q 45 50 48 60 Z" fill="#3D2817"/>
+            <ellipse cx="80" cy="40" rx="20" ry="12" fill="#3D2817"/>
+            <circle cx="50" cy="75" r="6" fill="#3D2817"/>
+            <circle cx="110" cy="75" r="6" fill="#3D2817"/>
+            <circle cx="68" cy="78" r="2" fill="#1A1A1A"/>
+            <circle cx="92" cy="78" r="2" fill="#1A1A1A"/>
+            <path d="M 80 84 L 78 95 L 82 95 Z" fill="#D4A88A" opacity="0.4"/>
+            <path d="M 73 105 Q 80 109 87 105" stroke="#8B5A3C" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="115" width="20" height="14" fill="#F5D4B8"/>
+            <path d="M 35 130 L 125 130 L 130 200 L 30 200 Z" fill="#7B2D5C"/>
+            <path d="M 60 130 Q 80 138 100 130 L 105 145 Q 80 150 55 145 Z" fill="#F5E8E0"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇬🇧</span>エイダ・ラブレス</div>
+          <div class="portrait__years">1815 - 1852</div>
+          <div class="portrait__role"><strong>世界初のプログラマー</strong>。チューリングより<em>100年前</em>に「機械が音楽や芸術を作れる」と予言。</div>
+        </div>
+
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="33" ry="40" fill="#FFD4B5"/>
+            <path d="M 47 62 Q 47 32 80 28 Q 113 32 113 62 L 113 50 Q 105 42 80 42 Q 55 42 47 50 Z" fill="#3D2817"/>
+            <circle cx="68" cy="78" r="2.5" fill="#1A1A1A"/>
+            <circle cx="92" cy="78" r="2.5" fill="#1A1A1A"/>
+            <path d="M 80 88 L 77 100 L 83 100 Z" fill="#D4A88A" opacity="0.4"/>
+            <path d="M 72 110 Q 80 114 88 110" stroke="#8B5A3C" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="120" width="20" height="14" fill="#FFD4B5"/>
+            <path d="M 35 134 L 125 134 L 130 200 L 30 200 Z" fill="#2C4A6B"/>
+            <path d="M 65 134 L 80 152 L 95 134 Z" fill="#FFFFFF"/>
+            <path d="M 76 148 L 84 148 L 86 200 L 80 200 L 74 200 Z" fill="#8B2635"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇬🇧</span>アラン・チューリング</div>
+          <div class="portrait__years">1912 - 1954</div>
+          <div class="portrait__role"><strong>計算理論の父</strong>。「機械は考えられるか？」を問い、<em>チューリング・テスト</em>を考案。</div>
+        </div>
+
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="34" ry="42" fill="#FFD4B5"/>
+            <path d="M 50 56 Q 50 38 80 34 Q 110 38 110 56 L 110 48 Q 95 46 80 48 Q 65 46 50 48 Z" fill="#5A4A3A" opacity="0.7"/>
+            <path d="M 45 80 Q 45 60 56 65 Q 50 75 48 90 Z" fill="#5A4A3A"/>
+            <path d="M 115 80 Q 115 60 104 65 Q 110 75 112 90 Z" fill="#5A4A3A"/>
+            <circle cx="68" cy="80" r="11" fill="white" opacity="0.5" stroke="#1A1A1A" stroke-width="2"/>
+            <circle cx="92" cy="80" r="11" fill="white" opacity="0.5" stroke="#1A1A1A" stroke-width="2"/>
+            <line x1="79" y1="80" x2="81" y2="80" stroke="#1A1A1A" stroke-width="2"/>
+            <circle cx="68" cy="80" r="2" fill="#1A1A1A"/>
+            <circle cx="92" cy="80" r="2" fill="#1A1A1A"/>
+            <path d="M 80 96 L 76 108 L 84 108 Z" fill="#D4A88A" opacity="0.4"/>
+            <path d="M 72 118 Q 80 122 88 118" stroke="#6B3A2C" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="125" width="20" height="14" fill="#FFD4B5"/>
+            <path d="M 32 140 L 128 140 L 132 200 L 28 200 Z" fill="#1A2A3A"/>
+            <path d="M 65 140 L 80 158 L 95 140 Z" fill="#FFFFFF"/>
+            <path d="M 76 154 L 84 154 L 86 200 L 80 200 L 74 200 Z" fill="#1A1A1A"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇭🇺→🇺🇸</span>ジョン・フォン・ノイマン</div>
+          <div class="portrait__years">1903 - 1957</div>
+          <div class="portrait__role"><strong>コンピュータ・アーキテクチャの父</strong>。「ノイマン型」が今のすべてのPCの基本設計。</div>
+        </div>
+
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="32" ry="40" fill="#F5D4B8"/>
+            <path d="M 48 58 Q 48 35 80 32 Q 112 35 112 58 L 110 48 Q 104 56 100 50 Q 92 58 88 50 Q 80 58 76 50 Q 68 58 64 50 Q 56 56 50 48 Z" fill="#A8A8A8"/>
+            <circle cx="68" cy="78" r="2.5" fill="#1A1A1A"/>
+            <circle cx="92" cy="78" r="2.5" fill="#1A1A1A"/>
+            <circle cx="68" cy="78" r="9" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+            <circle cx="92" cy="78" r="9" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+            <line x1="77" y1="78" x2="83" y2="78" stroke="#1A1A1A" stroke-width="1.5"/>
+            <path d="M 80 88 L 77 100 L 83 100 Z" fill="#D4A88A" opacity="0.4"/>
+            <path d="M 72 110 Q 80 114 88 110" stroke="#C25E5E" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="118" width="20" height="14" fill="#F5D4B8"/>
+            <path d="M 35 132 L 125 132 L 130 200 L 30 200 Z" fill="#0F2A4A"/>
+            <line x1="40" y1="155" x2="55" y2="155" stroke="#FFC830" stroke-width="2"/>
+            <line x1="40" y1="160" x2="55" y2="160" stroke="#FFC830" stroke-width="2"/>
+            <line x1="40" y1="165" x2="55" y2="165" stroke="#FFC830" stroke-width="2"/>
+            <path d="M 60 132 Q 80 142 100 132 L 95 152 Q 80 156 65 152 Z" fill="#FFFFFF"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇺🇸</span>グレース・ホッパー</div>
+          <div class="portrait__years">1906 - 1992</div>
+          <div class="portrait__role">海軍少将でプログラマー。<strong>COBOL言語</strong>と「コンパイラ」の概念を生んだ。</div>
+        </div>
+
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="33" ry="42" fill="#F5D4B8"/>
+            <path d="M 47 58 Q 45 35 80 28 Q 115 35 113 58 Q 118 50 112 38 Q 95 22 80 24 Q 65 22 48 38 Q 42 50 47 58 Z" fill="#7A6052"/>
+            <path d="M 55 100 Q 60 130 80 135 Q 100 130 105 100 Q 100 115 80 118 Q 60 115 55 100 Z" fill="#7A6052"/>
+            <circle cx="68" cy="78" r="2.5" fill="#1A1A1A"/>
+            <circle cx="92" cy="78" r="2.5" fill="#1A1A1A"/>
+            <rect x="60" y="73" width="16" height="11" fill="none" stroke="#1A1A1A" stroke-width="1.5" rx="2"/>
+            <rect x="84" y="73" width="16" height="11" fill="none" stroke="#1A1A1A" stroke-width="1.5" rx="2"/>
+            <line x1="76" y1="78" x2="84" y2="78" stroke="#1A1A1A" stroke-width="1.5"/>
+            <path d="M 80 88 L 77 98 L 83 98 Z" fill="#D4A88A" opacity="0.4"/>
+            <rect x="70" y="135" width="20" height="10" fill="#F5D4B8"/>
+            <path d="M 35 145 L 125 145 L 130 200 L 30 200 Z" fill="#5C4A3A"/>
+            <path d="M 65 145 L 80 162 L 95 145 Z" fill="#FFFFFF"/>
+            <path d="M 76 158 L 84 158 L 86 200 L 80 200 L 74 200 Z" fill="#3D2D20"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇺🇸</span>ジョン・マッカーシー</div>
+          <div class="portrait__years">1927 - 2011</div>
+          <div class="portrait__role"><strong>「AI」という言葉の名付け親</strong>。1956年ダートマス会議の主催者。LISP言語も開発。</div>
+        </div>
+
+        <div class="portrait">
+          <svg viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="200" fill="#F4F1EA"/>
+            <ellipse cx="80" cy="78" rx="32" ry="40" fill="#F5D4A8"/>
+            <path d="M 48 60 Q 48 38 80 35 Q 112 38 112 60 L 110 50 Q 100 48 80 50 Q 60 48 50 50 Z" fill="#1A1A1A"/>
+            <ellipse cx="68" cy="80" rx="4" ry="2" fill="#1A1A1A"/>
+            <ellipse cx="92" cy="80" rx="4" ry="2" fill="#1A1A1A"/>
+            <rect x="60" y="75" width="16" height="10" fill="none" stroke="#1A1A1A" stroke-width="1.5" rx="1"/>
+            <rect x="84" y="75" width="16" height="10" fill="none" stroke="#1A1A1A" stroke-width="1.5" rx="1"/>
+            <line x1="76" y1="80" x2="84" y2="80" stroke="#1A1A1A" stroke-width="1.5"/>
+            <path d="M 80 88 L 77 100 L 83 100 Z" fill="#D4A88A" opacity="0.4"/>
+            <path d="M 73 110 Q 80 114 87 110" stroke="#8B5A3C" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <rect x="70" y="118" width="20" height="14" fill="#F5D4A8"/>
+            <path d="M 35 132 L 125 132 L 130 200 L 30 200 Z" fill="#2A4A6B"/>
+            <path d="M 65 132 L 80 150 L 95 132 Z" fill="#FFFFFF"/>
+            <path d="M 76 146 L 84 146 L 86 200 L 80 200 L 74 200 Z" fill="#F26D5B"/>
+          </svg>
+          <div class="portrait__name"><span class="portrait__country">🇯🇵</span>福島 邦彦</div>
+          <div class="portrait__years">1936 -</div>
+          <div class="portrait__role"><strong>ネオコグニトロン</strong>(1979)を発明。今のディープラーニング(CNN)の<em>源流</em>を作った日本人。</div>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">KEY INSIGHT</div>
+        <p><strong>AIは、世界中の様々な人々が積み上げた挑戦の結晶です。</strong> 「天才のひらめき」じゃなく、<em>200年の協働</em>。日本人もその主役の一人です。</p>
+      </div>
+
+      <h3>AI進化の波 — ブームと冬</h3>
+      <p>AIには<strong>3回のブーム</strong>と<strong>2回の冬</strong>がありました。今は<em>第4次ブーム</em>の真っただ中。冬の時代は"敗北"ではなく、次のブームの種が育つ時期だったんです。</p>
+
+      <div class="wave-chart">
+        <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="170" x2="700" y2="170" stroke="#1A2D5C" stroke-width="1.5"/>
+          <text x="60" y="195" fill="#8B95AD" font-size="11" font-family="monospace">1956</text>
+          <text x="170" y="195" fill="#8B95AD" font-size="11" font-family="monospace">1980</text>
+          <text x="320" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2000</text>
+          <text x="460" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2012</text>
+          <text x="630" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2026</text>
+          <path d="M 60 165 Q 90 80 130 90 Q 160 100 200 165 Q 230 160 250 100 Q 290 80 320 90 Q 350 110 380 165 Q 420 165 460 80 Q 500 50 540 60 Q 570 70 600 30 Q 640 15 680 20" fill="none" stroke="#1A2D5C" stroke-width="2.5"/>
+          <text x="80" y="60" fill="#1A2D5C" font-size="11" font-weight="700">第1次</text>
+          <text x="80" y="73" fill="#8B95AD" font-size="9" font-family="monospace">推論・探索</text>
+          <text x="270" y="60" fill="#1A2D5C" font-size="11" font-weight="700">第2次</text>
+          <text x="270" y="73" fill="#8B95AD" font-size="9" font-family="monospace">エキスパート</text>
+          <text x="445" y="50" fill="#1A2D5C" font-size="11" font-weight="700">第3次</text>
+          <text x="445" y="63" fill="#8B95AD" font-size="9" font-family="monospace">ディープラーニング</text>
+          <text x="595" y="20" fill="#E8AC1A" font-size="11" font-weight="700">第4次・今</text>
+          <text x="595" y="33" fill="#8B95AD" font-size="9" font-family="monospace">生成AI</text>
+          <text x="180" y="155" fill="#8B95AD" font-size="10" font-style="italic">第1の冬</text>
+          <text x="370" y="155" fill="#8B95AD" font-size="10" font-style="italic">第2の冬</text>
+          <text x="20" y="100" fill="#8B95AD" font-size="10" font-family="monospace" transform="rotate(-90 20 100)">期待値</text>
+        </svg>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">1956</div>
+          <div class="epoch__year-label">START</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">ダートマス会議 — AIの誕生</div>
+          <p class="epoch__desc">アメリカ・ダートマス大学に10人の科学者が集まり、<strong>「Artificial Intelligence」</strong>という言葉が初めて使われた。たった2か月の夏の研究会議が、AI研究の出発点になった。</p>
+          <div class="epoch__example">
+            <strong>キーパーソン</strong>：マッカーシー（命名者）、ミンスキー、シャノン（情報理論の父）
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">命名</span>
+            <span class="epoch__kw">夏の研究会議</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1960s</div>
+          <div class="epoch__year-label">BOOM 1</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第1次AIブーム<span class="epoch__title-sub"> — 推論と探索</span></div>
+          <p class="epoch__desc">「迷路を解く」「数学の定理を証明する」AIが登場。世界初のチャットボット<strong>ELIZA</strong>(1966)が、簡単な会話で人を感動させた。「機械が考える！」と興奮の渦に。</p>
+          <div class="epoch__example">
+            <strong>象徴的な事例</strong>：ELIZA — 心理カウンセラーを真似たチャットボット。多くの人が「本当に話を聞いてもらえた」と感じてしまった。
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">ELIZA</span>
+            <span class="epoch__kw">探索アルゴリズム</span>
+            <span class="epoch__kw">推論</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch epoch--winter">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1970s</div>
+          <div class="epoch__year-label">WINTER 1</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第1の冬</div>
+          <p class="epoch__desc">「10年でAIは人間を超える」という宣言が空振り。簡単なゲームは解けても、<em>現実の複雑な問題</em>には歯が立たないと判明。研究資金が一気に消えた。</p>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1980s</div>
+          <div class="epoch__year-label">BOOM 2</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第2次AIブーム<span class="epoch__title-sub"> — エキスパートシステム</span></div>
+          <p class="epoch__desc">専門家のルールを書き込んで使うAIが流行。医療診断AI<strong>MYCIN</strong>は、人間の医師より正確に細菌感染を診断したが、<em>人間が全ルールを書く</em>限界に直面。</p>
+          <div class="epoch__example">
+            <strong>日本も主役だった</strong>：1982年、日本政府が570億円を投じた「<strong>第五世代コンピュータ・プロジェクト</strong>」をスタート。世界をリードしようとして大失敗。だが、この経験が後の日本のAI研究に活きる。
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">MYCIN</span>
+            <span class="epoch__kw">第五世代コンピュータ</span>
+            <span class="epoch__kw">日本のAI挑戦</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch epoch--winter">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1990s</div>
+          <div class="epoch__year-label">WINTER 2</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第2の冬<span class="epoch__title-sub"> — でも、種は育っていた</span></div>
+          <p class="epoch__desc">エキスパートシステムが採算取れず撤退の波。<strong>でも、この時期に重要な技術が生まれていた</strong>：1986年に「誤差逆伝播法」が再発見され、<em>今のディープラーニングの基礎</em>がここで完成した。</p>
+          <div class="epoch__example">
+            <strong>日本人の貢献</strong>：1979年、福島邦彦が<strong>ネオコグニトロン</strong>を発表。これが今のCNN（画像認識AI）の元祖。冬の時代に咲いた花。
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">2012</div>
+          <div class="epoch__year-label">BOOM 3</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第3次AIブーム<span class="epoch__title-sub"> — ディープラーニング革命</span></div>
+          <p class="epoch__desc">画像認識コンテストで<strong>AlexNet</strong>が圧勝。誤認識率が一気に下がり、<em>「AIがデータから自分で学ぶ時代」</em>が本格化。2016年には<strong>AlphaGo</strong>が囲碁の世界王者に勝利して世界が震撼。</p>
+          <div class="epoch__example">
+            <strong>偶然の革命</strong>：2012年の革命は、ゲーム用に開発された<strong>GPU</strong>が"偶然"AIの計算に向いていたことがきっかけ。技術は時に思わぬ方向から進化する。
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">AlexNet</span>
+            <span class="epoch__kw">GPU革命</span>
+            <span class="epoch__kw">AlphaGo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">2017</div>
+          <div class="epoch__year-label">PIVOT</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">Transformer登場 — すべての転換点</div>
+          <p class="epoch__desc">Googleの研究者が論文<strong>「Attention Is All You Need」</strong>を発表。<em>Transformer</em>と呼ばれる新しい仕組みが、その後のAIすべての基盤になる。GPTの「T」もこれ。</p>
+          <div class="epoch__example">
+            <strong>これがなければ</strong>：ChatGPTも、Claudeも、Geminiも、存在しなかった。歴史の転換点。
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">2022→</div>
+          <div class="epoch__year-label">NOW</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第4次AIブーム<span class="epoch__title-sub"> — 生成AI時代</span></div>
+          <p class="epoch__desc">2022年11月、<strong>ChatGPT</strong>が登場。2か月で1億ユーザーという史上最速の普及。今、AIが文章・画像・動画・音声・コードを「<em>創る</em>」時代に。<strong>君が今生きているのが、この時代</strong>。</p>
+          <div class="epoch__example">
+            <strong>2026年現在</strong>：Claude Opus 4.7、GPT-5.4、Gemini 3.1 Pro。AIエージェントが自律的に動く新時代に突入。
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">ChatGPT</span>
+            <span class="epoch__kw">マルチモーダル</span>
+            <span class="epoch__kw">AIエージェント</span>
+            <span class="epoch__kw">今ここ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">KEY INSIGHT</div>
+        <p><strong>AIは「学ぶ機械」に進化した。</strong> 昔は<em>人間がルールを全部書く</em>時代。今は<em>データからAI自身が学ぶ</em>時代。これが80年でたどり着いた最大の革命です。</p>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 01</span>
+          <h3 class="work__title">歴史に名前を刻もう</h3>
+        </div>
+        <p class="work__desc">AIの歴史を聞いて、君の心に残ったものを記録してください。<strong>正解はありません</strong>。君だけの感じ方を言葉にすることが、知識を"自分のもの"にする第一歩。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>一番心に残った人物・出来事</label>
+          <input class="input" id="w1q1" placeholder="例：100年前にラブレスが「機械が音楽を作る」と予言したこと">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>なぜそれが心に残った?</label>
+          <textarea class="textarea" id="w1q2" placeholder="例：「未来を予言した人」がいるという事実に驚いた..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>もし君が1956年のダートマス会議に呼ばれたら、何を提案する?</label>
+          <textarea class="textarea" id="w1q3" placeholder="自由に考えてみよう"></textarea>
+        </div>
+        <button class="btn" onclick="saveWork('w1', ['w1q1','w1q2','w1q3'])">💾 保存する</button>
+        <span id="w1status" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+
+      <details class="deep">
+        <summary>[+] DEEP DIVE: 冬の時代の本当の意味</summary>
+        <div class="deep__body">
+          <p>AIの「冬の時代」は、技術の停滞というより<strong>「期待が過剰に膨らんだ反動」</strong>でした。第1次ブームでは「10年以内に人間並みのAI」が空振り。第2次ではエキスパートシステムが採算合わず撤退。</p>
+          <p>でも面白いことに、<em>冬の時代こそ、次のブームの種が育つ時期</em>でした。1986年の誤差逆伝播法、1979年の福島邦彦のネオコグニトロン...今のディープラーニングの土台は、すべて"冬"の時期に作られたんです。</p>
+          <p>今の生成AIブームも、いつか落ち着く日が来るかも。でもその時こそ、次の革命の種が育っている時期です。</p>
+        </div>
+      </details>
+      
+      <details class="deep">
+        <summary>[+] DEEP DIVE: 第五世代コンピュータプロジェクトの教訓</summary>
+        <div class="deep__body">
+          <p>1982年、日本は<strong>570億円</strong>を投じた国家プロジェクト「第五世代コンピュータ」を開始。「日本がAIで世界を制覇する」という野望でした。</p>
+          <p>結果は<em>失敗</em>。当時のアプローチ（論理プログラミング）が、AIの本流（機械学習）とは違う方向だったから。10年後、プロジェクトは静かに終了。</p>
+          <p>でも、この挑戦が無駄だったわけじゃない。日本のAI研究のコミュニティが鍛えられ、その中から世界的研究者が輩出された。<strong>失敗は、次の成功の地ならし</strong>でした。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 2 — CURRENT STATE
+         ================================================= -->
+    <section class="section" id="ch2">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        LEARN PHASE · 学ぶ
+      </div>
+      <div class="section-tag">CHAPTER 02</div>
+      <h2 class="section-title">AIの<span class="hl">現在地</span>。<br>2026年、世界で何が起きているか。</h2>
+      <p class="section-lead">
+        AI業界は今、<strong>3つの巨人</strong>が激しい競争を繰り広げる戦国時代。そして、2027年に向けて世界が一気に変わるかもしれない、という予測も登場しています。最新の動向を一気に押さえよう。
+      </p>
+
+      <h3>3大AI企業 — 2026年最新</h3>
+
+      <div class="giants">
+        <div class="giant">
+          <div class="giant__logo">O</div>
+          <div class="giant__name">OpenAI</div>
+          <div class="giant__country">🇺🇸 USA · 2015</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">GPT-5.4</div>
+          </div>
+          <p class="giant__desc">ChatGPTで世界を変えた立役者。<strong>最大ユーザー数</strong>を誇る。画像生成（DALL·E）・動画生成（Sora）など、<em>マルチモーダル領域でも最前線</em>。</p>
+        </div>
+
+        <div class="giant">
+          <div class="giant__logo">A</div>
+          <div class="giant__name">Anthropic</div>
+          <div class="giant__country">🇺🇸 USA · 2021</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">Claude Opus 4.7</div>
+          </div>
+          <p class="giant__desc">OpenAIの元社員が<strong>「AIを安全に作る」</strong>を掲げて創業。長文理解とコーディング能力が圧倒的。<em>Claude Mythos Preview</em>が世界を騒然とさせた。</p>
+        </div>
+
+        <div class="giant">
+          <div class="giant__logo">G</div>
+          <div class="giant__name">Google DeepMind</div>
+          <div class="giant__country">🇺🇸 USA · 2010</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">Gemini 3.1 Pro</div>
+          </div>
+          <p class="giant__desc">GoogleのAI部門。<strong>超長文（100万トークン以上）</strong>の処理が得意。検索・YouTubeとの連携も強力。AlphaGoを作った会社でもある。</p>
+        </div>
+      </div>
+
+      <h3>Breaking — Claude Mythosの衝撃</h3>
+      <div class="callout callout--warn">
+        <div class="callout__label">2026年4月7日</div>
+        <p>Anthropicが発表した<strong>「Claude Mythos Preview」</strong>は、あまりに強力すぎて<em>一般公開されない</em>モデル。<br><br>
+        あらゆるOSやブラウザで<strong>何千件もの重大な脆弱性（セキュリティの穴）を発見</strong>できるため、世界の主要企業40社ほど（Amazon、Apple、Google、JPMorgan等）と組んで「<strong>Project Glasswing</strong>」という防衛プロジェクトを立ち上げた。<br><br>
+        <strong>AIが「公開できないほど強い」時代が、すでに来ている。</strong></p>
+      </div>
+
+      <h3>その他の主要プレイヤー</h3>
+      <table class="table">
+        <thead>
+          <tr><th>企業/モデル</th><th>特徴</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Meta (Llama 4)</strong></td><td>オープンソース戦略。誰でも無料でダウンロードして使える</td></tr>
+          <tr><td><strong>xAI (Grok 4)</strong></td><td>イーロン・マスクのAI。X(Twitter)のリアルタイム情報に強い</td></tr>
+          <tr><td><strong>Microsoft (Copilot)</strong></td><td>OpenAIと提携。Office製品に深く統合</td></tr>
+          <tr><td><strong>DeepSeek (中国)</strong></td><td>低コストで高性能。アメリカ市場を脅かした</td></tr>
+          <tr><td><strong>Mistral (フランス)</strong></td><td>ヨーロッパ発のAI。EUのAI規制と連携</td></tr>
+        </tbody>
+      </table>
+
+      <h3>AI 2027 — 世界を動かした予測レポート</h3>
+      <p>2025年4月に公開された<strong>「AI 2027」</strong>というレポートが、世界のAI業界と政府を震撼させた。元OpenAI研究者の<strong>ダニエル・ココタジロ</strong>が率いるチームが、<em>2027年までのAI進化を詳細に予測</em>。アメリカのバンス副大統領が読んだと公言するほど影響力があった。</p>
+
+      <div class="forecast">
+        <div class="forecast__title">AI 2027 — 予測されるタイムライン</div>
+        <div class="forecast__year">
+          <div class="forecast__year-num">2025</div>
+          <div class="forecast__year-text">AIエージェントが登場。単なる対話から、複数のタスクを自律的に実行できるAIへ。</div>
+        </div>
+        <div class="forecast__year forecast__year--now">
+          <div class="forecast__year-num">2026</div>
+          <div class="forecast__year-text"><strong>AIエージェントの本格普及</strong>。企業内の多くの知的労働が自動化され始める。（←今ここ）</div>
+        </div>
+        <div class="forecast__year">
+          <div class="forecast__year-num">2027 前半</div>
+          <div class="forecast__year-text">AIによる<strong>コーディング業務の完全自動化</strong>。プログラマーの仕事が根本的に変化。</div>
+        </div>
+        <div class="forecast__year">
+          <div class="forecast__year-num">2027 後半</div>
+          <div class="forecast__year-text"><strong>「知能爆発」</strong> — AIがAIを改良するループが始まり、進化が指数関数的に加速。人間のコントロールが効かなくなる可能性も。</div>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">考えてみよう</div>
+        <p>この予測が本当になるかは誰にも分からない。批判的な専門家もいる。でも大事なのは、<strong>「そういう未来もあり得る」と想像して、今から準備すること</strong>。<br>君たちが大人になる頃、世界はまるで違う姿になっているかもしれない。</p>
+      </div>
+
+      <h3>各国・企業の動き</h3>
+      <ul>
+        <li><strong>🇺🇸 アメリカ</strong>：AIの輸出規制を強化。半導体の中国への輸出を制限。<em>国家安全保障の問題</em>に。</li>
+        <li><strong>🇪🇺 EU</strong>：「AI Act」という<strong>世界初の包括的AI規制法</strong>を2024年施行。違反すると売上の7%が罰金。</li>
+        <li><strong>🇯🇵 日本</strong>：「AI戦略会議」を設置。AI人材育成と産業活用を推進。<em>規制は緩め</em>で独自路線。</li>
+        <li><strong>🇨🇳 中国</strong>：国家主導でAI開発を加速。アメリカとのAI競争の主役。</li>
+      </ul>
+
+      <h3>僕らの未来 — 仕事と生活</h3>
+      <div class="grid-4">
+        <div class="stat">
+          <div class="stat__value">40%</div>
+          <div class="stat__label">AIの影響を受ける仕事の割合 (IMF)</div>
+        </div>
+        <div class="stat">
+          <div class="stat__value stat__value--accent">+7%</div>
+          <div class="stat__label">AIによる世界GDP増加予測 (Goldman)</div>
+        </div>
+        <div class="stat">
+          <div class="stat__value">2030</div>
+          <div class="stat__label">AI主導に移行する目安</div>
+        </div>
+        <div class="stat">
+          <div class="stat__value stat__value--coral">$15T</div>
+          <div class="stat__label">2030年の経済効果(PwC・15兆ドル)</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout__label">真実</div>
+        <p>仕事が<strong>消える</strong>だけじゃなく、<strong>新しい仕事が生まれる</strong>のも確か。本当の格差は、<em>AIを使える人と使えない人</em>の間に生まれる。</p>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 02</span>
+          <h3 class="work__title">2030年の自分を想像してみよう</h3>
+        </div>
+        <p class="work__desc">AIが今のペースで進化し続けたら、5年後・10年後、君の生活はどう変わる？ 具体的に想像してみよう。</p>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>2030年、君はいくつ? 何をしている?</label>
+          <input class="input" id="w2q1" placeholder="例：21歳、大学で研究しながらAIと共同でプロダクトを作っている">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>AIによって「楽になること」は?</label>
+          <textarea class="textarea" id="w2q2" placeholder="自由に想像してみよう"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>AIによって「心配なこと」は?</label>
+          <textarea class="textarea" id="w2q3" placeholder="不安や疑問も大事な考察ポイント"></textarea>
+        </div>
+        <button class="btn" onclick="saveWork('w2', ['w2q1','w2q2','w2q3'])">💾 保存する</button>
+        <span id="w2status" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 3 — AI TYPES
+         ================================================= -->
+    <section class="section" id="ch3">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        LEARN PHASE · 学ぶ
+      </div>
+      <div class="section-tag">CHAPTER 03</div>
+      <h2 class="section-title">AIの<span class="hl-coral">種類</span>。<br>LLMからマルチモーダルまで。</h2>
+      <p class="section-lead">
+        「AI」と一口に言っても、実は様々な種類があります。特に2026年の今、<strong>LLM（大規模言語モデル）</strong>とマルチモーダルAIが主役。それぞれの違いと、得意分野を整理しよう。
+      </p>
+
+<div class="container">
+  <div class="section-tag">CONCEPT MAP</div>
+  <h2 class="section-title">AIの<span class="hl">包含関係</span>。</h2>
+  <p class="section-lead">
+    「AI」「機械学習」「ディープラーニング」「生成AI」... 色々な言葉がありますが、これらは別物ではなく<strong>「マトリョーシカのような入れ子（包含）関係」</strong>になっています。図解で直感的に整理しましょう。
+  </p>
+
+  <div class="diagram-wrap">
+    
+    <div class="box box--ai">
+      <div class="box__head">
+        <div class="box__title">人工知能</div>
+        <div class="box__en">Artificial Intelligence (AI)</div>
+      </div>
+      <div class="box__desc">
+        人間の知能（推論・認識・判断など）をコンピュータで再現する技術の総称。最も広い概念です。
+      </div>
+
+      <div class="box-row">
+        <div class="box box--expert">
+          <div class="box__head">
+            <div class="box__title" style="font-size: 16px;">ルールベースAI</div>
+            <div class="box__en">Expert System</div>
+          </div>
+          <div class="box__desc">
+            専門家の知識を人間が「もし〜なら〜する」というルールとして手作業で書き込んだ昔ながらのAI。
+          </div>
+          <div class="pills">
+            <span class="pill">ELIZA</span>
+            <span class="pill">MYCIN</span>
+            <span class="pill">初期のチェスAI</span>
+          </div>
+        </div>
+
+        <div class="box box--ml">
+          <div class="box__head">
+            <div class="box__title">機械学習</div>
+            <div class="box__en">Machine Learning (ML)</div>
+          </div>
+          <div class="box__desc">
+            人間がルールを書くのではなく、<strong>大量のデータからコンピュータ自身が法則やパターンを学ぶ</strong>技術。
+          </div>
+          <div class="pills">
+            <span class="pill">決定木</span>
+            <span class="pill">ランダムフォレスト</span>
+            <span class="pill">SVM</span>
+          </div>
+
+          <div class="box box--nn">
+            <div class="box__head">
+              <div class="box__title">ニューラルネットワーク</div>
+              <div class="box__en">Neural Networks (NN)</div>
+            </div>
+            <div class="box__desc">
+              人間の脳の神経回路（ニューロン）の仕組みを数学的に模倣した、機械学習の一つの手法。
+            </div>
+            <div class="pills">
+              <span class="pill">パーセプトロン</span>
+            </div>
+
+            <div class="box box--dl">
+              <div class="box__head">
+                <div class="box__title">ディープラーニング</div>
+                <div class="box__en">Deep Learning (DL)</div>
+              </div>
+              <div class="box__desc">
+                ニューラルネットワークの層を深く（多層化）し、より複雑なデータ（画像や音声）を高精度に処理できるようにした技術。第3次AIブームの主役。
+              </div>
+              <div class="pills">
+                <span class="pill">CNN (画像認識)</span>
+                <span class="pill">RNN</span>
+                <span class="pill">Transformer</span>
+              </div>
+
+              <div class="box box--genai">
+                <div class="box__head">
+                  <div class="box__title">生成AI</div>
+                  <div class="box__en">Generative AI</div>
+                </div>
+                <div class="box__desc">
+                  ディープラーニング（特にTransformerなどの巨大モデル）を応用し、データから<strong>全く新しい文章・画像・音楽・コードなどを自律的に「創り出す」</strong>ことに特化した最新のAI。
+                </div>
+                <div class="pills">
+                  <span class="pill">ChatGPT (GPT-4)</span>
+                  <span class="pill">Claude</span>
+                  <span class="pill">Gemini</span>
+                  <span class="pill">Midjourney</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="callout">
+    <div class="callout__label">KEY INSIGHT</div>
+    <p>
+      ニュースで話題になる「ChatGPT」は、<strong>生成AI</strong>であり、<strong>ディープラーニング</strong>技術を使っており、<strong>機械学習</strong>の一部であり、大きな意味で<strong>AI</strong>に含まれます。<br>
+      この関係性を頭に入れておくと、新しいAIニュースを見ても「これはどの階層の話をしているか」が整理しやすくなります。
+    </p>
+  </div>
+
+</div>
+
+
+      <h3>強いAI vs 弱いAI</h3>
+
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <div class="compare__label">強いAI · AGI</div>
+          <p class="compare__content"><strong>人間のように、あらゆる分野で思考できるAI。</strong> 自分で目標を持ち、未知の問題にも対応できる。<em>まだ存在しない</em>（研究中）。SFの世界。</p>
+        </div>
+        <div class="compare__side compare__side--good">
+          <div class="compare__label">弱いAI · Narrow</div>
+          <p class="compare__content"><strong>決まったタスクに特化したAI。</strong> ChatGPTもClaudeも、どんなに賢く見えても実はこっち。<em>今あるAIは全部「弱いAI」</em>。</p>
+        </div>
+      </div>
+
+      <h3>LLMとは? — 大規模言語モデル</h3>
+      <p><strong>LLM = Large Language Model</strong>。ChatGPT、Claude、Geminiの中身はこれ。<em>大量のテキストデータから「言葉のパターン」を学習した巨大なAI</em>です。</p>
+
+      <div class="card card--ink">
+        <h4>LLMのスケール感（2026年）</h4>
+        <ul>
+          <li><strong>パラメータ数：数千億〜数兆個</strong>（人間の脳のシナプスに相当）</li>
+          <li><strong>学習データ：インターネット上のほぼ全テキスト＋書籍＋コード</strong></li>
+          <li><strong>学習コスト：1回の学習で数百億円規模</strong>の電力・計算機を使用</li>
+          <li><strong>動作時の電力：1質問あたり、スマホ充電×数十回分</strong></li>
+        </ul>
+      </div>
+
+      <h3>マルチモーダルAI — 五感を持ったAI</h3>
+      <p>昔のAIは「テキストだけ」「画像だけ」など、1種類のデータしか扱えなかった。でも<strong>マルチモーダルAI</strong>は、<em>テキスト・画像・音声・動画を同時に扱える</em>。</p>
+
+      <div class="model-grid">
+        <div class="model-tile">
+          <div class="model-tile__icon">📝</div>
+          <div class="model-tile__type">TEXT</div>
+          <div class="model-tile__name">GPT-5.4 / Claude 4.7</div>
+          <div class="model-tile__desc">文章生成・要約・翻訳・対話の基本</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🖼</div>
+          <div class="model-tile__type">IMAGE GEN</div>
+          <div class="model-tile__name">DALL·E 3 / Midjourney v7</div>
+          <div class="model-tile__desc">テキストから画像を生成</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🎬</div>
+          <div class="model-tile__type">VIDEO GEN</div>
+          <div class="model-tile__name">Sora 2 / Veo 3</div>
+          <div class="model-tile__desc">テキストから最大1分の高品質動画</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🎤</div>
+          <div class="model-tile__type">VOICE</div>
+          <div class="model-tile__name">ElevenLabs / Whisper</div>
+          <div class="model-tile__desc">音声合成・音声認識。リアルタイム会話も</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🎵</div>
+          <div class="model-tile__type">MUSIC</div>
+          <div class="model-tile__name">Suno / Udio</div>
+          <div class="model-tile__desc">歌詞とスタイルから楽曲生成</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">💻</div>
+          <div class="model-tile__type">CODE</div>
+          <div class="model-tile__name">Claude Code / Copilot</div>
+          <div class="model-tile__desc">プログラミング支援、コード自動生成</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🤖</div>
+          <div class="model-tile__type">AGENT</div>
+          <div class="model-tile__name">Operator / Computer Use</div>
+          <div class="model-tile__desc">ブラウザを操作して自律的にタスク実行</div>
+        </div>
+        <div class="model-tile">
+          <div class="model-tile__icon">🔍</div>
+          <div class="model-tile__type">SEARCH</div>
+          <div class="model-tile__name">Perplexity / SearchGPT</div>
+          <div class="model-tile__desc">検索特化AI。ソース付きで回答</div>
+        </div>
+      </div>
+
+      <h3>各モデルの得意・不得意</h3>
+      <table class="table">
+        <thead>
+          <tr><th>モデル</th><th>得意</th><th>不得意</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>GPT-5.4</strong></td><td>総合力、画像生成、ブラウザ操作</td><td>超長文、論理的厳密さ</td></tr>
+          <tr><td><strong>Claude 4.7</strong></td><td>コーディング、自然な日本語、長文読解、創造性</td><td>画像生成（内蔵なし）</td></tr>
+          <tr><td><strong>Gemini 3.1</strong></td><td>超長文（100万トークン）、Google連携</td><td>応答速度、日本語の自然さ</td></tr>
+          <tr><td><strong>Grok 4</strong></td><td>Xのリアルタイム情報、砕けた対話</td><td>企業利用の信頼性</td></tr>
+        </tbody>
+      </table>
+
+      <h3>ベンチマーク — AIの成績表</h3>
+      <p>AIの性能は、<strong>ベンチマーク</strong>と呼ばれる共通テストで比較されます：</p>
+      <ul>
+        <li><strong>MMLU</strong>：大学生レベルの一般知識テスト（57分野）</li>
+        <li><strong>HumanEval</strong>：プログラミング能力を測る</li>
+        <li><strong>GPQA</strong>：博士号レベルの科学問題</li>
+        <li><strong>SWE-bench</strong>：実際のGitHubの問題を解けるか</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout__label">比較サイト</div>
+        <p><strong>lmarena.ai</strong> — 世界中のユーザーが実際にAIを比較投票するサイト。リアルなランキングが見られる。<br><strong>artificialanalysis.ai</strong> — 速度・価格・性能を多角的に比較。</p>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 03</span>
+          <h3 class="work__title">場面ごとに最適なAIを選ぼう</h3>
+        </div>
+        <p class="work__desc">シチュエーションごとに、どのモデルを使うか考えてみよう。「なぜそのAI？」も大事。</p>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>宿題の読書感想文を添削してほしいとき</label>
+          <input class="input" id="w3q1" placeholder="例：Claude。自然な日本語が得意だから">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>誕生日会のポスターを作りたいとき</label>
+          <input class="input" id="w3q2" placeholder="どのモデル? なぜ?">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>100ページのPDFを要約してほしいとき</label>
+          <input class="input" id="w3q3" placeholder="どのモデル? なぜ?">
+        </div>
+        <button class="btn" onclick="saveWork('w3', ['w3q1','w3q2','w3q3'])">💾 保存する</button>
+        <span id="w3status" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 4 — HOW AI WORKS
+         ================================================= -->
+    <section class="section" id="ch4">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        LEARN PHASE · 学ぶ
+      </div>
+      <div class="section-tag">CHAPTER 04 · 最重要</div>
+      <h2 class="section-title">AIの<span class="hl">仕組み</span>。<br>中身で何が起きているか。</h2>
+      <p class="section-lead">
+        ここが今日の授業で<strong>一番大事な部分</strong>。AIが<em>「どうやって答えを出しているのか」</em>を、直感的に理解しよう。これが分かれば、AIの強みも弱みも全部見えてきます。
+      </p>
+
+      <h3>① 生成AI登場以前のAI</h3>
+
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <div class="compare__label">~2010年代</div>
+          <h4 style="margin-top:0;">⚙️ ルールベースAI</h4>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">人間が<strong>全部のルールを書く</strong>。「もし〇〇なら××する」の積み重ね。<em>複雑な問題には対応できない</em>。</p>
+          <div style="margin-top:10px;padding:8px 12px;background:var(--bg-alt);border-radius:6px;font-size:12.5px;color:var(--ink-soft);">
+            <strong>例</strong>：ELIZA、MYCIN、初期の将棋AI
+          </div>
+        </div>
+        <div class="compare__side compare__side--good">
+          <div class="compare__label">2010年代~</div>
+          <h4 style="margin-top:0;">🧠 機械学習・生成AI</h4>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);"><strong>データからAIが自分でパターンを学ぶ</strong>。ルールを書かなくていい。<em>人間が教えていない法則を発見する</em>こともある。</p>
+          <div style="margin-top:10px;padding:8px 12px;background:var(--bg-alt);border-radius:6px;font-size:12.5px;color:var(--ink-soft);">
+            <strong>例</strong>：AlphaGo、ChatGPT、画像認識AI
+          </div>
+        </div>
+      </div>
+
+      <h3>② 機械学習の3つの方式</h3>
+      <table class="table">
+        <thead>
+          <tr><th>方式</th><th>学び方</th><th>具体例</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>教師あり学習</strong></td>
+            <td>「問題」と「正解」のペアを大量に見せる</td>
+            <td>猫の写真と「猫」ラベル → 画像認識</td>
+          </tr>
+          <tr>
+            <td><strong>教師なし学習</strong></td>
+            <td>データだけ見せて、自分でパターンを見つけさせる</td>
+            <td>顧客データから自動グループ分け</td>
+          </tr>
+          <tr>
+            <td><strong>強化学習</strong></td>
+            <td>行動してみて「良い/悪い」の報酬で学ぶ</td>
+            <td>AlphaGo、ゲームAI、ChatGPTのRLHF</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">重要</div>
+        <p>ChatGPTは実は<strong>3つすべて</strong>を使っている。最初は教師あり学習で言葉を覚え、最後に<em>強化学習（RLHF）</em>で「人間が好む答え方」を学ぶ。だから自然な会話ができる。</p>
+      </div>
+
+      <h3>③ ニューラルネットワーク — 脳をマネした計算機</h3>
+      <p>AIの"中身"は、人間の脳の神経細胞（<strong>ニューロン</strong>）をマネした計算のネットワーク。<em>数千億個の「つながり」</em>が、入力から出力へ情報を流していきます。</p>
+
+      <div class="neural-container">
+        <svg class="neural-svg" viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
+          <text x="80" y="28" fill="#6B7A99" font-size="12" text-anchor="middle" font-family="monospace" font-weight="700">入力層</text>
+          <text x="280" y="28" fill="#6B7A99" font-size="12" text-anchor="middle" font-family="monospace" font-weight="700">隠れ層 1</text>
+          <text x="480" y="28" fill="#6B7A99" font-size="12" text-anchor="middle" font-family="monospace" font-weight="700">隠れ層 2</text>
+          <text x="640" y="28" fill="#6B7A99" font-size="12" text-anchor="middle" font-family="monospace" font-weight="700">出力層</text>
+
+          <g stroke="#1A2D5C" stroke-width="0.8" fill="none" opacity="0.4">
+            <line x1="80" y1="80" x2="280" y2="70"/>
+            <line x1="80" y1="80" x2="280" y2="140"/>
+            <line x1="80" y1="80" x2="280" y2="210"/>
+            <line x1="80" y1="80" x2="280" y2="280"/>
+            <line x1="80" y1="160" x2="280" y2="70"/>
+            <line x1="80" y1="160" x2="280" y2="140"/>
+            <line x1="80" y1="160" x2="280" y2="210"/>
+            <line x1="80" y1="160" x2="280" y2="280"/>
+            <line x1="80" y1="240" x2="280" y2="70"/>
+            <line x1="80" y1="240" x2="280" y2="140"/>
+            <line x1="80" y1="240" x2="280" y2="210"/>
+            <line x1="80" y1="240" x2="280" y2="280"/>
+            <line x1="280" y1="70" x2="480" y2="100"/>
+            <line x1="280" y1="70" x2="480" y2="180"/>
+            <line x1="280" y1="70" x2="480" y2="240"/>
+            <line x1="280" y1="140" x2="480" y2="100"/>
+            <line x1="280" y1="140" x2="480" y2="180"/>
+            <line x1="280" y1="140" x2="480" y2="240"/>
+            <line x1="280" y1="210" x2="480" y2="100"/>
+            <line x1="280" y1="210" x2="480" y2="180"/>
+            <line x1="280" y1="210" x2="480" y2="240"/>
+            <line x1="280" y1="280" x2="480" y2="100"/>
+            <line x1="280" y1="280" x2="480" y2="180"/>
+            <line x1="280" y1="280" x2="480" y2="240"/>
+            <line x1="480" y1="100" x2="640" y2="140"/>
+            <line x1="480" y1="100" x2="640" y2="200"/>
+            <line x1="480" y1="180" x2="640" y2="140"/>
+            <line x1="480" y1="180" x2="640" y2="200"/>
+            <line x1="480" y1="240" x2="640" y2="140"/>
+            <line x1="480" y1="240" x2="640" y2="200"/>
+          </g>
+
+          <circle cx="80" cy="80" r="20" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="80" cy="160" r="20" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="80" cy="240" r="20" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+
+          <circle cx="280" cy="70" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="280" cy="140" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="280" cy="210" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="280" cy="280" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+
+          <circle cx="480" cy="100" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="480" cy="180" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="480" cy="240" r="20" fill="#FAF8F3" stroke="#1A2D5C" stroke-width="2"/>
+
+          <circle cx="640" cy="140" r="20" fill="#1A2D5C" stroke="#1A2D5C" stroke-width="2"/>
+          <circle cx="640" cy="200" r="20" fill="#1A2D5C" stroke="#1A2D5C" stroke-width="2"/>
+
+          <text x="640" y="146" fill="#FFC830" font-size="13" text-anchor="middle" font-weight="800">猫</text>
+          <text x="640" y="206" fill="#FFC830" font-size="13" text-anchor="middle" font-weight="800">犬</text>
+
+          <text x="350" y="315" fill="#1A2D5C" font-size="12" text-anchor="middle" font-weight="600">線の太さ＝重み。学習でこの数字が調整されていく</text>
+        </svg>
+      </div>
+
+      <h3>④ 学習プロセス — 重みを調整するということ</h3>
+      <p>「学習」って具体的に何をしているの？ — <strong>「線の太さ（重み）」を、何兆回も微調整していく作業</strong>です。</p>
+
+      <div class="card card--soft">
+        <h4 style="margin-top:0;">学習のステップ（猫を見分ける例）</h4>
+        <ol>
+          <li><strong>STEP 1</strong>：AIが「これは犬」と答える（初期はランダム）</li>
+          <li><strong>STEP 2</strong>：人間が「いや、これは猫」と教える</li>
+          <li><strong>STEP 3</strong>：AIが「<em>どこの線が間違っていた？</em>」を逆算（誤差逆伝播）</li>
+          <li><strong>STEP 4</strong>：その線を少し細く、別の線を太くする</li>
+          <li><strong>STEP 5</strong>：これを<strong>何百万・何十億回</strong>繰り返す</li>
+        </ol>
+        <p style="margin-bottom:0;font-size:13.5px;color:var(--ink-mid);">この大量の繰り返しに、<strong>数百億円規模の電気代と数か月の時間</strong>がかかる。これが「最新AIの開発に巨額が必要」な理由。</p>
+      </div>
+
+      <h3>⑤ 言葉を"数字"にする — ベクトル化</h3>
+      <p>AIは言葉をそのまま理解していません。<strong>全ての言葉を「数字の並び（ベクトル）」に変換</strong>しています。</p>
+      <p>でも、<em>なぜそんなことが可能</em>なのか？ — それは、<strong>「意味の近い言葉が、近い座標になるように学習」</strong>しているからです。</p>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">言葉の算数</div>
+        <p style="font-family:var(--font-mono);font-size:14.5px;line-height:2.1;">
+          「王様」 − 「男」 + 「女」 = <strong>「女王」</strong><br>
+          「東京」 − 「日本」 + 「フランス」 = <strong>「パリ」</strong><br>
+          「寿司」 − 「日本」 + 「イタリア」 = <strong>「ピザ」</strong>
+        </p>
+      </div>
+
+      <p>言葉が<em>意味の空間</em>に配置されていて、<strong>近い意味は近い座標、違う意味は遠い座標</strong>にある。AIにとっての「理解」とは、この<strong>ベクトルの距離計算</strong>なんです。</p>
+
+      <h3>⑥ Transformer — 現代AIすべての基盤</h3>
+      <p>2017年にGoogleの研究者が発表した論文<strong>「Attention Is All You Need」</strong>で誕生した<strong>Transformer</strong>という構造。これがChatGPT、Claude、Geminiすべての基盤です。</p>
+
+      <div class="card card--ink">
+        <h4>Attention（注意機構）とは</h4>
+        <p style="margin-bottom:0;">「<strong>文章を読むとき、どの単語が重要かを自動で判断して重みづけする</strong>」仕組み。<br><br>
+        例：「太郎は学校に行った。<em>彼</em>は数学が好きだ。」<br>
+        AIは「彼」が「太郎」を指していると<strong>注意機構</strong>で判断する。これが人間っぽい理解の正体。</p>
+      </div>
+
+      <p><strong>GPTの正体</strong>：<br>
+      <strong>G</strong>enerative（生成的） / <strong>P</strong>re-trained（事前学習済み） / <strong>T</strong>ransformer<br>
+      ← この「T」がTransformer。<em>Transformerなしには今のAIは存在しない</em>。</p>
+
+      <h3>⑦ LLMの本質 — 確率による次の単語予測</h3>
+      <p>これだけ複雑な仕組みを使って、ChatGPTが実際にやっていることは何か？ — <strong>「次の単語は何か？」を予測し続ける</strong>こと。たったそれだけ。</p>
+
+      <div class="card card--soft">
+        <h4 style="margin-top:0;">「日本で一番高い山は」の続きを予測：</h4>
+        <p style="font-family:var(--font-mono);font-size:14px;line-height:2.1;margin:0;">
+          「富士山」 <strong>93%</strong> ← 最有力<br>
+          「富士」 <strong>4%</strong><br>
+          「北岳」 <strong>1.5%</strong><br>
+          「エベレスト」 <strong>0.8%</strong><br>
+          その他 <strong>0.7%</strong>
+        </p>
+        <p style="margin-top:14px;margin-bottom:0;font-size:13px;color:var(--ink-mid);">→ 最も確率の高い「富士山」を選ぶ（少しランダムな揺らぎもあり）</p>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 04</span>
+          <h3 class="work__title">予測シミュレーターを体験しよう</h3>
+        </div>
+        <p class="work__desc">AIの"頭の中"で起きている確率計算を、簡易的に再現したものです。入力すると、次に来そうな言葉が確率付きで出ます。</p>
+
+        <div class="sim">
+          <div class="sim__header">
+            <span class="sim__dot"></span>
+            <span>AI PREDICTION ENGINE / SIMULATED</span>
+          </div>
+          <div class="sim__label">&gt; 文章を入力:</div>
+          <input type="text" class="sim__input" id="simInput" placeholder="例：日本で一番高い山は" autocomplete="off">
+
+          <div class="sim__label">&gt; 次に来そうな言葉（確率順）:</div>
+          <div class="sim__predictions" id="simPredictions">
+            <div class="sim__placeholder">↑ 上に入力するか、下のサンプルをクリック</div>
+          </div>
+
+          <div class="sim__examples">
+            <button class="sim__ex" data-ex="日本で一番高い山は">日本で一番高い山は</button>
+            <button class="sim__ex" data-ex="おはよう、今日の">おはよう、今日の</button>
+            <button class="sim__ex" data-ex="AIは">AIは</button>
+            <button class="sim__ex" data-ex="将来の夢は">将来の夢は</button>
+            <button class="sim__ex" data-ex="プログラミングって">プログラミングって</button>
+            <button class="sim__ex" data-ex="学校の給食で好きなのは">学校の給食で好きなのは</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">核心的な気づき</div>
+        <p>AIは<strong>「事実を知っている」</strong>のではなく、<strong>「それっぽい単語の並びを確率で出している」</strong>だけ。だから、<em>もっともらしい間違い（ハルシネーション）</em>が起きる。これは<em>AIの仕組みそのもの</em>から生まれる現象です。</p>
+      </div>
+
+      <h3>⑧ 脳とAI — 自由エネルギー原理</h3>
+      <p>ここまで学んだ「AIは予測する機械」というアイデア。実は、これと<strong>人間の脳</strong>には深い共通点があるかもしれません。</p>
+
+      <p>神経科学者<strong>カール・フリストン</strong>の理論によると、<em>「脳は常に次に起きることを予測し、予測と現実のズレを最小にしようと動いている」</em>。これ、まさにLLMがやっていることとそっくり。</p>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">哲学的な問い</div>
+        <p>もし人間の脳もAIも、<strong>"予測する機械"という意味で同じ原理で動いている</strong>としたら...<br>「考える」とは、結局なんなのでしょうか？<br>これは21世紀の最前線の研究テーマです。</p>
+      </div>
+
+      <details class="deep">
+        <summary>[+] DEEP DIVE: なぜTransformerはこんなに強いのか</summary>
+        <div class="deep__body">
+          <p>Transformer以前のAI（RNN）は、文章を<strong>頭から順番に読む</strong>仕組みでした。だから長い文章になると最初の方を忘れてしまう。</p>
+          <p>Transformerは違います。<strong>文章全体を一気に見て</strong>、各単語が他のどの単語と関係しているかを瞬時に判断する。これが「Attention」。</p>
+          <p>結果、長い文章でも文脈を保てるようになり、しかも並列計算で<em>圧倒的に速い</em>。これが2017年以降のAI革命の正体です。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 5 — AI USAGE
+         ================================================= -->
+    <section class="section" id="ch5">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        THINK PHASE · 考える
+      </div>
+      <div class="section-tag">CHAPTER 05</div>
+      <h2 class="section-title">AI活用の<span class="hl">基本</span>。<br>天才を自分の味方にする方法。</h2>
+      <p class="section-lead">
+        AIは<strong>東大生並に賢いけど、みんなのことを何も知らない新入社員</strong>。指示の仕方ひとつで、答えの質が劇的に変わります。ここでは、<em>AIに"最高の仕事"をさせる方法</em>を学ぼう。
+      </p>
+
+      <h3>使う前に — 3つの問い</h3>
+      <p>AIに頼む前に、<strong>ちょっと立ち止まって考える</strong>。これが上級者と初心者の分かれ目。</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">① 自分で考えるべき?</h4>
+          <p style="margin:0;font-size:14px;">作文の構成、自分の意見、進路の選択など、<strong>自分の頭で考えること自体が学び</strong>になる場面ではAIに頼らない。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">② 事実確認が必要?</h4>
+          <p style="margin:0;font-size:14px;">歴史、数字、固有名詞など、<strong>正確さが重要</strong>な情報は、AIの答えを必ず別ソースで確認。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">③ 個人情報を含む?</h4>
+          <p style="margin:0;font-size:14px;">本名、住所、家族の情報、学校の内部情報など、<strong>外に出てはいけない情報</strong>は絶対に入力しない。</p>
+        </div>
+      </div>
+
+      <h3>AIに頼むべき場面 vs 頼まない場面</h3>
+      <div class="compare">
+        <div class="compare__side compare__side--good">
+          <div class="compare__label">✅ AIに頼むべき</div>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;">
+            <li>文章の添削・要約・翻訳</li>
+            <li>アイデア出し・ブレスト</li>
+            <li>難しい概念の説明</li>
+            <li>コード・HTML生成</li>
+            <li>表・リストへの整形</li>
+            <li>たたき台・下書き作成</li>
+          </ul>
+        </div>
+        <div class="compare__side compare__side--bad">
+          <div class="compare__label">❌ AIに頼まない</div>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;">
+            <li>最新の事実確認</li>
+            <li>正確な計算（電卓が正しい）</li>
+            <li>医療・法律の最終判断</li>
+            <li>君の感情・気持ちそのもの</li>
+            <li>個人情報を扱う処理</li>
+            <li>「自分で考える力」を鍛える場面</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>プロンプトの 5つの黄金要素</h3>
+      <p>良いプロンプトには<strong>5つの要素</strong>が揃っている。これを意識するだけで、AIの答えが別物になります。</p>
+
+      <table class="table">
+        <thead>
+          <tr><th style="width:90px;">要素</th><th>内容</th><th>例</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>① 役割</strong></td><td>AIに誰になってもらうか</td><td>プロの料理人として</td></tr>
+          <tr><td><strong>② 背景</strong></td><td>なぜ・どんな状況で必要か</td><td>中学生のお弁当を作りたい</td></tr>
+          <tr><td><strong>③ タスク</strong></td><td>何をしてほしいか</td><td>レシピを3つ提案</td></tr>
+          <tr><td><strong>④ 条件</strong></td><td>制約・ルール</td><td>予算500円、15分で、肉なし</td></tr>
+          <tr><td><strong>⑤ 出力形式</strong></td><td>どんな形で欲しいか</td><td>表形式で、材料と手順を分けて</td></tr>
+        </tbody>
+      </table>
+
+      <h3>BAD vs GOOD — プロンプトの威力</h3>
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <div class="compare__label">❌ BAD</div>
+          <p style="margin:0;font-size:14px;font-family:var(--font-mono);">「ダイエットのアドバイスを」</p>
+          <p style="margin-top:12px;font-size:13px;color:var(--ink-mid);">→ ありきたりな一般論しか出ない</p>
+        </div>
+        <div class="compare__side compare__side--good">
+          <div class="compare__label">✅ GOOD</div>
+          <p style="margin:0;font-size:13px;font-family:var(--font-mono);line-height:1.7;">「私は15歳の男子バスケ部。170cm/65kg。筋肉落とさず体脂肪だけ減らしたい。朝練あり、自炊なし。1週間の食事メニューを表で」</p>
+          <p style="margin-top:12px;font-size:13px;color:var(--ink-mid);">→ ピッタリ合った答えが出る</p>
+        </div>
+      </div>
+
+      <h3>AIは確率器 — 使い方の心得</h3>
+      <div class="callout callout--gold">
+        <div class="callout__label">本質的な理解</div>
+        <p>AIは<strong>確率器</strong>。同じプロンプトでも毎回答えが微妙に違う。<br>上手く使うコツは、<em>「どんな入力でどんな出力が返ってくるか、予想しながら試す」</em>こと。AIとの対話は<strong>探検</strong>です。1回でうまく行かなくても気にせず、ズレから学んで改善する。</p>
+      </div>
+
+      <h3>上級テクニック</h3>
+
+      <h4>① プロンプト自体をAIに作らせる</h4>
+      <div class="card card--soft">
+        <p style="font-family:var(--font-mono);font-size:13px;line-height:1.85;margin:0;">
+          「<strong>〇〇について最高の答えを引き出したいです。<br>まず、そのための最適なプロンプトを3つ提案してください。<br>その後、最も良いと思う1つを実行してください。</strong>」
+        </p>
+        <p style="margin-top:10px;margin-bottom:0;font-size:13px;color:var(--ink-mid);">→ AIが"上手な質問の仕方"を提案してくれる。<em>自分で考えるのを諦めずに済む</em>。</p>
+      </div>
+
+      <h4>② タスクを分割して、成果物を組み合わせる</h4>
+      <p><strong>大きな作業は、小さな部品に分けて頼む</strong>のがプロのやり方。</p>
+      <div class="card card--soft">
+        <p style="font-family:var(--font-mono);font-size:13px;line-height:1.8;margin:0;">
+          ❌ 「Webサイトを作って」 (丸投げ)<br><br>
+          ✅ Step 1: 「自己紹介文を3パターン書いて」<br>
+          ✅ Step 2: 「1番目の文をHTML化して」<br>
+          ✅ Step 3: 「かっこいいCSSを追加して」<br>
+          ✅ Step 4: 「画像生成AI用のプロンプトも作って」
+        </p>
+        <p style="margin-top:10px;margin-bottom:0;font-size:13px;color:var(--ink-mid);">前のAIの出力を、次のプロンプトに渡す。これが<strong>成果物の組み合わせ</strong>。</p>
+      </div>
+
+      <h4>③ 対話で育てる — 便利フレーズ集</h4>
+      <p>1回で完璧は無理。<em>AIと会話しながら答えを育てる</em>。次のフレーズを覚えておくと、AIとの会話が劇的に上達します：</p>
+      <ul>
+        <li>「もう少し<strong>具体的に</strong>」</li>
+        <li>「<strong>中学生に分かるように</strong>書き直して」</li>
+        <li>「これを<strong>表形式に</strong>」</li>
+        <li>「<strong>3パターン</strong>出して、その中から選ばせて」</li>
+        <li>「<strong>逆の立場</strong>からも考えて」</li>
+        <li>「<strong>もっと簡潔に</strong>」/「<strong>もっと詳しく</strong>」</li>
+        <li>「<strong>例を3つ</strong>挙げて」</li>
+      </ul>
+
+      <h4>④ AIを壁打ち相手にする</h4>
+      <p>「答えをもらう」だけがAI活用じゃない。<strong>自分の思考を強化する</strong>使い方も：</p>
+      <ul>
+        <li>AIに<strong>質問してもらう</strong>（自分の考えを深める）</li>
+        <li>AIに<strong>反論してもらう</strong>（自分の論を強くする）</li>
+        <li>AIに<strong>別視点を出してもらう</strong>（思考の幅を広げる）</li>
+      </ul>
+
+      <h4>⑤ モデルを使い分ける</h4>
+      <p>1つのAIに全部やらせる時代は終わった。<strong>タスクごとにベストなAIを選ぶ</strong>。</p>
+      <table class="table">
+        <thead>
+          <tr><th>用途</th><th>おすすめモデル</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>文章中心の作業</td><td><strong>Claude</strong>（自然な日本語、長文に強い）</td></tr>
+          <tr><td>画像が必要</td><td><strong>ChatGPT (DALL·E)</strong>（テキストから画像生成）</td></tr>
+          <tr><td>超長文の処理</td><td><strong>Gemini</strong>（100万トークン処理）</td></tr>
+          <tr><td>プログラミング</td><td><strong>Claude / GitHub Copilot</strong></td></tr>
+          <tr><td>最新情報の検索</td><td><strong>Perplexity / Gemini</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 05</span>
+          <h3 class="work__title">プロンプトを組み立てよう</h3>
+        </div>
+        <p class="work__desc">5つの要素を埋めるだけで、効果的なプロンプトが完成します。自分の実際の悩みで試してみよう。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>役割（誰として？）</label>
+          <input class="input" id="pRole" placeholder="例：プロの英語教師">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>背景（なぜ・どんな状況？）</label>
+          <input class="input" id="pContext" placeholder="例：中3で英検3級を目指している">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>タスク（何を？）</label>
+          <input class="input" id="pTask" placeholder="例：毎日の勉強計画を立てて">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>条件（制約は？）</label>
+          <input class="input" id="pConstraint" placeholder="例：1日30分、2ヶ月で完了、単語中心">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>出力形式（どんな形で？）</label>
+          <input class="input" id="pFormat" placeholder="例：日別の表形式で、タスクと目安時間">
+        </div>
+
+        <div class="prompter__output" id="pOutput">↓ 上に入力すると、ここに完成プロンプトが生成されます</div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn" id="pCopy">📋 コピー</button>
+          <button class="btn btn--secondary" onclick="saveWork('p', ['pRole','pContext','pTask','pConstraint','pFormat'])" id="pSave">💾 保存</button>
+          <span id="pStatus" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+      </div>
+
+      <h3>明日から使える 日常プロンプト集</h3>
+      <div class="card card--soft">
+        <ul style="margin:0;padding-left:20px;">
+          <li>「次の英単語10個、それぞれ<strong>例文を中学生向け</strong>に作って」</li>
+          <li>「この問題の<strong>解き方の考え方だけ教えて</strong>、答えは書かないで」</li>
+          <li>「私の作文を読んで、<strong>悪い点を3つだけ指摘</strong>して」</li>
+          <li>「〇〇を<strong>5歳児に分かるように</strong>説明して」</li>
+          <li>「このスケジュール、<strong>無理がないか確認</strong>して」</li>
+          <li>「この相談、<strong>3つの異なる視点</strong>から答えて」</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 6 — DANGERS
+         ================================================= -->
+    <section class="section" id="ch6">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        THINK PHASE · 考える
+      </div>
+      <div class="section-tag">CHAPTER 06</div>
+      <h2 class="section-title">AIの<span class="hl-coral">危険性</span>。<br>知らないと、足をすくわれる。</h2>
+      <p class="section-lead">
+        AIは便利。でも<strong>取扱注意の道具</strong>です。ここでは、AIに潜む<em>5つの大きなリスク</em>と、自分を守るための知識を学びます。これは一生使うスキル。
+      </p>
+
+      <h3>① ハルシネーション — AIは自信満々に嘘をつく</h3>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">HALLUCINATION</div>
+        <p>AIが<strong>「ありもしない情報を、もっともらしく作り出す」</strong>現象。<br>なぜ起きるか？ — AIは<em>「それっぽい言葉」を確率で並べているだけ</em>で、事実確認はしていないから。<strong>どんなに最新モデルでも、完全にはなくならない</strong>。</p>
+      </div>
+
+      <h4>実際に起きた事件</h4>
+      <div class="card">
+        <p style="margin:0;"><strong>🇺🇸 架空の判例事件（2023年）</strong><br>
+        NYの弁護士が裁判書類にChatGPTを使ったら、<em>実在しない判例が6件</em>混入。裁判所で大問題に。弁護士は罰金処分。</p>
+      </div>
+      <div class="card">
+        <p style="margin:0;"><strong>📚 存在しない論文の引用</strong><br>
+        学生のレポートに、<em>AIが生成した架空の論文</em>が引用される事例が多発。大学が対応に追われている。</p>
+      </div>
+      <div class="card">
+        <p style="margin:0;"><strong>⚖️ 航空会社チャットボット事件（2024年）</strong><br>
+        カナダのAir Canadaのチャットボットが<em>存在しない割引制度</em>を案内。裁判所は「AIの発言も会社の責任」と判決。</p>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 06</span>
+          <h3 class="work__title">ハルシネーション判定クイズ</h3>
+        </div>
+        <p class="work__desc">AIの回答を読んで、「本当」か「嘘」かを見抜いてみよう。本物のハルシネーションは、これくらい自然に紛れ込みます。</p>
+
+        <div class="quiz" id="quiz"></div>
+      </div>
+
+      <h3>② セキュリティ・個人情報</h3>
+      <p>AIに入力した内容は、<strong>開発会社のサーバーに送られます</strong>。一部はAIの学習に使われる可能性も。<em>一度送った情報は、完全には消せない</em>と考えてください。</p>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">絶対NG</div>
+        <p>絶対にAIに入力してはいけない情報：</p>
+        <ul style="margin-top:8px;margin-bottom:0;color:var(--ink);">
+          <li><strong>本名・住所・電話番号・学校名</strong>（自分、家族、友達の情報）</li>
+          <li><strong>パスワード・クレジットカード番号</strong></li>
+          <li><strong>学校の成績・内部情報・他の生徒の情報</strong></li>
+          <li><strong>人の悪口・プライベートな噂</strong></li>
+          <li><strong>まだ公開されていない創作・アイデア</strong>（学習に使われる可能性）</li>
+        </ul>
+      </div>
+
+      <h4>攻撃する側の話 — 知っておくべき脅威</h4>
+      <p>「自分の情報を守ればOK」だけじゃ足りない。AIを使った攻撃が増えています：</p>
+      <ul>
+        <li><strong>プロンプトインジェクション</strong> — 巧妙な指示でAIの安全装置を解除する攻撃</li>
+        <li><strong>AI生成のフィッシング</strong> — 完璧な日本語の詐欺メールが、AIで誰でも作れる時代</li>
+        <li><strong>音声クローン詐欺</strong> — 30秒の音声で誰でも声をコピーされる。「お母さん、助けて」の偽電話事件が世界中で発生</li>
+      </ul>
+
+      <h3>③ 著作権の問題</h3>
+      <p>AIで作った画像・文章を使うときの<strong>○△× 線引き</strong>を知っておこう：</p>
+      <table class="table">
+        <thead>
+          <tr><th>ケース</th><th>判定</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>自分の作品にAI生成画像を使う（学校の課題）</td><td><strong style="color:var(--green);">○ OK</strong></td></tr>
+          <tr><td>クラスのアルバムにAI画像（同意がない人が含まれる）</td><td><strong style="color:var(--accent-deep);">△ 注意</strong></td></tr>
+          <tr><td>SNSにAI生成イラスト投稿（誰かのスタイルに似てる可能性）</td><td><strong style="color:var(--accent-deep);">△ 注意</strong></td></tr>
+          <tr><td>「〇〇先生（実在の漫画家）風で」とプロンプト</td><td><strong style="color:var(--coral-deep);">× NG</strong></td></tr>
+          <tr><td>既存キャラ（ピカチュウなど）をAIで生成</td><td><strong style="color:var(--coral-deep);">× NG</strong></td></tr>
+          <tr><td>友達の写真をAIで加工して拡散</td><td><strong style="color:var(--coral-deep);">× NG</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>④ ディープフェイクと"今そこにある危機"</h3>
+      <p>中高生が直面する、リアルな脅威：</p>
+      <div class="card">
+        <p style="margin:0;"><strong>🇰🇷 韓国 ディープフェイク事件（2024年）</strong><br>
+        中学・高校で<em>同級生の顔を使った偽画像</em>が拡散。社会問題化。「軽い気持ち」で作った加害者も処罰の対象に。</p>
+      </div>
+      <div class="card">
+        <p style="margin:0;"><strong>💔 Character.ai 事件（2024年）</strong><br>
+        米14歳少年が<em>AIキャラクターに依存して自殺</em>。親が訴訟を起こした。AIへの感情移入が深刻な問題に。</p>
+      </div>
+      <div class="card">
+        <p style="margin:0;"><strong>🇭🇰 香港 25億円詐欺（2024年）</strong><br>
+        AIディープフェイクで<em>社長に扮したビデオ会議</em>で送金させた。本物そっくりだった。</p>
+      </div>
+
+      <h3>⑤ AI依存 — 自分で考える力の低下</h3>
+      <p><strong>これが、中高生にとって一番大事なリスク</strong>。</p>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">考えてみよう</div>
+        <p>
+          <strong>計算機ができる前、人は暗算が得意でした。</strong><br>
+          <strong>カーナビができる前、人は地図を読めました。</strong><br>
+          <strong>検索エンジンができる前、人はもっと記憶していました。</strong><br><br>
+          じゃあ、<em>AIが普及した後、私たちは何が苦手になるでしょう？</em>
+        </p>
+      </div>
+
+      <p><strong>答え</strong>：自分で考えること、文章を組み立てること、<em>疑問を持つこと</em>、批判的に見ること。</p>
+
+      <h4>AI依存の兆候チェックリスト</h4>
+      <div class="checklist">
+        <div class="checklist__item"><input type="checkbox"> AIに聞かないと文章が書けなくなった</div>
+        <div class="checklist__item"><input type="checkbox"> 自分の意見を持つ前にAIに確認する癖がついた</div>
+        <div class="checklist__item"><input type="checkbox"> 暇な時間にAIと話してしまう</div>
+        <div class="checklist__item"><input type="checkbox"> AIが言うことを「権威」として受け取っている</div>
+        <div class="checklist__item"><input type="checkbox"> 自分の感情をAIに代弁させたい時がある</div>
+        <div class="checklist__item"><input type="checkbox"> AIに認められたい・褒められたいと感じる</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-mid);">3つ以上当てはまったら要注意。<em>自分で考える時間を意識的に作る</em>習慣を取り戻そう。</p>
+
+      <h3>行動指針 10条 — 君を守る具体的なルール</h3>
+      <div class="card card--ink">
+        <ol>
+          <li>重要な事実は、<strong>3つの異なるソース</strong>で確認</li>
+          <li>AIに<strong>個人を特定する情報</strong>は絶対入れない</li>
+          <li>悩みは<strong>人間に</strong>相談（家族・先生・友達）</li>
+          <li>AIの答えに<strong>「なぜ？」を3回</strong>問いかける</li>
+          <li>週に1回、<strong>AIなしで考える日</strong>を作る</li>
+          <li>作った文章は、<strong>必ず自分で読み返す</strong></li>
+          <li>AIを<strong>感情の代わり</strong>にしない</li>
+          <li>SNSへの投稿は<strong>「24時間置く」</strong>ルール</li>
+          <li>分からないことは<strong>「分からない」と言える</strong></li>
+          <li>AIは<strong>道具。使われる</strong>な、<strong>使う側</strong>に立つ</li>
+        </ol>
+      </div>
+
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK 07</span>
+          <h3 class="work__title">自分ルールを宣言しよう</h3>
+        </div>
+        <p class="work__desc">AIを安全に使うための、自分なりのルールを宣言しよう。声に出して読めるくらい具体的に。</p>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>AIに絶対に入力しないものは?</label>
+          <textarea class="textarea" id="w7q1" placeholder="例：本名、学校名、友達の個人情報、家族の話"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>AIの答えを必ず確認する場面は?</label>
+          <textarea class="textarea" id="w7q2" placeholder="例：歴史の事実、論文の引用、数字、URLリンク"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>「自分の頭で考える」を守る場面は?</label>
+          <textarea class="textarea" id="w7q3" placeholder="例：作文の最初の構成、友達への手紙、自分の意見を問われる時"></textarea>
+        </div>
+        <button class="btn" onclick="saveWork('w7', ['w7q1','w7q2','w7q3'])">💾 自分ルールを保存</button>
+        <span id="w7status" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 7 — BUILD
+         ================================================= -->
+    <section class="section" id="ch7">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        CREATE PHASE · 創る
+      </div>
+      <div class="section-tag">CHAPTER 07 · BUILD</div>
+      <h2 class="section-title"><span class="hl">自己紹介サイト</span>を<br>創ろう。</h2>
+      <p class="section-lead">
+        ここからは実践。<strong>3つのステップ</strong>で、自分だけのWebサイトを完成させます。これまで学んだ<em>プロンプト術・注意点・モデル選択</em>、すべて使います。今日作るのは、URLひとつで世界中に共有できる<strong>君の名刺</strong>です。
+      </p>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">制作前のリマインド</div>
+        <p><strong>本名・学校名・住所・電話番号は絶対にサイトに載せない。</strong><br>ニックネーム・学年（中学生/高校生）くらいで十分です。<em>インターネットに公開する可能性がある前提</em>で作りましょう。</p>
+      </div>
+
+      <h3>完成例ギャラリー — インスピレーション</h3>
+      <p>こんな感じのサイトが作れます。タイプはたくさん。<strong>君の好みに合わせて</strong>方向性を選ぼう。</p>
+
+      <div class="gallery">
+        <div class="gallery__item">
+          <div class="gallery__thumb" style="background:linear-gradient(135deg,#1A2D5C,#3D5FBA);">クール</div>
+          <div class="gallery__info">
+            <div class="gallery__title">テック・ミニマル</div>
+            <div class="gallery__tag">青系 / シンプル</div>
+          </div>
+        </div>
+        <div class="gallery__item">
+          <div class="gallery__thumb" style="background:linear-gradient(135deg,#FFC830,#F26D5B);color:#1A2D5C;">ポップ</div>
+          <div class="gallery__info">
+            <div class="gallery__title">明るく元気</div>
+            <div class="gallery__tag">黄×コーラル</div>
+          </div>
+        </div>
+        <div class="gallery__item">
+          <div class="gallery__thumb" style="background:#1A2D5C;">ダーク</div>
+          <div class="gallery__info">
+            <div class="gallery__title">ダーク・モード</div>
+            <div class="gallery__tag">黒系 / 高級感</div>
+          </div>
+        </div>
+        <div class="gallery__item">
+          <div class="gallery__thumb" style="background:linear-gradient(135deg,#7B6CC4,#D67898);">アート</div>
+          <div class="gallery__info">
+            <div class="gallery__title">アーティスティック</div>
+            <div class="gallery__tag">紫×ピンク</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>段階別の到達目標</h3>
+      <div class="grid-3">
+        <div class="card card--soft">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);letter-spacing:0.1em;font-weight:700;margin-bottom:6px;">最低ライン</div>
+          <h4 style="margin-top:0;">プロンプトを1つ書いて<br>結果を見る</h4>
+          <p style="margin:0;font-size:13px;">完成しなくてもOK。AIに頼んだ経験が大事。</p>
+        </div>
+        <div class="card card--soft">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent-deep);letter-spacing:0.1em;font-weight:700;margin-bottom:6px;">標準</div>
+          <h4 style="margin-top:0;">サイトが1つ完成する</h4>
+          <p style="margin:0;font-size:13px;">基本的な自己紹介ページが、ライブプレビューで動く。</p>
+        </div>
+        <div class="card card--soft">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--coral-deep);letter-spacing:0.1em;font-weight:700;margin-bottom:6px;">挑戦</div>
+          <h4 style="margin-top:0;">画像も含めて2案作る</h4>
+          <p style="margin:0;font-size:13px;">画像生成AIで作ったアバター付きの完成版を作る。</p>
+        </div>
+      </div>
+
+      <h3>STEP 1 — 自分のプロンプトで試す</h3>
+      <p>いきなりテンプレを使わず、<strong>自分の頭で考えたプロンプト</strong>でAIに頼んでみよう。後でプロのやり方と比較するために大事なステップ。</p>
+
+      <div class="step">
+        <div class="step__num">1</div>
+        <h4 class="step__title">自分の言葉でプロンプトを書く</h4>
+        <p class="step__body">5要素を思い出しながら、自分の言葉でプロンプトを組み立ててみよう。下の欄に書いてみてください。</p>
+
+        <div class="field" style="margin-top:14px;">
+          <label class="field__label">あなたが書くプロンプト</label>
+          <textarea class="textarea" id="s1prompt" style="min-height:160px;" placeholder="例：あなたはプロのWebデザイナーです。私は高校生で、プログラミングが趣味、将来はゲーム開発者になりたい。自己紹介のWebサイトを作ってください。シンプルでクールなデザイン、青とシルバーを基調に。HTMLとCSSを1ファイルで出力して。"></textarea>
+        </div>
+        <button class="btn" onclick="saveWork('s1', ['s1prompt'])">💾 プロンプトを保存</button>
+        <span id="s1status" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+
+      <div class="callout">
+        <div class="callout__label">次にやること</div>
+        <p>1. 上のプロンプトをChatGPTかGeminiに送る<br>2. 出てきたコードを、下の「ライブプレビュー」（STEP 3）に貼る<br>3. 思ったのと違ったら、AIに「もっと〇〇にして」と頼み直す</p>
+      </div>
+
+      <h3>STEP 2 — タスク分解式で作る（成果物の組み合わせ）</h3>
+      <p>プロのやり方。<strong>いきなりWebサイトを頼まず、部品を1つずつ作らせて組み合わせる</strong>。これが上級テクニック。</p>
+
+      <div class="card card--soft">
+        <h4 style="margin-top:0;">組み立てステップ</h4>
+        <ol style="margin:0;">
+          <li><strong>設計書を作らせる</strong>：「自己紹介サイトの構成案を、セクション別に提案して」</li>
+          <li><strong>自己紹介文を作らせる</strong>：「私の情報をもとに、3パターンの自己紹介文を」</li>
+          <li><strong>それをもとにHTMLを作らせる</strong>：「上の設計書と文章でHTMLサイトを作成して」</li>
+          <li><strong>CSSを洗練させる</strong>：「もっと〇〇風のデザインに変えて」</li>
+          <li><strong>画像プロンプトを作らせる</strong>：「このサイトに合う画像生成用プロンプトを」</li>
+        </ol>
+      </div>
+
+      <div class="step">
+        <div class="step__num">2</div>
+        <h4 class="step__title">自分の自己紹介シート</h4>
+        <p class="step__body">まず、自分の情報を整理しよう。これをAIに渡せば、一気にサイトが完成します。</p>
+
+        <div class="field" style="margin-top:14px;">
+          <label class="field__label">表示する名前（ニックネームOK）</label>
+          <input class="input" id="s2name" placeholder="例：ユウキ / Tech太郎">
+        </div>
+        <div class="field">
+          <label class="field__label">学年・年代（大まかでOK）</label>
+          <input class="input" id="s2grade" placeholder="例：高2 / 中学生">
+        </div>
+        <div class="field">
+          <label class="field__label">趣味・好きなこと（3つくらい）</label>
+          <input class="input" id="s2hobby" placeholder="例：バスケ、ゲーム、プログラミング">
+        </div>
+        <div class="field">
+          <label class="field__label">将来の夢・やりたいこと</label>
+          <input class="input" id="s2dream" placeholder="例:ゲーム会社でAIエンジニアになりたい">
+        </div>
+        <div class="field">
+          <label class="field__label">サイトの雰囲気・テーマ</label>
+          <input class="input" id="s2theme" placeholder="例：ダークでクール / ポップで可愛い / 宇宙っぽい">
+        </div>
+        <div class="field">
+          <label class="field__label">好きな色</label>
+          <input class="input" id="s2color" placeholder="例：青と黒 / パステルピンク">
+        </div>
+        <div class="field">
+          <label class="field__label">一言アピール</label>
+          <input class="input" id="s2pitch" placeholder="例：人と違うものを作るのが好き">
+        </div>
+
+        <button class="btn" id="s2generate">⚡ この情報でプロンプトを生成</button>
+        <button class="btn btn--secondary" onclick="saveWork('s2', ['s2name','s2grade','s2hobby','s2dream','s2theme','s2color','s2pitch'])">💾 保存</button>
+
+        <div class="prompter__output" id="s2output" style="margin-top:18px;">↑ 上の情報を埋めて「⚡生成」を押してください</div>
+      </div>
+
+      <h3>STEP 3 — ライブプレビューで改良</h3>
+      <p>AIが生成したHTMLを、ここに貼って確認できる。<strong>自由に編集して、見た目をリアルタイムに確認</strong>しよう。</p>
+
+      <div class="step">
+        <div class="step__num">3</div>
+        <h4 class="step__title">コードを貼って、見た目を確認</h4>
+        <p class="step__body">AIが生成したコードを左に貼ると、右にプレビューが出ます。編集すればリアルタイムに変わる。気に入るまで何度でも改良しよう。</p>
+
+        <div class="preview">
+          <div class="preview__tabs">
+            <button class="preview__tab is-active" data-tab="code">CODE</button>
+            <button class="preview__tab" data-tab="result">PREVIEW</button>
+          </div>
+          <div class="preview__panel is-active" data-panel="code">
+            <textarea class="preview__code" id="previewCode" spellcheck="false"></textarea>
+          </div>
+          <div class="preview__panel" data-panel="result">
+            <iframe class="preview__frame" id="previewFrame"></iframe>
+          </div>
+          <div class="preview__actions">
+            <button class="btn" id="previewRun">▶ 更新</button>
+            <button class="btn btn--secondary" id="previewReset">↺ サンプルに戻す</button>
+            <button class="btn btn--secondary" id="previewSave">💾 保存</button>
+            <button class="btn btn--secondary" id="previewDownload">⬇ ダウンロード</button>
+            <span id="previewStatus" style="align-self:center;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+          </div>
+        </div>
+      </div>
+
+      <h3>画像生成 — アバターを作ろう</h3>
+      <div class="callout callout--gold">
+        <div class="callout__label">おすすめのコツ</div>
+        <p><strong>人物の顔写真風は避ける</strong>（肖像権・同意の問題）。<em>アバター・キャラクター・シンボル</em>を作るのが安全。<br><br>
+        プロンプト例：「青と白のロボットアバター、フラットデザイン、SNSアイコン用正方形」<br><br>
+        おすすめツール：ChatGPT（DALL·E 3内蔵）、Adobe Firefly、Microsoft Designer</p>
+      </div>
+
+      <h3>困ったときの避難網</h3>
+      <table class="table">
+        <thead>
+          <tr><th>困ったこと</th><th>解決策</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AIのコードが動かない</td><td>エラー文をコピーして「このエラー直して」と頼む</td></tr>
+          <tr><td>デザインが地味すぎる</td><td>「もっとカラフルで若者向けのかっこいいデザインに」</td></tr>
+          <tr><td>言葉にできない</td><td>完成例を見せて「こんな感じで」と伝える</td></tr>
+          <tr><td>時間が足りない</td><td>STEP 1だけでも完成させる。後は宿題でOK</td></tr>
+          <tr><td>AIの答えが期待外れ</td><td>「3パターン出して」と頼んで選ぶ</td></tr>
+        </tbody>
+      </table>
+
+      <h3>共有する</h3>
+      <p><strong>CodePen</strong>（codepen.io）に貼れば、URLで簡単に共有できます。無料で使え、登録すれば保存も可能。<em>自分の作品を世界に公開する第一歩</em>です。</p>
+    </section>
+
+    <!-- =================================================
+         CLOSING
+         ================================================= -->
+    <section class="section" id="closing">
+      <div class="closing">
+        <div class="closing__kicker">CLOSING</div>
+        <h2 class="closing__message">
+          AIは<span class="hl">道具</span>。<br>
+          道具を使いこなす人が、<br>
+          これからの時代の<span class="hl-coral">主人公</span>。
+        </h2>
+        <p style="max-width:600px;margin:0 auto 32px;font-size:15px;line-height:2;color:var(--ink-soft);">
+          90分、お疲れさまでした。<br>
+          プログラミング未経験の君たちが、AIの仕組みを理解し、自分のWebサイトを作れるようになりました。<br>
+          10年前ならプロのエンジニアにしかできなかったことです。<br><br>
+          <em>AIに作らせる人</em>になるのではなく、<br>
+          <em>AIを使って、自分の「やりたい」を実現する人</em>になってください。<br><br>
+          次回、君たちの「AIに聞いてみたい問い」を持ち寄って、<br>また一緒に深めていきましょう。
+        </p>
+
+        <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <div style="padding:10px 20px;border:1.5px solid var(--ink);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink);font-weight:700;">DAY 01 / COMPLETE</div>
+          <div style="padding:10px 20px;border:1.5px solid var(--line);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">NEXT: DAY 02 / PROMPT MASTERY</div>
+        </div>
+
+        <p style="margin-top:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">— Akky先生のプログラミング教室 —</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// =========================================================================
+// UNIVERSAL UTILITIES
+// =========================================================================
+const storage = {
+  set(key, val) { try { localStorage.setItem('ai_course_' + key, JSON.stringify(val)); } catch(e) {} },
+  get(key) { try { const v = localStorage.getItem('ai_course_' + key); return v ? JSON.parse(v) : null; } catch(e) { return null; } }
+};
+
+function saveWork(key, fieldIds) {
+  const data = {};
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  storage.set(key, data);
+  const status = document.getElementById(key + 'status');
+  if (status) {
+    status.textContent = '✔ 保存しました';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+  }
+}
+
+function loadWork(key, fieldIds) {
+  const data = storage.get(key);
+  if (!data) return;
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && data[id] !== undefined) el.value = data[id];
+  });
+}
+
+// Progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// Nav active state
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav__item');
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.toggle('is-active', item.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => navObserver.observe(s));
+
+// Mobile nav
+const navEl = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+const backdrop = document.getElementById('backdrop');
+navToggle.addEventListener('click', () => {
+  navEl.classList.toggle('is-open');
+  backdrop.classList.toggle('is-shown');
+});
+backdrop.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+});
+navItems.forEach(item => item.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+}));
+
+// =========================================================================
+// SIMULATOR (Chapter 4)
+// =========================================================================
+const simInput = document.getElementById('simInput');
+const simPredictions = document.getElementById('simPredictions');
+const exBtns = document.querySelectorAll('.sim__ex');
+
+const vocab = {
+  '日本で一番高い山は': [ {w:'富士山', p:93}, {w:'富士', p:4}, {w:'北岳', p:1.5} ],
+  'おはよう、今日の': [ {w:'天気は', p:65}, {w:'予定は', p:20}, {w:'朝ごはんは', p:10} ],
+  'aiは': [ {w:'人工知能', p:40}, {w:'これから', p:25}, {w:'人間を', p:15} ],
+  '将来の夢は': [ {w:'まだ', p:30}, {w:'エンジニア', p:15}, {w:'YouTuber', p:12} ],
+  'プログラミングって': [ {w:'難しい', p:45}, {w:'楽しい', p:30}, {w:'何から', p:15} ],
+  '学校の給食で好きなのは': [ {w:'カレー', p:50}, {w:'揚げパン', p:25}, {w:'唐揚げ', p:15} ]
+};
+
+function updateSim(val) {
+  if(!simPredictions) return;
+  if(!val) {
+    simPredictions.innerHTML = '<div class="sim__placeholder">↑ 上に入力するか、下のサンプルをクリック</div>';
+    return;
+  }
+  const key = val.toLowerCase().trim();
+  let preds = vocab[key] || [
+    {w: '...', p: 45},
+    {w: 'です', p: 30},
+    {w: 'ます', p: 15}
+  ];
+  
+  simPredictions.innerHTML = preds.map(p => `
+    <div class="sim__pred-row">
+      <div class="sim__pred-word">${p.w}</div>
+      <div class="sim__pred-bar"><div class="sim__pred-fill" style="width:${p.p}%"></div></div>
+      <div class="sim__pred-pct">${p.p}%</div>
+    </div>
+  `).join('');
+}
+
+simInput?.addEventListener('input', e => updateSim(e.target.value));
+exBtns.forEach(b => b.addEventListener('click', e => {
+  const v = e.target.getAttribute('data-ex');
+  if(simInput) simInput.value = v;
+  updateSim(v);
+}));
+
+// =========================================================================
+// PROMPT BUILDER (Chapter 5)
+// =========================================================================
+function generatePrompt() {
+  const r = document.getElementById('pRole')?.value || '';
+  const c = document.getElementById('pContext')?.value || '';
+  const t = document.getElementById('pTask')?.value || '';
+  const cn = document.getElementById('pConstraint')?.value || '';
+  const f = document.getElementById('pFormat')?.value || '';
+  
+  if(!r && !c && !t && !cn && !f) return;
+  
+  const text = `# 指示\nあなたは【${r||'専門家'}】です。\n以下の背景と条件をもとに、【${t||'タスク'}】を実行してください。\n\n# 背景\n${c||'特になし'}\n\n# 条件\n${cn||'特になし'}\n\n# 出力形式\n${f||'見やすい形式で'}`;
+  
+  const out = document.getElementById('pOutput');
+  if(out) out.textContent = text;
+}
+
+['pRole', 'pContext', 'pTask', 'pConstraint', 'pFormat'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', generatePrompt);
+});
+
+document.getElementById('pCopy')?.addEventListener('click', () => {
+  const text = document.getElementById('pOutput')?.textContent;
+  if(text) navigator.clipboard.writeText(text);
+  const st = document.getElementById('pStatus');
+  if(st) { st.textContent = '📋 コピーしました'; setTimeout(() => st.textContent='', 2000); }
+});
+
+// =========================================================================
+// QUIZ (Chapter 6)
+// =========================================================================
+const questions = [
+  { q: "「徳川家康は江戸幕府を開いた後、1620年に黒船が来航した際、ペリーと会談した。」", a: false, fb: "黒船来航は1853年。家康は1616年に死去しています。AIは歴史上の有名人と出来事を適当に繋ぎ合わせることがあります。" },
+  { q: "「水は摂氏0度で凍り、100度で沸騰する（標準大気圧下）。」", a: true, fb: "これは正しい事実です。一般的な科学的事実についてはAIは高い精度で回答します。" },
+  { q: "「日本で一番高い山は富士山で、二番目は北岳、三番目は奥穂高岳である。」", a: true, fb: "これも正しい事実です。（奥穂高岳と間ノ岳は同率3位ですが、一般的に正しいとされます）" },
+  { q: "「芥川龍之介の代表作『人間失格』は、彼の生い立ちを色濃く反映している。」", a: false, fb: "『人間失格』は太宰治の作品です。AIは作家と作品をよく混同します。" }
+];
+let currentQ = 0;
+let score = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quiz');
+  if(!container) return;
+  
+  if(currentQ >= questions.length) {
+    container.innerHTML = `
+      <div class="quiz__complete-score">${score} / ${questions.length}</div>
+      <div class="quiz__complete-msg">クイズ完了！事実確認の大切さがわかりましたか？</div>
+      <button class="quiz__reset" onclick="currentQ=0; score=0; renderQuiz()">↻ もう一度挑戦</button>
+    `;
+    return;
+  }
+  
+  const q = questions[currentQ];
+  const dots = questions.map((_, i) => `<div class="quiz__dot ${i<currentQ?'is-done':i===currentQ?'is-current':''}"></div>`).join('');
+  
+  container.innerHTML = `
+    <div class="quiz__progress">${dots}</div>
+    <div class="quiz__q">
+      <div class="quiz__q-label">Q${currentQ+1}</div>
+      <div class="quiz__q-text">${q.q}</div>
+    </div>
+    <div class="quiz__actions">
+      <button class="quiz__btn" id="btnTrue">⭕ 本当 (FACT)</button>
+      <button class="quiz__btn" id="btnFalse">❌ 嘘 (HALLUCINATION)</button>
+    </div>
+    <div class="quiz__feedback" id="quizFb">
+      <strong id="quizFbHead"></strong>
+      <div class="fb-body">${q.fb}</div>
+      <button class="quiz__next" id="btnNext">次の問題へ ➔</button>
+    </div>
+  `;
+  
+  const btnT = document.getElementById('btnTrue');
+  const btnF = document.getElementById('btnFalse');
+  const fb = document.getElementById('quizFb');
+  const fbHead = document.getElementById('quizFbHead');
+  
+  const answer = (userAns) => {
+    btnT.disabled = true; btnF.disabled = true;
+    const isCorrect = userAns === q.a;
+    if(isCorrect) score++;
+    
+    if(userAns) btnT.classList.add(isCorrect ? 'is-correct' : 'is-wrong');
+    else btnF.classList.add(isCorrect ? 'is-correct' : 'is-wrong');
+    
+    fb.classList.add('is-shown', isCorrect ? 'is-good' : 'is-bad');
+    fbHead.textContent = isCorrect ? '✅ 正解！' : '❌ 不正解...';
+  };
+  
+  btnT.onclick = () => answer(true);
+  btnF.onclick = () => answer(false);
+  document.getElementById('btnNext').onclick = () => { currentQ++; renderQuiz(); };
+}
+renderQuiz();
+
+// =========================================================================
+// SITE BUILDER (Chapter 7)
+// =========================================================================
+document.getElementById('s2generate')?.addEventListener('click', () => {
+  const n = document.getElementById('s2name')?.value || '[名前]';
+  const g = document.getElementById('s2grade')?.value || '[学年]';
+  const h = document.getElementById('s2hobby')?.value || '[趣味]';
+  const d = document.getElementById('s2dream')?.value || '[将来の夢]';
+  const t = document.getElementById('s2theme')?.value || '[テーマ]';
+  const c = document.getElementById('s2color')?.value || '[色]';
+  const p = document.getElementById('s2pitch')?.value || '[アピール]';
+  
+  const prompt = `あなたはプロのWebデザイナーです。
+以下のプロフィールをもとに、自己紹介用のHTMLとCSSを1ファイルで作成してください。
+
+【プロフィール】
+・名前：${n}
+・学年：${g}
+・趣味：${h}
+・将来の夢：${d}
+・一言アピール：${p}
+
+【デザインの要望】
+・テーマ：${t}
+・メインカラー：${c}
+・シンプルでモダンなデザイン
+・スマホでも見やすいレスポンシブデザイン
+・プロフィール画像が入る丸いプレースホルダー（ダミー画像URL：https://via.placeholder.com/150）を配置
+
+出力はHTMLコードのみ（\`\`\`html〜\`\`\`で囲む）にしてください。`;
+  
+  const out = document.getElementById('s2output');
+  if(out) out.textContent = prompt;
+});
+
+// Live Preview
+const pTabs = document.querySelectorAll('.preview__tab');
+const pPanels = document.querySelectorAll('.preview__panel');
+const pCode = document.getElementById('previewCode');
+const pFrame = document.getElementById('previewFrame');
+
+pTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    pTabs.forEach(t => t.classList.remove('is-active'));
+    pPanels.forEach(p => p.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    document.querySelector(`.preview__panel[data-panel="${tab.dataset.tab}"]`).classList.add('is-active');
+  });
+});
+
+function updatePreview() {
+  if(!pFrame || !pCode) return;
+  const doc = pFrame.contentWindow.document;
+  doc.open();
+  doc.write(pCode.value);
+  doc.close();
+}
+
+const defaultCode = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: sans-serif; background: #1A2D5C; color: white; text-align: center; padding: 50px; }
+  h1 { color: #FFC830; }
+  .card { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; display: inline-block; }
+  img { border-radius: 50%; width: 150px; height: 150px; object-fit: cover; border: 4px solid #FFC830; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="https://via.placeholder.com/150/1A2D5C/FFC830?text=ICON" alt="icon">
+    <h1>Hello, World!</h1>
+    <p>ここにAIが作ったコードを貼り付けてみよう。</p>
+  </div>
+</body>
+</html>`;
+
+if(pCode) pCode.value = storage.get('previewCode') || defaultCode;
+updatePreview();
+
+document.getElementById('previewRun')?.addEventListener('click', () => {
+  updatePreview();
+  const tab = document.querySelector('.preview__tab[data-tab="result"]');
+  if(tab) tab.click();
+});
+
+document.getElementById('previewReset')?.addEventListener('click', () => {
+  if(pCode) pCode.value = defaultCode;
+  updatePreview();
+});
+
+document.getElementById('previewSave')?.addEventListener('click', () => {
+  if(pCode) storage.set('previewCode', pCode.value);
+  const st = document.getElementById('previewStatus');
+  if(st) { st.textContent = '✔ 保存しました'; setTimeout(() => st.textContent='', 2000); }
+});
+
+document.getElementById('previewDownload')?.addEventListener('click', () => {
+  if(!pCode) return;
+  const blob = new Blob([pCode.value], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'my-website.html';
+  a.click();
+});
+
+// =========================================================================
+// INITIALIZE
+// =========================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  loadWork('w1', ['w1q1','w1q2','w1q3']);
+  loadWork('w2', ['w2q1','w2q2','w2q3']);
+  loadWork('w3', ['w3q1','w3q2','w3q3']);
+  loadWork('w7', ['w7q1','w7q2','w7q3']);
+  loadWork('s1', ['s1prompt']);
+  loadWork('s2', ['s2name','s2grade','s2hobby','s2dream','s2theme','s2color','s2pitch']);
+  loadWork('p',  ['pRole','pContext','pTask','pConstraint','pFormat']);
+  
+  generatePrompt();
+});
+</script>
+</body>
+</html>
