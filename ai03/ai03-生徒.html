@@ -1,0 +1,3474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Course DAY 03 ｜ Akky先生のプログラミング教室</title>
+<style>
+/* =================================================================
+   DESIGN TOKENS — Navy × Off-white × 2 Accents (DAY 01と統一)
+   ================================================================= */
+:root {
+  --bg: #FAF8F3;
+  --bg-alt: #F4F1EA;
+  --paper: #FFFFFF;
+  --paper-alt: #FCFAF6;
+
+  --ink: #1A2D5C;
+  --ink-soft: #4A5878;
+  --ink-mid: #6B7A99;
+  --ink-muted: #8B95AD;
+  --ink-dim: #B8BFCC;
+
+  --line: #E8E4DA;
+  --line-soft: #F0EDE5;
+  --line-strong: #1A2D5C;
+
+  --accent: #FFC830;
+  --accent-soft: #FFF6D9;
+  --accent-deep: #E8AC1A;
+
+  --coral: #F26D5B;
+  --coral-soft: #FCE5DF;
+  --coral-deep: #D04E3D;
+
+  --green: #5DAB6E;
+  --green-soft: #E5F0E8;
+
+  --m-blue: #3D5FBA;
+  --m-purple: #7B6CC4;
+  --m-pink: #D67898;
+  --m-mint: #5BB5AA;
+
+  --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+  --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, Menlo, monospace;
+
+  --nav-w: 280px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+
+  --shadow-xs: 0 1px 2px rgba(26,45,92,0.04);
+  --shadow-sm: 0 2px 6px rgba(26,45,92,0.05);
+  --shadow: 0 4px 12px rgba(26,45,92,0.06);
+  --shadow-md: 0 8px 20px rgba(26,45,92,0.08);
+
+  --pop: 4px 4px 0 var(--ink);
+  --pop-sm: 2px 2px 0 var(--ink);
+}
+
+/* =================================================================
+   RESET & BASE
+   ================================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-feature-settings: 'palt';
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.85;
+  font-size: 15.5px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: var(--accent); color: var(--ink); }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(26,45,92,0.025) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* =================================================================
+   PROGRESS BAR
+   ================================================================= */
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 100;
+  background: var(--line-soft);
+  pointer-events: none;
+}
+.progress__bar {
+  height: 100%;
+  background: var(--ink);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* =================================================================
+   LAYOUT
+   ================================================================= */
+.app {
+  display: grid;
+  grid-template-columns: var(--nav-w) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 960px) {
+  .app { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   NAV (Sidebar)
+   ================================================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: var(--paper-alt);
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.nav::-webkit-scrollbar { width: 4px; }
+.nav::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+}
+
+.nav__brand-mark { width: 36px; height: 36px; flex-shrink: 0; }
+.nav__brand-text { line-height: 1.3; }
+
+.nav__brand-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.nav__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.nav__school {
+  background: var(--ink);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.nav__list { list-style: none; }
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin: 1px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.nav__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+  min-width: 22px;
+  font-weight: 700;
+}
+
+.nav__item:hover { color: var(--ink); background: var(--bg); }
+
+.nav__item.is-active {
+  color: var(--ink);
+  background: var(--bg);
+  font-weight: 700;
+}
+.nav__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nav__item.is-active .nav__num { color: var(--ink); }
+
+.nav__phase {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.18em;
+  margin: 18px 12px 6px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.nav__footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,45,92,0.4);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 960px) {
+  .nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  .nav.is-open { transform: translateX(0); }
+  .nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .backdrop.is-shown { display: block; }
+}
+
+/* =================================================================
+   MAIN
+   ================================================================= */
+.main { min-width: 0; padding: 0 64px; }
+
+@media (max-width: 960px) { .main { padding: 0 20px; } }
+
+.section {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 100px 0 80px;
+  scroll-margin-top: 20px;
+  position: relative;
+}
+
+/* =================================================================
+   HERO
+   ================================================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0;
+  position: relative;
+}
+
+.hero__school {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.hero__school::before { content: ''; width: 24px; height: 1px; background: var(--ink-soft); }
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.hero__eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--ink); border-radius: 50%; }
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  color: var(--ink);
+}
+.hero__title .hl { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl::after {
+  content: ''; position: absolute; bottom: 4px; left: -4px; right: -4px;
+  height: 18px; background: var(--accent); z-index: -1;
+}
+.hero__title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl-coral::after {
+  content: ''; position: absolute; bottom: 4px; left: -4px; right: -4px;
+  height: 18px; background: var(--coral); z-index: -1; opacity: 0.7;
+}
+
+.hero__lead {
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  max-width: 720px;
+}
+
+.hero__meta-item {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.hero__meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hero__meta-value { font-size: 14px; color: var(--ink); font-weight: 800; }
+
+.hero__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+.hero__scroll-line { width: 1px; height: 28px; background: var(--ink-muted); animation: scrollPulse 2s ease-in-out infinite; transform-origin: top; }
+@keyframes scrollPulse { 0%,100% { transform: scaleY(0.4); opacity: 0.3; } 50% { transform: scaleY(1); opacity: 1; } }
+
+.hero__mascot {
+  position: absolute;
+  top: 50%; right: 0;
+  transform: translateY(-50%);
+  width: clamp(180px, 26vw, 300px);
+  height: auto;
+  opacity: 0.92;
+  pointer-events: none;
+}
+@media (max-width: 880px) { .hero__mascot { display: none; } }
+
+/* =================================================================
+   SECTION HEADERS
+   ================================================================= */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.section-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent-deep); }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.section-title .hl { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl::after {
+  content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px;
+  height: 14px; background: var(--accent); z-index: -1;
+}
+.section-title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl-coral::after {
+  content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px;
+  height: 14px; background: var(--coral); opacity: 0.7; z-index: -1;
+}
+
+.section-lead {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  max-width: 700px;
+  margin-bottom: 56px;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.3;
+  font-weight: 800;
+  margin: 60px 0 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h3::before { content: ''; display: inline-block; width: 4px; height: 22px; background: var(--ink); flex-shrink: 0; }
+
+h4 { font-size: 17px; font-weight: 700; margin: 28px 0 12px; color: var(--ink); letter-spacing: 0.005em; }
+
+p { margin: 0 0 18px; font-size: 15.5px; line-height: 1.9; color: var(--ink-soft); }
+
+ul, ol { padding-left: 22px; margin: 0 0 22px; }
+li { margin-bottom: 8px; font-size: 15px; line-height: 1.85; color: var(--ink-soft); }
+
+strong { color: var(--ink); font-weight: 700; }
+
+em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 65%, var(--accent) 65%, var(--accent) 95%, transparent 95%);
+  padding: 0 2px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-alt);
+  color: var(--ink);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* =================================================================
+   PHASE BADGE
+   ================================================================= */
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 14px 5px 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+.phase-badge svg { width: 28px; height: 28px; }
+
+/* =================================================================
+   CARDS
+   ================================================================= */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+.card:hover { border-color: var(--ink-dim); box-shadow: var(--shadow-sm); }
+.card--soft { background: var(--bg-alt); box-shadow: none; }
+.card--soft:hover { border-color: var(--line); }
+.card--ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.card--ink * { color: var(--paper); }
+.card--ink strong { color: var(--accent); }
+.card--ink h4 { color: var(--accent); }
+.card--ink em { background: linear-gradient(180deg, transparent 65%, rgba(255,200,48,0.4) 65%); color: var(--accent); }
+
+/* =================================================================
+   GRID LAYOUTS
+   ================================================================= */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+@media (max-width: 760px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   TABLE
+   ================================================================= */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table th, .table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line-soft); }
+.table th {
+  background: var(--bg-alt);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.table tr:last-child td { border-bottom: none; }
+.table td { color: var(--ink-soft); }
+.table td strong { color: var(--ink); }
+.table tr:hover { background: var(--bg-alt); }
+
+/* =================================================================
+   CALLOUT
+   ================================================================= */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+.callout__label {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.callout p { margin: 0; color: var(--ink); font-weight: 500; }
+.callout strong { color: var(--ink); }
+.callout--warn { border-left-color: var(--coral-deep); background: var(--coral-soft); }
+.callout--warn .callout__label { background: var(--coral-deep); color: white; }
+.callout--gold { border-left-color: var(--accent-deep); background: var(--accent-soft); }
+.callout--gold .callout__label { background: var(--accent-deep); color: var(--ink); }
+.callout--insight { border-left-color: var(--ink); background: var(--bg-alt); }
+
+/* =================================================================
+   PILLS
+   ================================================================= */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; }
+.pill {
+  padding: 4px 12px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* =================================================================
+   WORK — pop shadow
+   ================================================================= */
+.work {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 36px 0;
+  position: relative;
+  box-shadow: var(--pop);
+}
+.work__head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.work__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.work__label::before { content: '✎'; font-size: 12px; }
+.work__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.4;
+  flex: 1;
+  margin: 0;
+}
+.work__title::before { display: none; }
+.work__desc { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 22px; line-height: 1.85; font-weight: 500; }
+
+.field { display: flex; flex-direction: column; margin-bottom: 14px; }
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+.input:focus, .textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,45,92,0.08); }
+.textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+.btn:hover { background: var(--ink); transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn--secondary { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn--secondary:hover { background: var(--bg-alt); }
+.btn--accent { background: var(--accent); color: var(--ink); }
+.btn--accent:hover { background: var(--accent-deep); }
+
+/* =================================================================
+   DETAILS / DEEP DIVE
+   ================================================================= */
+details.deep {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: 24px 0;
+  overflow: hidden;
+}
+details.deep summary {
+  padding: 16px 22px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+details.deep summary::-webkit-details-marker { display: none; }
+details.deep summary::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+details.deep[open] summary::before { content: '−'; }
+.deep__body { padding: 0 22px 20px; }
+.deep__body p:first-child { margin-top: 4px; }
+
+/* =================================================================
+   STEP
+   ================================================================= */
+.step { display: flex; gap: 18px; margin: 20px 0; align-items: flex-start; }
+.step__num {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 16px;
+}
+.step__body { flex: 1; padding-top: 4px; }
+.step__title { font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+
+/* =================================================================
+   COMPARE
+   ================================================================= */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+@media (max-width: 680px) { .compare { grid-template-columns: 1fr; } }
+.compare__side { border-radius: var(--radius); padding: 20px 22px; border: 1.5px solid var(--line); }
+.compare__side--good { background: var(--green-soft); border-color: var(--green); }
+.compare__side--bad { background: var(--coral-soft); border-color: var(--coral); }
+.compare__label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  display: block;
+}
+.compare__side--good .compare__label { color: var(--green); }
+.compare__side--bad .compare__label { color: var(--coral-deep); }
+
+/* =================================================================
+   CHECKLIST
+   ================================================================= */
+.checklist { list-style: none; padding: 0; margin: 20px 0; }
+.checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.checklist__item::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  background: var(--green-soft);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+/* =================================================================
+   DAY 02 SPECIFIC COMPONENTS
+   ================================================================= */
+
+/* --- Recap chips (前回の振り返り) --- */
+.recap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+.recap__card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+.recap__card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--accent);
+}
+.recap__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent-deep);
+  letter-spacing: 0.1em;
+}
+.recap__title { font-weight: 800; font-size: 15px; color: var(--ink); margin: 6px 0 6px; }
+.recap__desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+
+/* --- Agent comparison diagram --- */
+.agentbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 28px 0;
+}
+@media (max-width: 720px) { .agentbox { grid-template-columns: 1fr; } }
+.agentbox__col {
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+}
+.agentbox__col--passive { background: var(--bg-alt); }
+.agentbox__col--active { background: var(--ink); border-color: var(--ink); }
+.agentbox__col--active * { color: var(--paper); }
+.agentbox__col--active .agentbox__tag { background: var(--accent); color: var(--ink); }
+.agentbox__tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.agentbox__name { font-family: var(--font-display); font-size: 19px; font-weight: 800; margin-bottom: 14px; color: var(--ink); }
+.agentbox__col--active .agentbox__name { color: var(--paper); }
+.agentbox__flow { display: flex; flex-direction: column; gap: 8px; }
+.agentbox__node {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  text-align: center;
+}
+.agentbox__col--active .agentbox__node { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: var(--paper); }
+.agentbox__arrow { text-align: center; font-size: 14px; color: var(--ink-muted); line-height: 1; }
+.agentbox__col--active .agentbox__arrow { color: var(--accent); }
+.agentbox__loop {
+  border: 1.5px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agentbox__loop-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-align: center;
+  font-weight: 700;
+}
+
+/* --- Tool roster cards (4つのAI相棒) --- */
+.roster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+@media (max-width: 720px) { .roster { grid-template-columns: 1fr; } }
+.toolcard {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.toolcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--ink-dim); }
+.toolcard__icon { flex-shrink: 0; width: 54px; height: 54px; }
+.toolcard__body { flex: 1; }
+.toolcard__name { font-family: var(--font-display); font-size: 19px; font-weight: 800; color: var(--ink); margin: 0 0 2px; }
+.toolcard__maker { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-muted); letter-spacing: 0.05em; font-weight: 600; margin-bottom: 8px; }
+.toolcard__role {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+.toolcard__desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+.toolcard--chatgpt .toolcard__role { background: var(--green-soft); color: var(--green); }
+.toolcard--gemini .toolcard__role { background: #E5EAF7; color: var(--m-blue); }
+.toolcard--notebook .toolcard__role { background: #EEE9F7; color: var(--m-purple); }
+.toolcard--gamma .toolcard__role { background: var(--coral-soft); color: var(--coral-deep); }
+
+/* --- Theme Gacha (テーマガチャ) --- */
+.gacha {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 32px 34px;
+  margin: 32px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pop);
+}
+.gacha::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,200,48,0.16) 0%, transparent 70%);
+  pointer-events: none;
+}
+.gacha__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 14px;
+}
+.gacha__title { font-family: var(--font-display); font-size: clamp(20px, 3vw, 26px); font-weight: 800; color: var(--paper); margin-bottom: 8px; }
+.gacha__desc { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 22px; max-width: 560px; }
+.gacha__desc strong { color: var(--accent); }
+.gacha__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--font-display);
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+.gacha__btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--accent-deep); }
+.gacha__btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--accent-deep); }
+.gacha__btn .gacha__dice { display: inline-block; font-size: 20px; }
+.gacha__btn.is-rolling .gacha__dice { animation: diceRoll 0.5s ease infinite; }
+@keyframes diceRoll { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+
+.gacha__results { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 24px; }
+@media (max-width: 680px) { .gacha__results { grid-template-columns: 1fr; } }
+.gacha__results:empty { display: none; }
+
+.theme-opt {
+  background: var(--paper);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: themePop 0.4s ease backwards;
+}
+.theme-opt:nth-child(1) { animation-delay: 0.05s; }
+.theme-opt:nth-child(2) { animation-delay: 0.13s; }
+.theme-opt:nth-child(3) { animation-delay: 0.21s; }
+.theme-opt:nth-child(4) { animation-delay: 0.29s; }
+@keyframes themePop { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.theme-opt:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.theme-opt.is-selected { border-color: var(--ink); box-shadow: var(--pop-sm); }
+.theme-opt.is-selected::after { content: '✓ 選択中'; font-family: var(--font-mono); font-size: 10px; font-weight: 800; color: var(--green); letter-spacing: 0.05em; }
+.theme-opt__type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.theme-opt__type--propose { background: var(--accent-soft); color: var(--accent-deep); }
+.theme-opt__type--debate { background: var(--coral-soft); color: var(--coral-deep); }
+.theme-opt__type--predict { background: #E5EAF7; color: var(--m-blue); }
+.theme-opt__type--research { background: var(--green-soft); color: var(--green); }
+.theme-opt__text { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.5; }
+
+.gacha__chosen {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px dashed rgba(255,255,255,0.35);
+  border-radius: var(--radius);
+  color: var(--paper);
+  font-size: 14px;
+  display: none;
+}
+.gacha__chosen.is-shown { display: block; }
+.gacha__chosen strong { color: var(--accent); }
+
+/* --- Chat comparison (ChatGPT vs Gemini) --- */
+.chatcompare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 720px) { .chatcompare { grid-template-columns: 1fr; } }
+.chatwin {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-xs);
+}
+.chatwin__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+}
+.chatwin__bar svg { width: 22px; height: 22px; }
+.chatwin--gpt .chatwin__bar { background: var(--green-soft); }
+.chatwin--gem .chatwin__bar { background: #E5EAF7; }
+.chatwin__body { padding: 16px; min-height: 120px; }
+.chatwin__msg {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.chatwin__placeholder { color: var(--ink-muted); font-size: 13px; font-style: italic; }
+.chatcompare__ask { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+
+/* --- Chat thread demonstrator (リアルな会話例) --- */
+.thread {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 18px;
+  margin: 18px 0;
+  box-shadow: var(--shadow-xs);
+}
+.thread__turn { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+.thread__turn:last-child { margin-bottom: 0; }
+.thread__who {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  font-family: var(--font-mono);
+}
+.thread__who--user { background: var(--ink); color: var(--accent); }
+.thread__who--ai { background: var(--accent); color: var(--ink); }
+.thread__bubble {
+  flex: 1;
+  border-radius: 12px;
+  padding: 11px 15px;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.thread__turn--user .thread__bubble { background: var(--bg-alt); color: var(--ink); }
+.thread__turn--ai .thread__bubble { background: var(--paper-alt); border: 1px solid var(--line-soft); color: var(--ink-soft); }
+.thread__bubble strong { color: var(--ink); }
+.thread__note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-style: italic;
+  padding-left: 40px;
+}
+
+/* --- Good vs weak prompt comparison --- */
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 760px) { .vs { grid-template-columns: 1fr; } }
+.vs__card {
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line);
+  overflow: hidden;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+.vs__head {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vs__card--weak { border-color: var(--coral); }
+.vs__card--weak .vs__head { background: var(--coral-soft); color: var(--coral-deep); }
+.vs__card--strong { border-color: var(--green); }
+.vs__card--strong .vs__head { background: var(--green-soft); color: var(--green); }
+.vs__body { padding: 16px; flex: 1; }
+.vs__prompt {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+.vs__result { font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
+.vs__result strong { color: var(--ink); }
+.vs__verdict {
+  margin-top: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+.vs__card--weak .vs__verdict { background: var(--coral-soft); color: var(--coral-deep); }
+.vs__card--strong .vs__verdict { background: var(--green-soft); color: var(--green); }
+
+/* --- Essence banner (各章の本質) --- */
+.essence {
+  position: relative;
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin: 28px 0;
+  overflow: hidden;
+}
+.essence::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -8%;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(255,200,48,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+.essence__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.essence__text {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.6vw, 23px);
+  font-weight: 800;
+  line-height: 1.55;
+  color: var(--paper);
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.essence__text .mark {
+  background: linear-gradient(180deg, transparent 60%, rgba(255,200,48,0.45) 60%);
+  padding: 0 3px;
+}
+.essence__sub {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.82);
+}
+.essence__text strong, .essence__sub strong { color: var(--accent); }
+
+/* --- Try-first prompt (まず自分で) --- */
+.tryfirst {
+  border: 2px dashed var(--m-blue);
+  border-radius: var(--radius);
+  background: #F2F5FC;
+  padding: 18px 22px;
+  margin: 22px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.tryfirst__icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  background: var(--m-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.tryfirst__body { flex: 1; }
+.tryfirst__title { font-weight: 800; font-size: 15px; color: var(--m-blue); margin-bottom: 4px; }
+.tryfirst__body p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+/* --- Axis concept (AIに任せる/自分が握る) --- */
+.axis {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  margin: 26px 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  box-shadow: var(--pop);
+}
+@media (max-width: 680px) { .axis { grid-template-columns: 1fr; } }
+.axis__side { padding: 22px 24px; }
+.axis__side--ai { background: var(--bg-alt); }
+.axis__side--you { background: var(--ink); }
+.axis__side--you * { color: var(--paper); }
+.axis__mid {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent);
+  padding: 0 18px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+}
+@media (max-width: 680px) { .axis__mid { writing-mode: horizontal-tb; padding: 10px; } }
+.axis__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.axis__side--ai .axis__label { color: var(--ink-soft); }
+.axis__side--you .axis__label { color: var(--accent); }
+.axis__list { list-style: none; padding: 0; margin: 0; }
+.axis__list li {
+  font-size: 14px;
+  padding: 6px 0 6px 22px;
+  position: relative;
+  line-height: 1.6;
+}
+.axis__side--ai .axis__list li::before { content: '⚙'; position: absolute; left: 0; color: var(--ink-mid); }
+.axis__side--you .axis__list li::before { content: '★'; position: absolute; left: 0; color: var(--accent); }
+.axis__side--you .axis__list li { color: rgba(255,255,255,0.92); }
+.axis__note { font-size: 12px; margin-top: 12px; font-style: italic; }
+.axis__side--ai .axis__note { color: var(--ink-mid); }
+.axis__side--you .axis__note { color: rgba(255,255,255,0.7); }
+
+/* --- Tool category card (ツールはカテゴリーで) --- */
+.toolcat {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-xs);
+}
+.toolcat__head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.toolcat__icon { width: 42px; height: 42px; flex-shrink: 0; }
+.toolcat__cat { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--ink); line-height: 1.3; }
+.toolcat__role { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.05em; }
+.toolcat__desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin: 0 0 10px; }
+.toolcat__ex {
+  font-size: 12px;
+  color: var(--ink-mid);
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+.toolcat__ex strong { color: var(--ink); }
+
+/* --- Step phase navigation banner (大ステップ表示) --- */
+.bigstep {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  margin: 0 0 28px;
+}
+.bigstep__badge {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  background: var(--accent);
+  color: var(--ink);
+  padding: 6px 14px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+.bigstep__text { color: var(--paper); font-size: 14px; font-weight: 600; }
+.bigstep__text strong { color: var(--accent); }
+
+/* --- Memo work variant --- */
+.work--memo { border-style: dashed; box-shadow: none; background: var(--paper-alt); }
+
+/* --- Caution points box (各ステップの気をつけポイント) --- */
+.cautions {
+  background: var(--paper);
+  border: 1.5px solid var(--accent-deep);
+  border-radius: var(--radius);
+  padding: 4px 0 8px;
+  margin: 26px 0;
+  overflow: hidden;
+}
+.cautions__head {
+  background: var(--accent);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  margin: -4px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cautions__list { list-style: none; padding: 0 20px; margin: 0; }
+.cautions__list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.cautions__list li:last-child { border-bottom: none; }
+.cautions__list li::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  margin-top: 1px;
+}
+.cautions__list li strong { color: var(--ink); }
+
+/* --- Enriched tool card (詳細版) --- */
+.tooldetail {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  margin: 18px 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.tooldetail__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.tooldetail__icon { width: 48px; height: 48px; flex-shrink: 0; }
+.tooldetail__title { flex: 1; }
+.tooldetail__cat { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.tooldetail__role { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.08em; margin-top: 2px; }
+.tooldetail__ex {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+  border-radius: 100px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.tooldetail__body { padding: 16px 22px; }
+.tooldetail__body p { margin: 0 0 12px; font-size: 14px; line-height: 1.75; }
+.tooldetail__feats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin: 0; }
+@media (max-width: 600px){ .tooldetail__feats { grid-template-columns: 1fr; } }
+.tooldetail__feat {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.55;
+}
+.tooldetail__feat::before { content: '▸'; position: absolute; left: 0; color: var(--accent-deep); font-weight: 800; }
+.tooldetail__feat strong { color: var(--ink); }
+.tooldetail__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tooldetail__tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+.tooldetail__tag--good { background: var(--green-soft); color: var(--green); }
+.tooldetail__tag--watch { background: var(--coral-soft); color: var(--coral-deep); }
+
+/* --- Challenge brief (最終チャレンジ要件) --- */
+.brief {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 28px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--pop);
+}
+.brief::before {
+  content: '';
+  position: absolute;
+  bottom: -40%; left: -8%;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(242,109,91,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.brief__label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--coral);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.brief__mission {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 27px);
+  font-weight: 900;
+  color: var(--paper);
+  line-height: 1.4;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.brief__mission .hl-y { background: linear-gradient(180deg, transparent 58%, var(--accent) 58%); color: var(--paper); padding: 0 3px; }
+.brief__sub { font-size: 13.5px; color: rgba(255,255,255,0.75); margin: 0 0 22px; }
+.brief__sub strong, .brief__mission strong { color: var(--accent); }
+.brief__conds { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px){ .brief__conds { grid-template-columns: 1fr; } }
+.brief__cond {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.brief__cond-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+}
+.brief__cond-text { color: var(--paper); font-size: 13.5px; line-height: 1.6; }
+.brief__cond-text strong { color: var(--accent); }
+
+/* --- Sparring simulator (壁打ち) --- */
+.spar {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+.spar__lenses { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.spar__lens {
+  padding: 8px 16px;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--line);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.spar__lens:hover { border-color: var(--ink-dim); color: var(--ink); }
+.spar__lens.is-active { background: var(--ink); color: var(--accent); border-color: var(--ink); }
+.spar__output {
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  min-height: 90px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.spar__output .spar__q { font-weight: 800; color: var(--ink); display: block; margin-bottom: 6px; }
+.spar__placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* --- Fact-check steps --- */
+.factsteps { counter-reset: fc; margin: 24px 0; }
+.factstep {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.factstep::before {
+  counter-increment: fc;
+  content: counter(fc);
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--coral);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 15px;
+}
+.factstep__body { flex: 1; }
+.factstep__title { font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 3px; }
+.factstep__desc { font-size: 13.5px; color: var(--ink-soft); margin: 0; line-height: 1.7; }
+
+/* --- Source-grounded diagram (NotebookLM) --- */
+.sourcebox { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+@media (max-width: 720px) { .sourcebox { grid-template-columns: 1fr; } }
+.sourcebox__card { border-radius: var(--radius); padding: 20px; border: 1.5px solid var(--line); background: var(--paper); }
+.sourcebox__head { font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sourcebox__card--wide { background: var(--bg-alt); }
+.sourcebox__card--narrow { background: #EEE9F7; border-color: var(--m-purple); }
+
+/* --- Timeline (時間の地図) --- */
+.timemap { margin: 24px 0; }
+.timerow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.timerow__time {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--accent-soft);
+  padding: 6px 12px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  min-width: 66px;
+  text-align: center;
+}
+.timerow__label { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+.timerow__sub { font-size: 12.5px; color: var(--ink-muted); }
+
+/* --- Flow steps (探究の5ステップ) --- */
+.flowmap {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+.flowmap__step {
+  flex: 1;
+  min-width: 130px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  text-align: center;
+  position: relative;
+}
+.flowmap__icon { width: 40px; height: 40px; margin: 0 auto 8px; }
+.flowmap__num { font-family: var(--font-mono); font-size: 10px; font-weight: 800; color: var(--accent-deep); letter-spacing: 0.1em; }
+.flowmap__name { font-weight: 800; font-size: 14px; color: var(--ink); margin: 2px 0 4px; }
+.flowmap__tool { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); font-weight: 600; }
+
+/* --- Phase banner (You do タイムキープ用) --- */
+.phasebanner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--accent-soft);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin: 24px 0;
+}
+.phasebanner__time {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.phasebanner__text { font-size: 14px; color: var(--ink); font-weight: 600; }
+.phasebanner__text strong { color: var(--ink); }
+
+/* --- Mascot says (aila吹き出し) --- */
+.ailasays {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.ailasays__avatar { flex-shrink: 0; width: 52px; height: 52px; }
+.ailasays__bubble { flex: 1; }
+.ailasays__bubble p { margin: 0; font-size: 14.5px; color: var(--ink-soft); line-height: 1.8; }
+.ailasays__name { font-family: var(--font-mono); font-size: 10.5px; font-weight: 800; color: var(--ink); letter-spacing: 0.08em; margin-bottom: 4px; }
+
+/* --- Closing --- */
+.closing { text-align: center; padding: 40px 0; }
+.closing__kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.closing__message {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.5vw, 44px);
+  line-height: 1.3;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.closing__message .hl { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl::after { content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px; height: 14px; background: var(--accent); z-index: -1; }
+.closing__message .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl-coral::after { content: ''; position: absolute; bottom: 4px; left: -3px; right: -3px; height: 14px; background: var(--coral); opacity: 0.7; z-index: -1; }
+
+/* --- Reveal animation --- */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* --- prompt output (再利用) --- */
+.prompter__output {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  margin: 16px 0;
+  min-height: 60px;
+}
+
+/* --- mono prompt block --- */
+.promptblock {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  margin: 14px 0;
+  position: relative;
+}
+.promptblock__label {
+  position: absolute;
+  top: -9px; left: 14px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+<button class="nav-toggle" id="navToggle" aria-label="メニュー">☰</button>
+<div class="backdrop" id="backdrop"></div>
+
+<!-- =====================================================================
+     SVG SPRITES — DAY 01のマスコット世界観を継承＋探究verを追加
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- AILA SPROUT (LEARN) - yellow -->
+    <symbol id="aila-sprout" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4.5" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4.5" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.8" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.8" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <path d="M 50 6 Q 44 2 42 8 Q 48 9 50 6" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.4"/>
+      <path d="M 50 6 Q 56 2 58 8 Q 52 9 50 6" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.4"/>
+      <line x1="44" y1="62" x2="56" y2="62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MIND (THINK) - purple, circuit -->
+    <symbol id="aila-mind" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5"/>
+      <line x1="30" y1="40" x2="40" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="60" y1="40" x2="70" y2="40" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <line x1="30" y1="65" x2="70" y2="65" stroke="#1A2D5C" stroke-width="1.2" opacity="0.45"/>
+      <ellipse cx="38" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <ellipse cx="62" cy="48" rx="5" ry="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="38" cy="48" r="1.2" fill="#1A2D5C"/>
+      <circle cx="62" cy="48" r="1.2" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="20" y1="50" x2="14" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="11" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <line x1="80" y1="50" x2="86" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="89" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <path d="M 44 62 L 56 62" stroke="#1A2D5C" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- AILA MAKER (CREATE) - coral -->
+    <symbol id="aila-maker" viewBox="0 0 100 100">
+      <polygon points="56,18 84,34 84,66 56,82 28,66 28,34" fill="#D67898" stroke="#1A2D5C" stroke-width="2" opacity="0.45"/>
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="38" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="48" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="40" cy="46" r="1.6" fill="#1A2D5C"/>
+      <circle cx="64" cy="46" r="1.6" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <polygon points="50,3 47,7 50,5 53,7" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+      <path d="M 42 60 Q 50 66 58 60" stroke="#1A2D5C" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <line x1="80" y1="68" x2="92" y2="80" stroke="#1A2D5C" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="92,80 96,82 94,86 90,84" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+    </symbol>
+
+    <!-- AILA EXPLORER (DAY02 NEW) - mint, magnifier + compass -->
+    <symbol id="aila-explorer" viewBox="0 0 100 100">
+      <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" fill="#5BB5AA" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="40" cy="47" r="4.2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="62" cy="47" r="4.2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="41" cy="47" r="1.7" fill="#1A2D5C"/>
+      <circle cx="63" cy="47" r="1.7" fill="#1A2D5C"/>
+      <line x1="50" y1="15" x2="50" y2="6" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="4" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+      <path d="M 43 61 Q 50 67 57 61" stroke="#1A2D5C" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- magnifier in hand -->
+      <line x1="80" y1="55" x2="74" y2="55" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="90" cy="55" r="9" fill="rgba(255,200,48,0.3)" stroke="#1A2D5C" stroke-width="2.5"/>
+      <line x1="97" y1="62" x2="103" y2="68" stroke="#1A2D5C" stroke-width="3" stroke-linecap="round"/>
+      <line x1="20" y1="50" x2="14" y2="50" stroke="#1A2D5C" stroke-width="1.8"/>
+      <circle cx="11" cy="50" r="2.5" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+    </symbol>
+
+    <!-- HERO MASCOT (large explorer) -->
+    <symbol id="aila-hero" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="125" fill="#5BB5AA" opacity="0.08"/>
+      <polygon points="165,60 240,103 240,187 165,230 90,187 90,103" fill="#5BB5AA" stroke="#1A2D5C" stroke-width="2.5" opacity="0.3"/>
+      <polygon points="150,45 225,88 225,172 150,215 75,172 75,88" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="3"/>
+      <line x1="90" y1="105" x2="110" y2="105" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="190" y1="105" x2="210" y2="105" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="90" y1="160" x2="210" y2="160" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <circle cx="125" cy="130" r="13" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="175" cy="130" r="13" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="128" cy="128" r="5" fill="#1A2D5C"/>
+      <circle cx="178" cy="128" r="5" fill="#1A2D5C"/>
+      <circle cx="130" cy="126" r="1.6" fill="white"/>
+      <circle cx="180" cy="126" r="1.6" fill="white"/>
+      <line x1="150" y1="45" x2="150" y2="26" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="150" cy="20" r="6" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="150" cy="20" r="2" fill="#FFC830"/>
+      <path d="M 130 168 Q 150 180 170 168" stroke="#1A2D5C" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- magnifier -->
+      <line x1="225" y1="140" x2="214" y2="140" stroke="#1A2D5C" stroke-width="3"/>
+      <circle cx="245" cy="140" r="18" fill="rgba(255,200,48,0.25)" stroke="#1A2D5C" stroke-width="3.5"/>
+      <line x1="258" y1="153" x2="270" y2="165" stroke="#1A2D5C" stroke-width="5" stroke-linecap="round"/>
+      <line x1="75" y1="130" x2="60" y2="130" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="54" cy="130" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+
+    <!-- BRAND LOGO MARK -->
+    <symbol id="brand-logo" viewBox="0 0 36 36">
+      <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+      <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+      <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+      <line x1="14" y1="23" x2="22" y2="23" stroke="#FFC830" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- TOOL ICONS (抽象アイコン・商標を避けた独自デザイン) -->
+    <!-- ChatGPT: 対話の吹き出し -->
+    <symbol id="icon-chatgpt" viewBox="0 0 60 60">
+      <rect x="6" y="10" width="48" height="48" rx="14" fill="#5DAB6E" opacity="0.12"/>
+      <path d="M 16 18 h 22 a 6 6 0 0 1 6 6 v 10 a 6 6 0 0 1 -6 6 h -12 l -8 7 v -7 h -2 a 6 6 0 0 1 -6 -6 v -10 a 6 6 0 0 1 6 -6 z" fill="#FFFFFF" stroke="#5DAB6E" stroke-width="2.5"/>
+      <circle cx="22" cy="29" r="2.2" fill="#5DAB6E"/>
+      <circle cx="30" cy="29" r="2.2" fill="#5DAB6E"/>
+      <circle cx="38" cy="29" r="2.2" fill="#5DAB6E"/>
+    </symbol>
+    <!-- Gemini: 検索＋星 -->
+    <symbol id="icon-gemini" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#3D5FBA" opacity="0.12"/>
+      <circle cx="26" cy="26" r="12" fill="none" stroke="#3D5FBA" stroke-width="3"/>
+      <line x1="35" y1="35" x2="46" y2="46" stroke="#3D5FBA" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 26 20 L 28 25 L 33 26 L 28 27 L 26 32 L 24 27 L 19 26 L 24 25 Z" fill="#FFC830" stroke="#3D5FBA" stroke-width="1"/>
+    </symbol>
+    <!-- NotebookLM: ノート＋ソース -->
+    <symbol id="icon-notebook" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#7B6CC4" opacity="0.12"/>
+      <rect x="16" y="14" width="28" height="34" rx="3" fill="#FFFFFF" stroke="#7B6CC4" stroke-width="2.5"/>
+      <line x1="22" y1="14" x2="22" y2="48" stroke="#7B6CC4" stroke-width="2"/>
+      <line x1="28" y1="23" x2="39" y2="23" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="30" x2="39" y2="30" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+      <line x1="28" y1="37" x2="34" y2="37" stroke="#7B6CC4" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <!-- Gamma: スライド -->
+    <symbol id="icon-gamma" viewBox="0 0 60 60">
+      <rect x="6" y="6" width="48" height="48" rx="14" fill="#F26D5B" opacity="0.12"/>
+      <rect x="14" y="16" width="32" height="22" rx="3" fill="#FFFFFF" stroke="#F26D5B" stroke-width="2.5"/>
+      <line x1="20" y1="23" x2="33" y2="23" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="29" x2="28" y2="29" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+      <rect x="35" y="26" width="6" height="6" rx="1" fill="#FFC830"/>
+      <line x1="30" y1="38" x2="30" y2="44" stroke="#F26D5B" stroke-width="2.5"/>
+      <line x1="22" y1="44" x2="38" y2="44" stroke="#F26D5B" stroke-width="2.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- FLOW ICONS -->
+    <symbol id="fi-spar" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#FFF6D9" stroke="#1A2D5C" stroke-width="2"/>
+      <path d="M 13 16 h 9 a 3 3 0 0 1 3 3 v 4 a 3 3 0 0 1 -3 3 h -5 l -4 3 v -3 a 3 3 0 0 1 -3 -3 v -4 a 3 3 0 0 1 3 -3 z" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="fi-search" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#E5EAF7" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="18" cy="18" r="7" fill="none" stroke="#1A2D5C" stroke-width="2.2"/>
+      <line x1="23" y1="23" x2="28" y2="28" stroke="#1A2D5C" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fi-organize" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#EEE9F7" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="13" y1="15" x2="27" y2="15" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="13" y1="20" x2="27" y2="20" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="13" y1="25" x2="22" y2="25" stroke="#1A2D5C" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fi-slide" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#FCE5DF" stroke="#1A2D5C" stroke-width="2"/>
+      <rect x="11" y="13" width="18" height="13" rx="2" fill="#FFFFFF" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="20" y1="26" x2="20" y2="29" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+    <symbol id="fi-present" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="#E5F0E8" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="20" cy="16" r="4" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.6"/>
+      <path d="M 13 29 Q 13 22 20 22 Q 27 22 27 29 Z" fill="#5DAB6E" stroke="#1A2D5C" stroke-width="1.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- =====================================================================
+     DAY 03 SPECIFIC CSS — 4レベルの梯子・仕様カードなど（ai02のCSSに追加）
+     ===================================================================== -->
+<style id="day03-style">
+  /* --- Level ladder (AI駆動開発の4レベル) --- */
+  .ladder { display: flex; flex-direction: column; gap: 14px; margin: 28px 0; }
+  .ladder__step {
+    display: flex; gap: 18px; align-items: stretch;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    box-shadow: var(--shadow-xs);
+    transition: all 0.18s ease;
+  }
+  .ladder__step:hover { transform: translateX(3px); box-shadow: var(--shadow-sm); }
+  .ladder__step--l1 { border-left: 5px solid var(--green); }
+  .ladder__step--l2 { border-left: 5px solid var(--m-blue); }
+  .ladder__step--l3 { border-left: 5px solid var(--m-purple); }
+  .ladder__step--l4 { border-left: 5px solid var(--coral); }
+  .ladder__lv { flex-shrink: 0; width: 66px; text-align: center; padding-top: 2px; }
+  .ladder__lvnum { font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--ink); line-height: 1; }
+  .ladder__lvtag { font-family: var(--font-mono); font-size: 9px; font-weight: 800; letter-spacing: 0.08em; color: var(--ink-muted); margin-top: 5px; }
+  .ladder__body { flex: 1; min-width: 0; }
+  .ladder__name { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ladder__key { font-size: 10.5px; font-weight: 800; font-family: var(--font-mono); padding: 2px 10px; border-radius: 100px; background: var(--bg-alt); color: var(--ink-soft); letter-spacing: 0.04em; }
+  .ladder__step--l1 .ladder__key { background: var(--green-soft); color: var(--green); }
+  .ladder__step--l2 .ladder__key { background: #E5EAF7; color: var(--m-blue); }
+  .ladder__step--l3 .ladder__key { background: #EEE9F7; color: var(--m-purple); }
+  .ladder__step--l4 .ladder__key { background: var(--coral-soft); color: var(--coral-deep); }
+  .ladder__desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+  .ladder__desc strong { color: var(--ink); }
+  .ladder__human { font-size: 12px; color: var(--ink-mid); margin-top: 7px; padding-left: 16px; position: relative; }
+  .ladder__human::before { content: '👤'; position: absolute; left: 0; font-size: 11px; }
+
+  /* --- Spec card preview (仕様カードの完成イメージ) --- */
+  .speccard {
+    background: var(--paper-alt);
+    border: 2px dashed var(--ink);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin: 22px 0;
+  }
+  .speccard__title { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .speccard__row { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
+  .speccard__row:last-child { border-bottom: none; }
+  .speccard__k { flex-shrink: 0; width: 110px; font-family: var(--font-mono); font-weight: 700; color: var(--ink-soft); font-size: 12px; }
+  .speccard__v { flex: 1; color: var(--ink); }
+
+  /* --- Iteration counter chips (反復の見える化) --- */
+  .iterbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+  .iterchip {
+    display: flex; flex-direction: column; gap: 2px;
+    background: var(--paper); border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm); padding: 10px 14px; flex: 1; min-width: 120px;
+  }
+  .iterchip__n { font-family: var(--font-mono); font-size: 10px; font-weight: 800; color: var(--accent-deep); letter-spacing: 0.08em; }
+  .iterchip__t { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .iterchip__d { font-size: 11.5px; color: var(--ink-mid); }
+
+  /* --- Compliance banner (年齢規約の運用注意・教師向け) --- */
+  .opsnote {
+    background: #FFF9EC;
+    border: 1.5px solid var(--accent-deep);
+    border-radius: var(--radius);
+    padding: 0; margin: 26px 0; overflow: hidden;
+  }
+  .opsnote__head {
+    background: var(--accent-deep); color: var(--ink);
+    font-family: var(--font-mono); font-weight: 800; font-size: 12px;
+    letter-spacing: 0.06em; padding: 9px 18px; display: flex; align-items: center; gap: 8px;
+  }
+  .opsnote__body { padding: 16px 20px; }
+  .opsnote__body p { margin: 0 0 10px; font-size: 13.5px; }
+  .opsnote__body p:last-child { margin-bottom: 0; }
+
+  /* --- Prompt Gacha (Lv1体験：プロンプトの質で結果が変わる) --- */
+  .pgacha__results { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+  .pgacha__results:empty { display: none; }
+  .pgcard {
+    background: var(--paper);
+    border-radius: var(--radius);
+    border-left: 5px solid var(--line);
+    padding: 14px 16px 15px;
+    text-align: left;
+    animation: themePop 0.4s ease backwards;
+  }
+  .pgcard--t0 { border-left-color: var(--ink-dim); }
+  .pgcard--t1 { border-left-color: var(--green); }
+  .pgcard--t2 { border-left-color: var(--m-blue); }
+  .pgcard--t3 { border-left-color: var(--coral); }
+  .pgcard__head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .pgcard__stars { font-size: 14px; color: var(--accent-deep); letter-spacing: 1px; }
+  .pgcard--t0 .pgcard__stars { color: var(--ink-dim); }
+  .pgcard__tier { font-family: var(--font-mono); font-size: 11.5px; font-weight: 800; color: var(--ink); }
+  .pgcard__copy {
+    margin-left: auto;
+    background: var(--ink); color: var(--paper);
+    border-radius: 100px; padding: 6px 14px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+  }
+  .pgcard__copy:hover { background: var(--accent); color: var(--ink); transform: translateY(-1px); }
+  .pgcard__copy.is-copied { background: var(--green); color: #fff; }
+  .pgcard__prompt {
+    font-family: var(--font-mono); font-size: 12px; line-height: 1.7;
+    color: var(--ink-soft); background: var(--bg-alt);
+    border-radius: var(--radius-sm); padding: 11px 13px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .pgcard__why { font-size: 12px; color: var(--ink-mid); margin-top: 8px; padding-left: 18px; position: relative; }
+  .pgcard__why::before { content: '💡'; position: absolute; left: 0; font-size: 11px; }
+
+  /* --- Warm-up: アラビア語ドキュメント＋ロック式クイズ --- */
+  .arabicbox {
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin: 16px 0;
+    box-shadow: var(--shadow-xs);
+    direction: rtl;
+    text-align: right;
+    font-size: 17px;
+    line-height: 2.25;
+    color: var(--ink);
+    font-family: 'Segoe UI', 'Times New Roman', 'Traditional Arabic', serif;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+  .arabicbox p { font-size: 17px; line-height: 2.25; color: var(--ink); margin: 0 0 14px; }
+  .arabicbox p:last-child { margin-bottom: 0; }
+
+  .quizzone { position: relative; margin: 20px 0; }
+  .quizzone.is-locked .quiz { filter: blur(8px); pointer-events: none; user-select: none; }
+  .quizlock {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+    background: rgba(250,248,243,0.55);
+    border-radius: var(--radius-lg);
+  }
+  .quizzone:not(.is-locked) .quizlock { display: none; }
+  .quizlock__inner {
+    background: var(--ink); color: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 28px 30px; max-width: 440px; text-align: center;
+    box-shadow: var(--shadow-md);
+  }
+  .quizlock__inner p { color: rgba(255,255,255,0.85); font-size: 13.5px; margin: 8px 0 16px; line-height: 1.8; }
+  .quizlock__inner strong { color: var(--accent); }
+  .quizlock__icon { font-size: 34px; margin-bottom: 4px; }
+  .quizlock__title { font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--paper); }
+  .quizlock__form { display: flex; gap: 8px; }
+  .quizlock__form .input { flex: 1; }
+  .quizlock__msg { margin-top: 10px; font-size: 12.5px; font-weight: 700; min-height: 16px; color: var(--accent); }
+  .quizlock__msg.is-err { color: #FFB3A8; }
+
+  .quiz { display: flex; flex-direction: column; gap: 16px; }
+  .quizq { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+  .quizq__q { font-weight: 800; font-size: 15.5px; color: var(--ink); margin-bottom: 12px; display: flex; gap: 10px; align-items: flex-start; }
+  .quizq__n {
+    flex-shrink: 0; width: 28px; height: 28px;
+    background: var(--ink); color: var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 800; font-size: 12px;
+  }
+  .quizopt {
+    display: block; width: 100%; text-align: left;
+    padding: 11px 14px; margin-bottom: 8px;
+    background: var(--bg-alt); border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm); font-size: 14px; color: var(--ink-soft);
+    cursor: pointer; transition: all 0.14s ease; font-weight: 600; line-height: 1.6;
+  }
+  .quizopt:last-child { margin-bottom: 0; }
+  .quizopt:hover { border-color: var(--ink-dim); }
+  .quizopt.is-sel { border-color: var(--ink); background: var(--paper); color: var(--ink); }
+  .quizopt.is-correct { border-color: var(--green); background: var(--green-soft); color: var(--green); font-weight: 800; }
+  .quizopt.is-wrong { border-color: var(--coral); background: var(--coral-soft); color: var(--coral-deep); }
+  .quiz__foot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+  .quiz__score { font-family: var(--font-mono); font-weight: 800; font-size: 15px; color: var(--ink); }
+</style>
+
+<div class="app">
+
+  <!-- =====================================================================
+       SIDEBAR NAVIGATION
+       ===================================================================== -->
+  <nav class="nav" id="nav">
+    <div class="nav__brand">
+      <svg class="nav__brand-mark"><use href="#brand-logo"/></svg>
+      <div class="nav__brand-text">
+        <div class="nav__brand-title">AI COURSE</div>
+        <div class="nav__brand-sub">DAY 03 / 2026</div>
+      </div>
+    </div>
+
+    <div class="nav__school">Akky先生のプログラミング教室</div>
+
+    <ul class="nav__list">
+      <li><a class="nav__item is-active" href="#hero"><span class="nav__num">00</span>OPENING</a></li>
+      <li><a class="nav__item" href="#warmup"><span class="nav__num">WU</span>ウォームアップ</a></li>
+      <li><a class="nav__item" href="#ch0"><span class="nav__num">01</span>バイブコーディングとは</a></li>
+      <li><div class="nav__phase">STEP 1 — 一緒に体験</div></li>
+      <li><a class="nav__item" href="#ch1"><span class="nav__num">①</span>企画・仕様カード</a></li>
+      <li><a class="nav__item" href="#ch2"><span class="nav__num">②</span>まず動かす</a></li>
+      <li><a class="nav__item" href="#ch3"><span class="nav__num">③</span>段階修正</a></li>
+      <li><a class="nav__item" href="#ch4"><span class="nav__num">④</span>エラー対処・ツール</a></li>
+      <li><a class="nav__item" href="#ch5"><span class="nav__num">⑤</span>共有・公開</a></li>
+      <li><div class="nav__phase">STEP 2 — 自分で実践</div></li>
+      <li><a class="nav__item" href="#step2"><span class="nav__num">▶</span>個人制作</a></li>
+      <li><div class="nav__phase">STEP 3 — 発表</div></li>
+      <li><a class="nav__item" href="#step3"><span class="nav__num">★</span>作品共有・振り返り</a></li>
+      <li><a class="nav__item" href="#closing"><span class="nav__num">07</span>CLOSING</a></li>
+    </ul>
+
+    <div class="nav__footer">
+      AI COURSE · DAY 03<br>
+      100 MIN / STUDENT
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       MAIN CONTENT
+       ===================================================================== -->
+  <main class="main">
+
+    <!-- ============================================
+         HERO (OPENING)
+         ============================================ -->
+    <section class="section hero" id="hero">
+      <div class="hero__school">AKKY先生のプログラミング教室</div>
+      <div class="hero__eyebrow">AI COURSE · DAY 03 · 2026</div>
+
+      <h1 class="hero__title">
+        AIと<span class="hl">言葉</span>で、<br>
+        アプリを<span class="hl-coral">つくる</span>。
+      </h1>
+
+      <p class="hero__lead">
+        むずかしいコードの文法は、もう覚えなくていい。<br>
+        AIに<strong>「言葉」で伝えるだけ</strong>で、アプリやゲームが組み上がる——これが<strong>バイブコーディング</strong>。<br>
+        今日、君は"プログラマー"ではなく<strong>"企画する人"</strong>になる。
+      </p>
+
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">DURATION</div>
+          <div class="hero__meta-value">100 MIN</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">TOOL</div>
+          <div class="hero__meta-value">AI Studio</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">OUTPUT</div>
+          <div class="hero__meta-value">自作アプリ</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">FLOW</div>
+          <div class="hero__meta-value">企画→生成→改善</div>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        SCROLL
+        <div class="hero__scroll-line"></div>
+      </div>
+
+      <svg class="hero__mascot"><use href="#aila-hero"/></svg>
+    </section>
+
+    <!-- =================================================
+         WARM-UP — AIで読めない文章を読む（要約→ロック式クイズ）
+         ================================================= -->
+    <section class="section" id="warmup">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        WARM-UP · AIを使ってみる
+      </div>
+      <div class="section-tag">ウォームアップ ｜ AIで"読めない文章"を読む</div>
+      <h2 class="section-title">読めない文章も、<br><span class="hl">AIとなら</span>読める。</h2>
+      <p class="section-lead">
+        本題の前に、かるく練習。下にあるのは<strong>アラビア語</strong>の長い文章だ。たぶん、ほとんどの人が1文字も読めない。でも大丈夫。<strong>AIに要約させれば、何が書いてあるか理解できる</strong>。これこそ「AIを使いこなす」ということ。さっそくやってみよう。
+      </p>
+
+      <h3>STEP 1 ─ この文章を、まるごとAIに渡す</h3>
+      <p>下の「コピー」ボタンで文章を全部コピーして、GeminiかChatGPTに貼りつけ、こうお願いしよう。</p>
+
+      <div class="promptblock">
+        <span class="promptblock__label">AIへの指示</span>つぎのアラビア語の文章を、日本語でやさしく要約して。何についての話か、だれが登場して、それぞれどんな特徴があるかも教えて。
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0;">
+        <button class="btn btn--accent" onclick="copyEl('arabicText', this)">📋 アラビア語の文章をコピー</button>
+        <span style="font-size:12.5px;color:var(--ink-mid);">↑ これを押して、AIに貼りつけよう</span>
+      </div>
+
+      <div class="arabicbox" id="arabicText" dir="rtl" lang="ar">
+        <p>في خضم التحولات الجذرية التي تعصف بالمشهد التكنولوجي المعاصر، يشهد حقل الذكاء الاصطناعي التوليدي تنافساً ثلاثي الأقطاب ومحموماً بين كيانات تقنية مؤسساتية ترسم ملامح الإدراك الآلي المستقبلي. هذا المضمار المعقد، الذي يتجاوز مجرد الحوسبة الخوارزمية ليلامس تخوم الفلسفة المعرفية والاصطناع اللغوي، تقوده شركات "أوبن إيه آي"، و"جوجل"، و"أنثروبيك"، حيث يتولى قيادتها شخصيات استراتيجية ذات رؤى متباينة حيال حتمية "الذكاء الاصطناعي العام" (AGI) وضوابطه الأخلاقية.</p>
+        <p>تتسنم شركة "أوبن إيه آي" (OpenAI)، تحت إدارة مديرها التنفيذي سام ألتمان، طليعة هذا التحول النماذجي (Paradigm Shift). فمن خلال إطلاقها لمنظومة "شات جي بي تي" (ChatGPT)، أحدثت الشركة قطيعة إبستيمولوجية مع الأساليب التقليدية لمعالجة اللغات الطبيعية (NLP). ألتمان، ببراغماتيته التي توازن بين التسويق الجماهيري والبحث الاستقصائي المحض، قاد الشركة لتطوير معماريات تعتمد على "المحولات التوليدية المدربة مسبقاً". هذه النماذج لا تقوم فقط بفك تشفير البنى النحوية والدلالية للنصوص، بل تستنبط أنماطاً كامنة في كميات هائلة من البيانات غير المهيكلة، مما يمنحها قدرة غير مسبوقة على التوليد الاستدلالي، ومحاكاة المنطق البشري في صياغة الأكواد البرمجية، وتقديم استجابات متسقة سياقياً ضمن بيئات متعددة التخصصات، وهو ما كرس هيمنتها كمعيار صناعي أساسي.</p>
+        <p>في المقابل، تخوض شركة "جوجل" (Google)، التي طالما احتكرت خوارزميات الاسترجاع المعلوماتي، معركة إثبات الوجود تحت قيادة سوندار بيتشاي. يدرك بيتشاي "المعضلة الابتكارية" (Innovator's Dilemma) التي تواجهها شركته، ولذلك دفع بنموذج "جيمناي" (Gemini) كاستجابة استراتيجية شاملة لإعادة هيكلة التفاعل بين الإنسان والآلة. لا يقتصر "جيمناي" على كونه مجرد نموذج لغوي كبير، بل تم هندسته كبنية عصبية "متعددة الوسائط أصلياً" (Natively Multimodal)؛ أي أنه تم تدريبه منذ اللبنة الأولى على استيعاب ومعالجة حزم بيانات متباينة أنطولوجياً كالنصوص، والصور، والترددات الصوتية، والمقاطع المرئية ضمن نسيج رياضي وإدراكي واحد. هذه المقاربة الشمولية تتيح لجوجل دمج هذه القدرات الاستدلالية الفائقة في البنية التحتية لنظامها البيئي المترامي الأطراف، محولةً محرك البحث من مجرد مفهرس آلي للروابط إلى كيان تفاعلي قادر على التوليف المعرفي الفوري.</p>
+        <p>على الجانب الآخر من هذا الطيف التنظيري، تبرز شركة "أنثروبيك" (Anthropic) ككيان انشق أيديولوجياً عن المسار السائد، والذي أسسه ويقوده داريو أمودي. انشق أمودي عن "أوبن إيه آي" متوجساً من مسارات الأمان التكنولوجي وتغليب النزعة التجارية على الموثوقية. تطرح الشركة نموذجها "كلود" (Claude) متبنيةً منهجية تحليلية صارمة تُعرف بـ "الذكاء الاصطناعي الدستوري" (Constitutional AI). تسعى هذه المنهجية المبتكرة إلى ترويض النماذج اللغوية عبر إخضاعها لبروتوكولات تقييمية ذاتية تستند إلى مبادئ أخلاقية محددة سلفاً، مما يقلص من ظاهرة "هلوسة الذكاء الاصطناعي" ويضمن ما يُعرف بـ "محاذاة الذكاء الاصطناعي" (AI Alignment) مع القيم الإنسانية. وعلاوة على ذلك، يتفوق "كلود" في قدرته المعرفية على استيعاب "نوافذ سياقية هائلة" (Massive Context Windows)، مما يمكنه من إجراء تحليلات دلالية عميقة واستنباطية لمستندات معقدة ومطولة، محققاً مستويات استرجاع دقيقة تقارب التحليل البشري الأكاديمي.</p>
+        <p>إن هذا التثليث التنافسي لا يجسد فحسب سباقاً نحو التفوق الحوسبي، بل يعكس صراعاً فكرياً حول المعايير الأخلاقية، والهيكليات الرياضية، والحدود الفلسفية لما يمكن أن تبلغه الآلة المعرفية. فبين براغماتية ألتمان التوسعية، ورؤية بيتشاي التكاملية متعددة الوسائط، وصرامة أمودي الدستورية، تتشكل البنية التحتية للإدراك الاصطناعي الذي سيحكم مستقبل الحضارة التكنولوجية.</p>
+      </div>
+
+      <h3>STEP 2 ─ 要約を読んで、内容をつかむ</h3>
+      <p>AIが出した要約を読んで、「何の話だったか」を自分の言葉でメモしておこう。これがクイズのヒントになる。</p>
+
+      <div class="work work--memo">
+        <div class="work__head">
+          <span class="work__label">WORK · 要約メモ</span>
+          <h3 class="work__title">AIの要約で、わかったこと</h3>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>これは何についての文章だった？</label>
+          <input class="input" id="wuTopic" placeholder="例：生成AIをめぐる、3つの会社の競争の話">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>登場した3つの会社と、それぞれの特徴は？</label>
+          <textarea class="textarea" id="wuPoints" placeholder="例：OpenAI＝ChatGPT（サム・アルトマン）／Google＝Gemini（マルチモーダル）／Anthropic＝Claude（安全性・憲法AI）"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('wu', ['wuTopic','wuPoints'])">💾 保存</button>
+          <span id="wustatus" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+      </div>
+
+      <h3>STEP 3 ─ 理解できたか、クイズで確認！</h3>
+      <p>クイズは<strong>ロック中</strong>。要約で内容をつかめていれば、ぜんぶ解けるはずだ。<strong>先生が「いいよ」と言ったら、合言葉を入力</strong>してロックを解除しよう。</p>
+
+      <div class="quizzone is-locked" id="quizzone">
+        <div class="quizlock" id="quizlock">
+          <div class="quizlock__inner">
+            <div class="quizlock__icon">🔒</div>
+            <div class="quizlock__title">クイズはロック中</div>
+            <p>先に、上の長文をAIで要約して内容を理解しよう。先生の合図があったら、<strong>合言葉</strong>を入れて解除！</p>
+            <div class="quizlock__form">
+              <input class="input" id="quizPass" placeholder="合言葉を入力">
+              <button class="btn btn--accent" onclick="unlockQuiz()">解除</button>
+            </div>
+            <div class="quizlock__msg" id="quizPassMsg"></div>
+          </div>
+        </div>
+
+        <div class="quiz" id="quizBody">
+          <div class="quizq" data-correct="1">
+            <div class="quizq__q"><span class="quizq__n">Q1</span>この文章は、何についての話だった？</div>
+            <button class="quizopt">スマートフォン市場での、会社どうしの競争</button>
+            <button class="quizopt">生成AI（文章などを作るAI）をめぐる、3つの会社の競争</button>
+            <button class="quizopt">インターネットが生まれた歴史</button>
+            <button class="quizopt">自動運転車の安全性をめぐる議論</button>
+          </div>
+          <div class="quizq" data-correct="2">
+            <div class="quizq__q"><span class="quizq__n">Q2</span>「ChatGPT」を作り、サム・アルトマンが率いる会社は？</div>
+            <button class="quizopt">Google（グーグル）</button>
+            <button class="quizopt">Anthropic（アンスロピック）</button>
+            <button class="quizopt">OpenAI（オープンエーアイ）</button>
+            <button class="quizopt">Microsoft（マイクロソフト）</button>
+          </div>
+          <div class="quizq" data-correct="0">
+            <div class="quizq__q"><span class="quizq__n">Q3</span>グーグルの「Gemini（ジェミニ）」の大きな特徴は？</div>
+            <button class="quizopt">最初から、文字・画像・音声・映像をまとめて扱える（マルチモーダル）</button>
+            <button class="quizopt">文章だけしか扱えない</button>
+            <button class="quizopt">インターネットにはつながらない</button>
+            <button class="quizopt">ゲーム専用に作られている</button>
+          </div>
+          <div class="quizq" data-correct="1">
+            <div class="quizq__q"><span class="quizq__n">Q4</span>「Claude」を作ったAnthropicと、創業者ダリオ・アモデイの説明で正しいのは？</div>
+            <button class="quizopt">もともとGoogleの検索チームのリーダーだった</button>
+            <button class="quizopt">もとはOpenAIにいたが、安全性への心配から独立し「憲法AI」という安全重視のやり方を採用している</button>
+            <button class="quizopt">ChatGPTを開発した会社である</button>
+            <button class="quizopt">画像を作ることだけを専門にしている</button>
+          </div>
+
+          <div class="quiz__foot">
+            <button class="btn btn--accent" onclick="gradeQuiz()">答え合わせ</button>
+            <span class="quiz__score" id="quizScore"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-mind"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のまとめ</div>
+          <p>すごくない？ 1文字も読めなかった文章の中身を、もう君は説明できる。これがAIの力だ。言葉のかべも、むずかしい資料も、AIを相棒にすれば乗りこえられる。この「使いこなす感覚」を持って、今日の本番に進もう。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 0 — RECAP + バイブコーディングとは + 4レベル
+         ================================================= -->
+    <section class="section" id="ch0">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        OPENING · 基本を知る
+      </div>
+      <div class="section-tag">準備 ｜ 振り返り＋バイブコーディングとは</div>
+      <h2 class="section-title"><span class="hl">「言葉」</span>でつくる、<br>新しいモノづくり。</h2>
+      <p class="section-lead">
+        前回までに、君はAIで「作る」「考える」を体験した。今日はその延長で、AIに言葉で指示して<strong>動くアプリ</strong>を作る。まず前回を高速で思い出し、そのあと今日の主役<strong>「バイブコーディング」</strong>と、その上達の地図<strong>「AI駆動開発の4レベル」</strong>を押さえよう。
+      </p>
+
+      <h3>前回までのダイジェスト</h3>
+      <p>第1回・第2回で身につけた4つの柱。これが今日の土台になる。</p>
+
+      <div class="recap">
+        <div class="recap__card">
+          <div class="recap__num">RECAP 01</div>
+          <div class="recap__title">プロンプトの5要素</div>
+          <p class="recap__desc">役割・背景・タスク・条件・出力形式。言葉のかたちで答えが激変する。今日も全部使う。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 02</div>
+          <div class="recap__title">AIは確率器</div>
+          <p class="recap__desc">生成AIは「次に来そうな言葉」を選び続ける道具。だから1回で完璧にはならない。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 03</div>
+          <div class="recap__title">AIエージェント</div>
+          <p class="recap__desc">目標を渡すと、自分で計画→実行→修正を回すAI。今日のアプリ作りの裏側で活躍する。</p>
+        </div>
+        <div class="recap__card">
+          <div class="recap__num">RECAP 04</div>
+          <div class="recap__title">人間が方向を決める</div>
+          <p class="recap__desc">広げる・作るはAI、選ぶ・決めるは自分。ハンドルを握るのは、いつも人間。</p>
+        </div>
+      </div>
+
+      <h3>「バイブコーディング」って何？</h3>
+      <p>2025年、世界的なAI研究者<strong>アンドレイ・カーパシー</strong>が名付けた言葉。「コードの存在すら忘れて、ノリ（vibe）に身をまかせて作る」——つまり<em>AIに言葉で頼んで、コードを書かせる新しい作り方</em>だ。2025年には英語辞書コリンズの<strong>「今年の言葉（Word of the Year）」</strong>にも選ばれた。</p>
+
+      <div class="agentbox">
+        <div class="agentbox__col agentbox__col--passive">
+          <span class="agentbox__tag">これまでのプログラミング</span>
+          <div class="agentbox__name">文法を覚えて、手で書く</div>
+          <div class="agentbox__flow">
+            <div class="agentbox__node">難しい言語を勉強する</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">1文字ずつコードを書く</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">エラーを自力で直す</div>
+          </div>
+          <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">作れるまで何ヶ月もかかる。<br>入り口がとても高い。</p>
+        </div>
+        <div class="agentbox__col agentbox__col--active">
+          <span class="agentbox__tag">バイブコーディング</span>
+          <div class="agentbox__name">言葉で伝えて、AIに書かせる</div>
+          <div class="agentbox__flow">
+            <div class="agentbox__node">作りたいものを言葉で伝える</div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__loop">
+              <div class="agentbox__loop-label">― すぐ動く・すぐ直せる ―</div>
+              <div class="agentbox__node">AIがコードを生成</div>
+              <div class="agentbox__node">画面で動きを確認</div>
+              <div class="agentbox__node">言葉で修正を頼む</div>
+            </div>
+            <div class="agentbox__arrow">↓</div>
+            <div class="agentbox__node">自分のアプリ完成！</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のたとえ話</div>
+          <p>料理にたとえると、昔のプログラミングは「包丁の研ぎ方から習う」感じ。バイブコーディングは「シェフ（AI）に"こんな料理が食べたい"と伝えて作ってもらう」感じだよ。でも——<strong>"何を食べたいか"を考えるのは、いつだって君</strong>。そこがいちばん大事なんだ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">プロも知っている、大事な注意</div>
+        <p>バイブコーディングは魔法じゃない。研究では、AIが作るコードの<strong>約45%に「セキュリティの穴」が混じる</strong>という報告もある。だから「動いた！」で終わりにせず、<strong>人間が中身を確かめる</strong>姿勢が大切。今日はその"確かめながら作る"力も身につけよう。</p>
+      </div>
+
+      <h3>上達の地図 ─ 「AI駆動開発」の4つのレベル</h3>
+      <p>AIに頼んでモノを作る力は、4段階で上達する。<strong>「言葉 → 前提 → 手順 → 自律ループ」</strong>と登っていく梯子だ。今日の授業は、この梯子を君が自分で登っていく時間になる。</p>
+
+      <div class="ladder">
+        <div class="ladder__step ladder__step--l1">
+          <div class="ladder__lv"><div class="ladder__lvnum">1</div><div class="ladder__lvtag">LEVEL 1</div></div>
+          <div class="ladder__body">
+            <div class="ladder__name">プロンプトエンジニアリング <span class="ladder__key">言葉を磨く</span></div>
+            <p class="ladder__desc">1回の指示の質を上げる。<strong>「ゲーム作って」ではなく「小学生向けの3問・動物クイズを、青基調・絵文字つきで」</strong>。第1回の5要素をそのまま使う。ただし1発でできるのは約8割。</p>
+            <div class="ladder__human">人間の役割：いい言葉を考える</div>
+          </div>
+        </div>
+        <div class="ladder__step ladder__step--l2">
+          <div class="ladder__lv"><div class="ladder__lvnum">2</div><div class="ladder__lvtag">LEVEL 2</div></div>
+          <div class="ladder__body">
+            <div class="ladder__name">コンテキストエンジニアリング <span class="ladder__key">前提を渡す</span></div>
+            <p class="ladder__desc">打ち始める前に<strong>「仕様カード」と「お約束カード」</strong>を書き、AIに世界観や決まりを最初から持たせる。あいまいさを先に消すから、やり取りの往復が大きく減る。</p>
+            <div class="ladder__human">人間の役割：何を作るかを設計する</div>
+          </div>
+        </div>
+        <div class="ladder__step ladder__step--l3">
+          <div class="ladder__lv"><div class="ladder__lvnum">3</div><div class="ladder__lvtag">LEVEL 3</div></div>
+          <div class="ladder__body">
+            <div class="ladder__name">フローエンジニアリング <span class="ladder__key">手順に分ける</span></div>
+            <p class="ladder__desc"><strong>1プロンプト＝1変更</strong>で「①レイアウト→②スコア→③効果音」と積む。各ステップで画面を確認。友達に弱点を3つ言わせて直す<strong>「自己レビューのループ」</strong>もここ。</p>
+            <div class="ladder__human">人間の役割：作る順番を組み立てる</div>
+          </div>
+        </div>
+        <div class="ladder__step ladder__step--l4">
+          <div class="ladder__lv"><div class="ladder__lvnum">4</div><div class="ladder__lvtag">LEVEL 4</div></div>
+          <div class="ladder__body">
+            <div class="ladder__name">ループエンジニアリング <span class="ladder__key">AIに回させる</span></div>
+            <p class="ladder__desc">前回学んだ<strong>AIエージェント</strong>が「計画→実行→確認→修正」を自分で回す。AI Studioの裏側がまさにこれ。人間はゴールとお約束を渡して<strong>「監督」</strong>になる。</p>
+            <div class="ladder__human">人間の役割：方向を決めて、見守る</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="essence">
+        <div class="essence__label">今日の本質</div>
+        <p class="essence__text">レベルが上がるほど、<span class="mark">手を動かすのはAI</span>になる。<br>そして人間に残るのは——<span class="mark">「何を、どう作るか」を考える企画力</span>だ。</p>
+        <p class="essence__sub">だから「AIが賢くなったら人間はいらない」は逆。AIが賢くなるほど、<strong>起点になる人間の想像力と企画力</strong>が大事になる。今日はそれを、手を動かして体感しよう。</p>
+      </div>
+
+      <!-- 教師向け運用注意（年齢規約） -->
+      <div class="opsnote">
+        <div class="opsnote__head">⚙ 先生へ ─ 使い方の大事なルール</div>
+        <div class="opsnote__body">
+          <p><strong>Google AI Studioは「18歳以上」が利用規約。</strong>中学生・小学生は自分のアカウントで操作できません。基本は<strong>「先生が大人のアカウントで操作・投影し、生徒は仕様カードとプロンプトを設計→先生が代理で入力」</strong>する形で進めます（高校生で18歳以上は本人操作も可）。</p>
+          <p><strong>無料枠には1日の回数制限</strong>があります。1人1作品・<strong>3〜5回の反復</strong>を目安に設計し、予備のアカウント／ブラウザを用意しておくと安心です。「設計するのは生徒、タイプするのは先生」——役割を最初に伝えましょう。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 1 ① 企画・仕様カード (Lv2)
+         ================================================= -->
+    <section class="section" id="ch1">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        STEP 1 · ①企画する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ①企画・仕様カード</div>
+      <h2 class="section-title"><span class="hl">企画</span>が9割。<br>作る前に、決める。</h2>
+      <p class="section-lead">
+        いきなり「作って」と打つ前に、まず<strong>何を作るかを決める</strong>。アイデアを広げて、いちばん作りたい1つに絞り、<strong>「仕様カード」</strong>に書き出す。これが<strong>レベル2（前提を渡す）</strong>の練習だ。ここをていねいにやると、あとが全然ラクになる。
+      </p>
+
+      <h3>まず、アイデアを「広げる」</h3>
+      <p>最初から1つに決めなくていい。AIを相棒に、たくさん出してから選ぶ。下のガチャでお題のヒントを引いて、自分なりにアレンジしてみよう。</p>
+
+      <!-- アプリお題ガチャ -->
+      <div class="gacha">
+        <div class="gacha__label">🎲 アプリお題ガチャ</div>
+        <div class="gacha__title">何を作る？ ヒントを引いてみよう</div>
+        <p class="gacha__desc">4タイプから1つずつ、作れそうなアプリの<strong>お題のタネ</strong>が出る。気に入ったものを選んで、<strong>自分の好き</strong>を足してアレンジしよう。そのまま作る必要はないよ。</p>
+        <button class="gacha__btn" id="gachaBtn"><span class="gacha__dice">🎲</span> お題を引く</button>
+        <div class="gacha__results" id="gachaResults"></div>
+        <div class="gacha__chosen" id="gachaChosen"></div>
+      </div>
+
+      <h3>次に、「最小限」まで絞る ─ MVPの考え方</h3>
+      <p>やりたいことを全部のせると、絶対に時間内に終わらない。プロの世界でも、まず<em>「いちばん大事な1つの機能だけ」</em>で動くものを作る。これを<strong>MVP（実用最小限の製品）</strong>と呼ぶ。欲張らないのが、完成への近道だ。</p>
+
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <span class="compare__label">✕ 欲張りすぎ</span>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">「キャラが10種類いて、対戦できて、レベルアップして、ランキングもあって、着せ替えもできるRPG」<br><br><strong>→ 100分でも一生終わらない。</strong></p>
+        </div>
+        <div class="compare__side compare__side--good">
+          <span class="compare__label">○ 最小限（MVP）</span>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">「タップすると数字が増える。10になったら"クリア！"と出る」<br><br><strong>→ まず動く。あとから1つずつ足せる。</strong></p>
+        </div>
+      </div>
+
+      <h3>「仕様カード」を書く</h3>
+      <p>絞れたら、<strong>仕様カード</strong>に書き出す。これがAIに渡す「前提（コンテキスト）」になる。誰のための・何をする・どんな画面か——これを先に決めるだけで、AIの精度がぐっと上がる。完成イメージはこんな感じ。</p>
+
+      <div class="speccard">
+        <div class="speccard__title">📋 仕様カード（記入例）</div>
+        <div class="speccard__row"><div class="speccard__k">誰のため</div><div class="speccard__v">勉強の合間に息抜きしたい、自分と同じ中学生</div></div>
+        <div class="speccard__row"><div class="speccard__k">何をする</div><div class="speccard__v">ボタンを押すと、今日がんばれる「応援メッセージ」が1つ出る</div></div>
+        <div class="speccard__row"><div class="speccard__k">画面（1つ）</div><div class="speccard__v">まんなかに大きなボタン、その上にメッセージ表示エリア</div></div>
+        <div class="speccard__row"><div class="speccard__k">操作・動き</div><div class="speccard__v">ボタンを押すたびに、20個の中からランダムでメッセージが変わる</div></div>
+        <div class="speccard__row"><div class="speccard__k">終わり / 勝ち</div><div class="speccard__v">（今回はなし。何度でも押せる）</div></div>
+        <div class="speccard__row"><div class="speccard__k">お約束</div><div class="speccard__v">色は3色まで・やさしい雰囲気・日本語・絵文字をすこし使う</div></div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">お約束カードって？</div>
+        <p>仕様カードの最後の<strong>「お約束」</strong>は特別大事。これは「毎回守ってほしい共通ルール」で、プロが使う<code>CLAUDE.md</code>という仕組みの子ども版。最初に決めておくと、何度修正しても雰囲気がブレない。</p>
+      </div>
+
+      <!-- WORK 1: 仕様カード -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">WORK ①</span>
+          <h3 class="work__title">君の「仕様カード」を作ろう</h3>
+        </div>
+        <p class="work__desc">作りたいアプリを、最小限まで絞って書き出そう。これがAIへの最初の指示のもとになる。迷ったら、上のガチャのお題を使ってOK。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>アプリの名前 ＆ 一言でいうと？</label>
+          <input class="input" id="w1name" placeholder="例：「おうえんボタン」── 押すと応援メッセージが出るアプリ">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>誰のため？（ターゲット）</label>
+          <input class="input" id="w1who" placeholder="例：勉強づかれした、自分と同じ中学生">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>いちばん大事な「1つの機能」は？（MVP）</label>
+          <textarea class="textarea" id="w1mvp" placeholder="例：ボタンを押すと、20個の中から応援メッセージが1つランダムで出る"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>お約束（色・雰囲気・言葉など）</label>
+          <input class="input" id="w1rule" placeholder="例：色は3色まで・やさしい雰囲気・日本語・絵文字すこし">
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w1', ['w1name','w1who','w1mvp','w1rule'])">💾 保存</button>
+          <button class="btn btn--accent" onclick="buildPrompt()">✨ プロンプトに変身させる</button>
+          <span id="w1status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+
+        <div class="promptblock" id="builtPrompt" style="display:none;">
+          <span class="promptblock__label">AIへの最初の指示</span>
+          <span id="builtPromptText"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 「変身させる」を押すと、仕様カードが<strong>AIへの指示文（プロンプト）</strong>に組み上がる。これがレベル2の力だ。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 1 ② まず動かす (Lv1)
+         ================================================= -->
+    <section class="section" id="ch2">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        STEP 1 · ②まず動かす
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ②まず動かす</div>
+      <h2 class="section-title">まず<span class="hl-coral">動かす</span>。<br>「80点」を、こわがらない。</h2>
+      <p class="section-lead">
+        仕様カードができたら、それをまるごとAIに渡して<strong>最初の1個</strong>を作らせる。これが<strong>レベル1</strong>。ここで大事な心がまえ——<strong>最初の生成は「だいたい8割」で十分</strong>。完璧を待たず、まず動くものを出すのがコツだ。
+      </p>
+
+      <h3>「言葉のちがい」で結果は変わる</h3>
+      <p>同じ「クイズアプリ」でも、指示のしかたで出来がまるで違う。下を見比べてみよう。</p>
+
+      <div class="vs">
+        <div class="vs__card vs__card--weak">
+          <div class="vs__head">✕ ざっくり丸投げ</div>
+          <div class="vs__body">
+            <div class="vs__prompt">クイズアプリ作って</div>
+            <p class="vs__result"><strong>結果：</strong>何のクイズ？ 何問？ 誰向け？ ——AIが勝手に決めるので、思っていたものと違うものが出てくる。</p>
+            <div class="vs__verdict">直すところが多すぎて、逆に時間がかかる</div>
+          </div>
+        </div>
+        <div class="vs__card vs__card--strong">
+          <div class="vs__head">○ 仕様カードを渡す</div>
+          <div class="vs__body">
+            <div class="vs__prompt">小学生向けの動物クイズアプリを作って。
+3問・4択。正解で「せいかい！」と表示し、
+最後に点数を出す。色は3色まで・絵文字つき・日本語で。</div>
+            <p class="vs__result"><strong>結果：</strong>イメージにかなり近いものが、一発で出てくる。残りは細かい調整だけ。</p>
+            <div class="vs__verdict">8割完成。あとは育てるだけ</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>自分の手で、ちがいを"引いて"みよう</h3>
+      <p>同じ「シューティングゲーム」を作るプロンプトを、<strong>★1（丸投げ）から★4（超絶クオリティ）まで</strong>そろえたガチャだ。出てきたプロンプトを<strong>コピーして、GeminiやChatGPTに貼るだけ</strong>。同じお題なのに、出てくるゲームがどれだけ変わるか、自分の目でたしかめよう。</p>
+
+      <div class="gacha">
+        <div class="gacha__label">🎰 プロンプトガチャ</div>
+        <div class="gacha__title">同じ「シューティングゲーム」、言葉でここまで変わる</div>
+        <p class="gacha__desc">引くたびに、各レベルのプロンプトがランダムで変わる。<strong>★1から順にコピーして試す</strong>と、レベルが上がるほどゲームが進化するのがわかるよ。まずは★1と★4を比べてみよう。</p>
+        <button class="gacha__btn" id="pgBtn"><span class="gacha__dice">🎰</span> プロンプトを引く</button>
+        <div class="pgacha__results" id="pgResults"></div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">気づいてほしいこと</div>
+        <p>★1は短くてラクだけど、出てくるものは毎回バラバラで、しょぼいことも多い。★4は長いけれど、<strong>「何を・どう作るか」を言葉で具体的に伝えている</strong>。この差が、そのまま作品の差になる。長く書くのがえらいんじゃない、<strong>はっきり伝えるのが強い</strong>んだ。</p>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のひとこと</div>
+          <p>最初から100点をねらうと、いつまでも始められない。<strong>「まず動く80点を出す → あとで20点ぶん育てる」</strong>。プロのバイブコーディングも、この順番でやっているんだ。失敗じゃなくて、これが正しいやり方だよ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">先生が投影で実演</div>
+        <p>ここは先生が、みんなの仕様カードを1つ選んでAI Studioに入力し、<strong>言葉だけでアプリが組み上がる瞬間</strong>をスクリーンで見せます。生成された画面（ライブプレビュー）を見て、「お、できた！」「ここはイメージと違うね」を全員で確認しよう。その"違い"が、次のステップ（修正）のタネになる。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 1 ③ 段階修正 (Lv3)
+         ================================================= -->
+    <section class="section" id="ch3">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        STEP 1 · ③段階修正
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ③段階修正</div>
+      <h2 class="section-title">のこり<span class="hl">2割</span>を、<br>1つずつ育てる。</h2>
+      <p class="section-lead">
+        ここが今日いちばんの腕の見せどころ、<strong>レベル3（手順に分ける）</strong>。最初の8割ができたアプリを、<strong>「1回の指示で1つだけ」</strong>直していく。いっぺんに全部頼まないのが、うまくいく最大のコツだ。
+      </p>
+
+      <h3>鉄則：「1プロンプト＝1変更」</h3>
+      <p>あれもこれも一度に頼むと、AIは混乱して、せっかく動いていた部分まで壊すことがある。<strong>1つ直して、画面で確認。また1つ直して、確認。</strong>この積み重ねが、確実に完成へ近づく道だ。</p>
+
+      <div class="compare">
+        <div class="compare__side compare__side--bad">
+          <span class="compare__label">✕ いっぺんに頼む</span>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">「色を変えて、音をつけて、点数も出して、タイトルも変えて、難しくして」<br><br><strong>→ どこかが必ず崩れる。何が原因かも分からなくなる。</strong></p>
+        </div>
+        <div class="compare__side compare__side--good">
+          <span class="compare__label">○ 1つずつ頼む</span>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">「① ボタンの色を青にして」→確認→<br>「② 正解のとき音を鳴らして」→確認→<br><br><strong>→ 確実。崩れても、すぐ前に戻れる。</strong></p>
+        </div>
+      </div>
+
+      <h3>修正の会話例 ─ こうやって「育てる」</h3>
+      <p>実際のバイブコーディングは、こんな"言葉のキャッチボール"で進む。AIは<strong>「修正を手伝ってくれる相棒」</strong>だ。</p>
+
+      <div class="thread">
+        <div class="thread__turn thread__turn--user">
+          <div class="thread__who thread__who--user">君</div>
+          <div class="thread__bubble">いいね！ でも文字が小さいから、<strong>メッセージの文字をもっと大きく</strong>して。</div>
+        </div>
+        <div class="thread__turn thread__turn--ai">
+          <div class="thread__who thread__who--ai">AI</div>
+          <div class="thread__bubble">文字サイズを大きくしました。プレビューで確認してください。</div>
+        </div>
+        <div class="thread__turn thread__turn--user">
+          <div class="thread__who thread__who--user">君</div>
+          <div class="thread__bubble">完ぺき！ 次は、<strong>ボタンを押したとき「ふわっ」と動くアニメ</strong>をつけて。</div>
+        </div>
+        <div class="thread__turn thread__turn--ai">
+          <div class="thread__who thread__who--ai">AI</div>
+          <div class="thread__bubble">ボタンに、押すと少し沈むアニメーションを追加しました。</div>
+        </div>
+      </div>
+      <p class="thread__note" style="padding-left:0;">※ AI Studioには、画面の一部を選んで「ここをこう直して」と指示できる<strong>注釈モード</strong>もある。言葉で場所を説明しにくいときに便利。</p>
+
+      <h3>もうひとつの技 ─ 「自己レビューのループ」</h3>
+      <p>自分では気づけない弱点も、AIや友達に聞けば見えてくる。これは<strong>レベル3の上級ワザ</strong>。プロが使う「書く人／チェックする人」を分ける方法の、子ども版だ。</p>
+
+      <div class="card card--ink">
+        <h4>こう聞いてみよう</h4>
+        <p>「このアプリを、<strong>はじめて使う人の目線で、直したほうがいい点を3つ</strong>教えて」<br>→ 出てきた3つを、1つずつ「1プロンプト＝1変更」で直していく。となりの友達に試してもらって、感想をもらうのも最高のレビューだ。</p>
+      </div>
+
+      <div class="cautions">
+        <div class="cautions__head">✓ 段階修正の「気をつけポイント」</div>
+        <ul class="cautions__list">
+          <li><strong>1回に1つだけ。</strong>欲張らない。直したら必ずプレビューで確認する。</li>
+          <li><strong>うまくいったら、ひと言メモ。</strong>「この言い方が効いた」を覚えておくと次に活きる。</li>
+          <li><strong>沼にハマったら戻る。</strong>直すほど悪化したら、無理せず最後にうまくいった状態に戻す。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 1 ④ エラー対処・ツール理解
+         ================================================= -->
+    <section class="section" id="ch4">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        STEP 1 · ④エラー対処
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ④エラー対処・ツール理解</div>
+      <h2 class="section-title">エラーは<span class="hl-coral">こわくない</span>。<br>相棒に、まかせろ。</h2>
+      <p class="section-lead">
+        作っていると、必ず「エラー（赤い文字）」や「思った動きにならない」が起きる。でも大丈夫。バイブコーディングでは、<strong>エラーすらAIに直してもらえる</strong>。あわてず対処する型を覚えよう。
+      </p>
+
+      <h3>エラーが出たときの「3つの型」</h3>
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">① 全文をそのまま貼る</h4>
+          <p style="margin:0;font-size:14px;">エラーメッセージを<strong>1文字も変えず</strong>コピーして貼り、「このエラーを直して」。AIはそれを読んで原因を見つける。要約しないのがコツ。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">② 何をしたかも伝える</h4>
+          <p style="margin:0;font-size:14px;">「<strong>○○を押したら</strong>このエラーが出た」と、状況もそえる。AIが状況を分かるほど、直しが早く正確になる。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">③ ダメなら前に戻る</h4>
+          <p style="margin:0;font-size:14px;">直しても直しても悪化するときは、<strong>最後にうまく動いた状態に戻す</strong>。傷口を広げない。これも立派な技術。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">合言葉</div>
+        <p>エラーは「失敗」じゃなく<strong>「AIへの次の質問」</strong>。プロでも、エラー全文を貼って「fix this（直して）」と頼むのは日常茶飯事。エラーを見て焦るより、<strong>そのまま相棒に渡す</strong>のが正解だ。</p>
+      </div>
+
+      <h3>今日の道具 ─ Google AI Studio「Build」</h3>
+      <p>今日使うのは、Googleの<strong>AI Studio</strong>の中にある<strong>「Build（ビルド）」</strong>という機能。言葉でアプリを作るための、強力な道具だ。中身を知っておこう。</p>
+
+      <div class="tooldetail">
+        <div class="tooldetail__top">
+          <svg class="tooldetail__icon"><use href="#icon-gemini"/></svg>
+          <div class="tooldetail__title">
+            <div class="tooldetail__cat">Google AI Studio ─ Build mode</div>
+            <div class="tooldetail__role">言葉でアプリを作る / 最新のGeminiが動く</div>
+          </div>
+          <span class="tooldetail__ex">aistudio.google.com</span>
+        </div>
+        <div class="tooldetail__body">
+          <p>作りたいものを言葉で打つと、AIがコードを書き、<strong>すぐ右側に「動く画面」</strong>を出してくれる。直したいところは言葉で頼めばその場で反映。完成したら<strong>共有用のURL</strong>で人に見せられる。</p>
+          <div class="tooldetail__feats">
+            <div class="tooldetail__feat"><strong>ライブプレビュー：</strong>作りながら、すぐ動きを確認できる</div>
+            <div class="tooldetail__feat"><strong>注釈モード：</strong>画面の一部を選んで「ここを直して」</div>
+            <div class="tooldetail__feat"><strong>音声入力：</strong>声で指示することもできる</div>
+            <div class="tooldetail__feat"><strong>共有・公開：</strong>URLやデプロイで作品を見せられる</div>
+          </div>
+          <div class="tooldetail__tags">
+            <span class="tooldetail__tag tooldetail__tag--good">無料枠で始められる</span>
+            <span class="tooldetail__tag tooldetail__tag--good">最新Geminiが動く</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">18歳以上が利用条件</span>
+            <span class="tooldetail__tag tooldetail__tag--watch">無料は1日の回数制限あり</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA のヒント</div>
+          <p>回数に限りがあるから、<strong>1回の指示を大事に</strong>しよう。打つ前に「今いちばん直したいのはどこ？」を1つに決める。これが、限られた回数で良いものを作るコツだよ。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 1 ⑤ 共有・公開
+         ================================================= -->
+    <section class="section" id="ch5">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-hero"/></svg>
+        STEP 1 · ⑤共有する
+      </div>
+      <div class="section-tag">STEP 1 ｜ 一緒に体験 · ⑤共有・公開</div>
+      <h2 class="section-title">できたら、<span class="hl">見せる</span>。<br>それが完成のしるし。</h2>
+      <p class="section-lead">
+        アプリが動いたら、<strong>共有</strong>しよう。AI Studioは作品を<strong>URLで公開</strong>できる。人に見せて遊んでもらうと、自分では気づかなかった改善点が見えてくる。「作る→見せる→直す」——この一周が、モノづくりの本当の楽しさだ。
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4 style="margin-top:0;">🔗 共有する</h4>
+          <p style="margin:0;font-size:14px;">共有ボタンでURLを作れば、友達や家族に送って遊んでもらえる。「自分が言葉で作ったもの」が、人の手で動く感動を味わおう。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">💬 感想をもらう</h4>
+          <p style="margin:0;font-size:14px;">「ここが分かりにくい」「これ楽しい」——もらった声は、次の修正プロンプトのタネ。レベル3の自己レビューと同じだ。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">ここまでで一周</div>
+        <p>①企画 → ②まず動かす → ③段階修正 → ④エラー対処 → ⑤共有。これがバイブコーディングの<strong>1サイクル</strong>。次はいよいよ、この流れを<strong>自分のアイデアで</strong>一周する番だ！</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 2 — 個人制作（本番）
+         ================================================= -->
+    <section class="section" id="step2">
+      <div class="bigstep">
+        <span class="bigstep__badge">STEP 2</span>
+        <span class="bigstep__text">いよいよ本番。<strong>自分のアイデア</strong>を仕様カードにして、AIと一緒に<strong>君だけのアプリ</strong>を作ろう。完璧じゃなくていい。<strong>一周する</strong>ことが目標だ。</span>
+      </div>
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        STEP 2 · 自分でつくる
+      </div>
+      <div class="section-tag">STEP 2 ｜ 個人制作</div>
+      <h2 class="section-title">本番チャレンジ。<br><span class="hl-coral">君だけ</span>のアプリを作れ。</h2>
+      <p class="section-lead">
+        ステップ1で体験した流れを、今度は自分のアイデアで。困ったら、各章の「本質」「会話例」「気をつけポイント」に戻っていい。大事なのは完璧さじゃなく、<strong>自分でハンドルを握って4つのレベルを登る</strong>ことだ。
+      </p>
+
+      <!-- CHALLENGE BRIEF -->
+      <div class="brief">
+        <div class="brief__label">🚀 MISSION</div>
+        <p class="brief__mission">君は<span class="hl-y">アプリ開発者</span>。<br>言葉だけで、<span class="hl-y">"あったらいいな"</span>を<br>本当に動くアプリにせよ。</p>
+        <p class="brief__sub">仕様カード→まず動かす→段階修正、の流れで1つのアプリを完成させ、最後にみんなに見せる。次の<strong>4つの条件</strong>を満たそう。</p>
+        <div class="brief__conds">
+          <div class="brief__cond">
+            <span class="brief__cond-num">1</span>
+            <span class="brief__cond-text"><strong>仕様カードを書いた。</strong>誰の・何の・どんな画面かを、作る前に決めた。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">2</span>
+            <span class="brief__cond-text"><strong>最小限から始めた。</strong>欲張らず、まず動く1機能を完成させた。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">3</span>
+            <span class="brief__cond-text"><strong>3回以上、直した。</strong>「1プロンプト＝1変更」で育てた。</span>
+          </div>
+          <div class="brief__cond">
+            <span class="brief__cond-num">4</span>
+            <span class="brief__cond-text"><strong>動くものになった。</strong>完璧じゃなくてOK。最後まで一周した。</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>進めかたの「時間の地図」</h3>
+      <p>一人で作るときは、時計を意識するのが成功のカギ。<strong>1つの工程で沼にハマらない</strong>こと。区切りが来たら、思い切って次へ。先生が時間を知らせてくれるよ。</p>
+
+      <div class="timemap">
+        <div class="timerow">
+          <div class="timerow__time">〜5分</div>
+          <div><div class="timerow__label">① 仕様カードを書く（企画）</div><div class="timerow__sub">最小限の1機能に絞る。お約束も決める ＝レベル2</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜5分</div>
+          <div><div class="timerow__label">② まず動かす（最初の生成）</div><div class="timerow__sub">仕様カードをまるごと渡す。8割でOK ＝レベル1</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜12分</div>
+          <div><div class="timerow__label">③ 段階修正（3〜5回）</div><div class="timerow__sub">1プロンプト＝1変更で育てる。エラーは全文貼る ＝レベル3</div></div>
+        </div>
+        <div class="timerow">
+          <div class="timerow__time">〜3分</div>
+          <div><div class="timerow__label">④ 仕上げ・共有の準備</div><div class="timerow__sub">「どの言葉が効いたか」をメモしておく</div></div>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">よくある失敗</div>
+        <p><strong>「企画を考えすぎて、作る時間がなくなる」</strong>のが一番もったいない。アイデアは完璧じゃなくていい。<strong>まず作り始める</strong>のが大事。作りながら直せるのが、バイブコーディングの強みだ。</p>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">迷ったら、これを思い出す</div>
+        <p>詰まったら自分に聞く。<strong>「いま、4つのレベルのどこにいる？」</strong> 言葉が弱い→レベル1。前提が足りない→レベル2。いっぺんに頼みすぎ→レベル3に戻って1つずつ。これが脱出のヒントだ。</p>
+      </div>
+
+      <!-- WORK: STEP2 制作記録 -->
+      <div class="work work--memo">
+        <div class="work__head">
+          <span class="work__label">STEP 2 制作記録</span>
+          <h3 class="work__title">アプリ制作と、4条件チェック</h3>
+        </div>
+        <p class="work__desc">作ったアプリを記録し、最後に4つの条件を満たせたか自分でチェックしよう。「効いたプロンプト」は宝物だから、必ず書きとめて。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>作ったアプリの名前・どんなアプリ？</label>
+          <textarea class="textarea" id="s2app" placeholder="例：「おうえんボタン」── 押すと応援メッセージが出る、息抜きアプリ"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>いちばん「効いた」プロンプト（指示の言葉）は？</label>
+          <textarea class="textarea" id="s2prompt" placeholder="例：「ボタンを押したら、ふわっと沈むアニメをつけて」と言ったら、一気にそれっぽくなった"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>何回くらい直した？ どんなエラーに出会った？</label>
+          <input class="input" id="s2iter" placeholder="例：4回。1回エラーが出たけど、全文貼ったら直してくれた">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>4条件チェック（自分で確認！）</label>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c1"> ① 仕様カードを書いた</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c2"> ② 最小限から始めた</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c3"> ③ 3回以上、直した</label>
+            <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink-soft);cursor:pointer;"><input type="checkbox" id="s2c4"> ④ 動くものになった</label>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('s2', ['s2app','s2prompt','s2iter'], ['s2c1','s2c2','s2c3','s2c4'])">💾 保存</button>
+          <span id="s2status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 4つ全部にチェックが付いたら、発表の準備OK！ 足りないところは、もう一度その工程に戻ってみよう。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         STEP 3 — 作品共有・振り返り
+         ================================================= -->
+    <section class="section" id="step3">
+      <div class="bigstep">
+        <span class="bigstep__badge">STEP 3</span>
+        <span class="bigstep__text">作品を<strong>見せ合おう</strong>。大事なのは"すごさ"じゃない。<strong>「どんな言葉でAIに頼んで、その動きを実現したか」</strong>を共有することだ。</span>
+      </div>
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-hero"/></svg>
+        STEP 3 · 見せ合う
+      </div>
+      <div class="section-tag">STEP 3 ｜ 作品共有・振り返り</div>
+      <h2 class="section-title">作品を<span class="hl">共有</span>。<br>そして、振り返る。</h2>
+      <p class="section-lead">
+        作ったアプリをみんなに見せよう。ポイントは作品自体より——<strong>「どんなプロンプト（言葉）で、その動きを出したか」</strong>を伝えること。同じツールでも、人によって全く違うアプリができる。その違いこそ、君の<strong>企画力</strong>の証拠だ。
+      </p>
+
+      <h3>見せ合いのコツ ─ この3つを話そう</h3>
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="margin-top:0;">① 何のアプリか一言で</h4>
+          <p style="margin:0;font-size:14px;">「これは"○○するアプリ"です」。最初に結論。誰のために作ったかも添えると伝わる。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">② 効いた"魔法の言葉"</h4>
+          <p style="margin:0;font-size:14px;">「この動きは、<strong>こう頼んだら</strong>できた」。いちばん効いたプロンプトを共有。みんなのヒントになる。</p>
+        </div>
+        <div class="card">
+          <h4 style="margin-top:0;">③ 苦労と工夫</h4>
+          <p style="margin:0;font-size:14px;">どんなエラーに困って、どう乗りこえたか。失敗談こそ、いちばん学びになる。</p>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-hero"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA の感想欄</div>
+          <p>友達の発表で「その頼み方、うまい！」「その発想はなかった」と思ったところは、下のメモに書いておこう。<strong>人のプロンプトの使い方</strong>から学べることは、本当にたくさんあるよ。</p>
+        </div>
+      </div>
+
+      <!-- WORK: reflection -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 3 ふりかえり</span>
+          <h3 class="work__title">今日のモノづくりを振り返ろう</h3>
+        </div>
+        <p class="work__desc">自分のやり方を見つめ直すこと（メタ認知）が、いちばん成長につながる。正直に書いてみよう。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>AIに任せた部分は？（手を動かす作業）</label>
+          <input class="input" id="w5ai" placeholder="例：コードを書く、デザインを整える、エラーを直す">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>自分で決めた部分は？（企画・判断）</label>
+          <input class="input" id="w5me" placeholder="例：何を作るか、誰のために作るか、どの機能を入れるか">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>今日、何回くらいレベルの梯子を登った？ どこが難しかった？</label>
+          <textarea class="textarea" id="w5level" placeholder="例：レベル1〜3を行き来した。いっぺんに頼んで崩したとき、レベル3に戻るのが難しかった"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">4</span>友達の発表・作品を見て思ったこと</label>
+          <textarea class="textarea" id="w5peer" placeholder="例：同じツールなのに全然違うアプリができていて驚いた／あの頼み方を真似したい"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">5</span>「AIが賢くても、人間の企画力が大事」と感じた瞬間は？</label>
+          <textarea class="textarea" id="w5key" placeholder="例：作るのはAIが一瞬でやってくれたけど、"何を作るか"を考えるのは自分しかできなかった"></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn--secondary" onclick="saveWork('w5', ['w5ai','w5me','w5level','w5peer','w5key'])">💾 保存</button>
+          <span id="w5status" style="color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-mid);margin:14px 0 0;">💡 ⑤こそが今日の主役。作ったのはAIでも、<strong>「何を作るか」を決めたのは君</strong>。その感覚を覚えておこう。</p>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA から、次回への問い</div>
+          <p>「もっと複雑なアプリを作るには？」「AIエージェント（レベル4）に、どこまで任せられる？」——この問いを持ち帰ってね。君のアイデアが、世界を変えるアプリの第一歩になるかもしれない。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CLOSING
+         ================================================= -->
+    <section class="section" id="closing">
+      <div class="closing">
+        <div class="closing__kicker">CLOSING</div>
+        <h2 class="closing__message">
+          AIが作るのは、<span class="hl">コード</span>。<br>
+          世界に生み出すのは、<br>
+          君の<span class="hl-coral">アイデア</span>だ。
+        </h2>
+        <p style="max-width:600px;margin:0 auto 32px;font-size:15px;line-height:2;color:var(--ink-soft);">
+          100分、お疲れさまでした。<br>
+          今日、君は言葉だけで、本当に動くアプリを作った。<br>
+          むずかしいコードの文法は、一文字も書いていないのに。<br><br>
+          AIがどれだけ進化しても、<br>
+          <em>「何を作るか」を考えるのは、いつも人間</em>だ。<br><br>
+          AIに作ってもらう人ではなく、<br>
+          <em>AIを相棒に、自分のアイデアを形にする人</em>になってほしい。<br><br>
+          企画して、言葉で伝えて、形にする。<br>
+          この力は、これからの時代、君の最強の武器になる。
+        </p>
+
+        <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <div style="padding:10px 20px;border:1.5px solid var(--ink);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink);font-weight:700;">DAY 03 / COMPLETE</div>
+          <div style="padding:10px 20px;border:1.5px solid var(--line);border-radius:100px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">AI COURSE · 2026</div>
+        </div>
+
+        <p style="margin-top:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">— Akky先生のプログラミング教室 —</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// =========================================================================
+// UNIVERSAL UTILITIES
+// =========================================================================
+const storage = {
+  set(key, val) { try { localStorage.setItem('ai_course_d3_' + key, JSON.stringify(val)); } catch(e) {} },
+  get(key) { try { const v = localStorage.getItem('ai_course_d3_' + key); return v ? JSON.parse(v) : null; } catch(e) { return null; } }
+};
+
+function saveWork(key, fieldIds, checkIds) {
+  const data = {};
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  if (checkIds) {
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) data[id] = el.checked;
+    });
+  }
+  storage.set(key, data);
+  const status = document.getElementById(key + 'status');
+  if (status) {
+    status.textContent = '✔ 保存しました';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+  }
+}
+
+function loadWork(key, fieldIds, checkIds) {
+  const data = storage.get(key);
+  if (!data) return;
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && data[id] !== undefined) el.value = data[id];
+  });
+  if (checkIds) {
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) el.checked = data[id];
+    });
+  }
+}
+
+// Progress bar
+const progressBar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// Nav active state
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav__item');
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.toggle('is-active', item.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => navObserver.observe(s));
+
+// Reveal on scroll
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+// Mobile nav
+const navEl = document.getElementById('nav');
+const navToggle = document.getElementById('navToggle');
+const backdrop = document.getElementById('backdrop');
+navToggle.addEventListener('click', () => {
+  navEl.classList.toggle('is-open');
+  backdrop.classList.toggle('is-shown');
+});
+backdrop.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+});
+navItems.forEach(item => item.addEventListener('click', () => {
+  navEl.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+}));
+
+// =========================================================================
+// アプリお題ガチャ (STEP 1 ①) — type-controlled random
+// =========================================================================
+const THEMES = {
+  tool: [
+    "毎日の持ち物チェックリスト ── 忘れ物をなくすアプリ",
+    "勉強の時間をはかる、シンプルなタイマー",
+    "今日の気分を記録する「きぶんメモ」",
+    "じゃんけんの手をランダムに出してくれるアプリ",
+    "わりかん計算機 ── 人数を入れたら1人分が出る",
+    "やることリスト ── 終わったらチェックを付けられる"
+  ],
+  game: [
+    "もぐらたたき ── 出てきた的をタップして点をかせぐ",
+    "クリックゲーム ── 押すほど数字が増えて目標をめざす",
+    "反射神経テスト ── 色が変わった瞬間に押す速さを測る",
+    "数当てゲーム ── AIが決めた数字を当てる",
+    "タイミングゲーム ── ぴったりで止められたら勝ち",
+    "記憶ゲーム ── 光る順番を覚えて同じ順に押す"
+  ],
+  quiz: [
+    "好きな教科の3択クイズ ── 全問正解をめざそう",
+    "都道府県クイズ ── 県の形や名産でわかるかな？",
+    "動物の鳴き声・特徴クイズ",
+    "アニメ／ゲームのキャラ性格しんだん",
+    "「あなたは何タイプ？」性格しんだんアプリ",
+    "計算ドリル ── ランダムな問題を出してくれる"
+  ],
+  fun: [
+    "おみくじアプリ ── 今日の運勢を引ける",
+    "応援メッセージボタン ── 押すと元気が出る言葉が出る",
+    "ごはん何にする？ ── ランダムでメニューを提案",
+    "ほめてくれるボタン ── 押すと君をほめてくれる",
+    "今日のラッキーカラー＆アイテム占い",
+    "なまえメーカー ── 入れた言葉から新しい名前を作る"
+  ]
+};
+const TYPE_META = {
+  tool: { label: "便利ツール", cls: "research" },
+  game: { label: "ゲーム",     cls: "debate" },
+  quiz: { label: "クイズ・診断", cls: "predict" },
+  fun:  { label: "おもしろ系",  cls: "propose" }
+};
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rollThemes() {
+  const types = ['tool', 'game', 'quiz', 'fun'];
+  return types.map(t => ({ type: t, text: pick(THEMES[t]) }));
+}
+
+const gachaBtn = document.getElementById('gachaBtn');
+const gachaResults = document.getElementById('gachaResults');
+const gachaChosen = document.getElementById('gachaChosen');
+
+if (gachaBtn) {
+  gachaBtn.addEventListener('click', () => {
+    gachaBtn.classList.add('is-rolling');
+    if (gachaChosen) gachaChosen.classList.remove('is-shown');
+    setTimeout(() => {
+      gachaBtn.classList.remove('is-rolling');
+      const picks = rollThemes();
+      gachaResults.innerHTML = picks.map(p => {
+        const m = TYPE_META[p.type];
+        return `<button class="theme-opt" data-theme="${p.text.replace(/"/g,'&quot;')}">
+          <span class="theme-opt__type theme-opt__type--${m.cls}">${m.label}</span>
+          <span class="theme-opt__text">${p.text}</span>
+        </button>`;
+      }).join('');
+      gachaBtn.querySelector('.gacha__dice').textContent = '🎲';
+      gachaResults.querySelectorAll('.theme-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          gachaResults.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          const txt = opt.getAttribute('data-theme');
+          gachaChosen.innerHTML = `決めた！ お題のタネ → <strong>${txt}</strong><br><span style="font-size:12.5px;opacity:0.85;">これに"君の好き"を足して、下の仕様カードに書いてみよう。</span>`;
+          gachaChosen.classList.add('is-shown');
+          storage.set('ideaSeed', txt);
+          const t = document.getElementById('w1name');
+          if (t && !t.value) t.value = txt;
+        });
+      });
+    }, 600);
+  });
+}
+
+// =========================================================================
+// 仕様カード → プロンプト変身ビルダー (STEP 1 ①, Lv2)
+// =========================================================================
+function buildPrompt() {
+  const name = (document.getElementById('w1name').value || '').trim();
+  const who  = (document.getElementById('w1who').value || '').trim();
+  const mvp  = (document.getElementById('w1mvp').value || '').trim();
+  const rule = (document.getElementById('w1rule').value || '').trim();
+
+  if (!name && !mvp) {
+    alert('まず「名前」か「いちばん大事な1つの機能」を書いてみよう！');
+    return;
+  }
+
+  let p = '次の条件で、Webアプリを1つ作ってください。\n';
+  if (name) p += `■ アプリ：${name}\n`;
+  if (who)  p += `■ 使う人：${who}\n`;
+  if (mvp)  p += `■ いちばん大事な機能：${mvp}\n`;
+  if (rule) p += `■ お約束（毎回まもる）：${rule}\n`;
+  p += '■ まずはこの最小限の機能だけで、動くものを作ってください。';
+
+  const box = document.getElementById('builtPrompt');
+  const txt = document.getElementById('builtPromptText');
+  txt.textContent = p;
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// =========================================================================
+// プロンプトガチャ (STEP 1 ②, Lv1体験) — ★1丸投げ〜★4超絶を引いて試す
+// =========================================================================
+const PROMPTS = {
+  t0: [
+    { p: `シューティングゲームを作って。`,
+      why: `お題だけ。言語も操作も指定がないので、毎回バラバラで"しょぼい"結果になりがち。` },
+    { p: `シューティングゲームのプログラムを書いて。`,
+      why: `「プログラム」とだけ。HTMLで動くとは限らず、すぐ遊べないことも多い。` }
+  ],
+  t1: [
+    { p: `HTMLで、ブラウザで動くシューティングゲームを作って。矢印キーで自機を左右に動かし、スペースキーで弾を撃って、敵に当たると消えるようにして。`,
+      why: `言語(HTML)と操作を指定。最低限あそべるが、得点もゲームオーバーもまだない。` },
+    { p: `1つのHTMLファイルだけで遊べるシューティングゲームを作って。自機・敵・弾があって、敵を倒すと得点が増えるようにして。`,
+      why: `「1ファイル」「得点」を追加。グッと"ゲーム"らしくなる。` }
+  ],
+  t2: [
+    { p: `ブラウザで遊べるシューティングゲームを、1つのHTMLファイル（HTML/CSS/JavaScript全部入り）で作ってください。
+
+【操作】矢印キーで自機を左右に動かし、スペースキーで弾を発射。
+【ルール】上から敵が降りてくる。弾を当てると敵を倒して+10点。敵に当たると自機のライフが1減る（最初は3）。ライフが0でゲームオーバー。
+【画面】上にスコアとライフを表示。ゲームオーバー画面に「もう一度」ボタンをつける。
+【見た目】宇宙っぽい黒背景に、自機は青、敵は赤でわかりやすく。
+
+コードはコピーしてすぐ使えるように、全部まとめて出力してください。`,
+      why: `操作・ルール・画面・見た目を箇条書きで指定。"ちゃんと遊べる"完成形に近づく。` }
+  ],
+  t3: [
+    { p: `あなたはプロのゲーム開発者です。ブラウザだけで動く本格的な縦スクロール・シューティングゲームを、1つのHTMLファイル（HTML/CSS/JavaScriptを内包）で完成させてください。外部ライブラリは使わず、<canvas>で描画します。
+
+【操作】矢印キー／WASDで移動、スペースで連射。スマホでもドラッグで移動・タップで発射できるようにする。
+【内容】
+- 自機：ライフ3。被弾後はしばらく無敵で点滅する。
+- 敵：3種類以上（まっすぐ来る雑魚／ジグザグ／たまに撃ってくる中型）。時間が経つほど数が増えて難しくなる。
+- アイテム：たまに落ちる「弾が強くなる」パワーアップ。
+- ボス：一定時間ごとに体力ゲージ付きのボスが出る。
+【演出】
+- 敵を倒すと爆発のパーティクル。被弾時は画面が軽くゆれる。
+- ネオン風のかっこいい配色、星が流れる背景。
+- Web Audio APIで発射音・爆発音・かんたんなBGMを鳴らす（音声ファイルは使わず、コードだけで音を生成）。
+【画面】スタート画面→プレイ画面（スコア・ハイスコア・ライフ表示）→ゲームオーバー画面（スコアと「リトライ」）。ハイスコアはブラウザに保存する。
+
+そのままHTMLファイルに貼れば動く完成コードを、1つにまとめて出力してください。`,
+      why: `役割・全機能・演出・画面構成・保存まで具体的に指示。"作品"レベルのゲームが出てくる。` }
+  ]
+};
+const PG_TIER = {
+  t0: { stars: '★', label: '丸投げ', cls: 't0' },
+  t1: { stars: '★★', label: 'ちょっと条件', cls: 't1' },
+  t2: { stars: '★★★', label: 'しっかり仕様', cls: 't2' },
+  t3: { stars: '★★★★', label: '超絶クオリティ', cls: 't3' }
+};
+function pgEscape(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function pgCopyFallback(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '-1000px';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) { alert('コピーできませんでした。プロンプトを手で選んでコピーしてね。'); }
+  document.body.removeChild(ta);
+}
+function pgCopy(text, btn) {
+  const done = () => {
+    const orig = btn.textContent;
+    btn.textContent = '✔ コピーした！';
+    btn.classList.add('is-copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('is-copied'); }, 1600);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => pgCopyFallback(text, done));
+  } else {
+    pgCopyFallback(text, done);
+  }
+}
+
+const pgBtn = document.getElementById('pgBtn');
+const pgResults = document.getElementById('pgResults');
+let pgCurrent = {};
+
+function pgRoll() {
+  const tiers = ['t0', 't1', 't2', 't3'];
+  pgCurrent = {};
+  pgResults.innerHTML = tiers.map((t, i) => {
+    const item = pick(PROMPTS[t]);
+    pgCurrent[t] = item.p;
+    const m = PG_TIER[t];
+    return `<div class="pgcard pgcard--${m.cls}" style="animation-delay:${(0.05 + i * 0.09).toFixed(2)}s">
+      <div class="pgcard__head">
+        <span class="pgcard__stars">${m.stars}</span>
+        <span class="pgcard__tier">レベル${i}：${m.label}</span>
+        <button class="pgcard__copy" data-tier="${t}">📋 コピー</button>
+      </div>
+      <div class="pgcard__prompt">${pgEscape(item.p)}</div>
+      <div class="pgcard__why">${pgEscape(item.why)}</div>
+    </div>`;
+  }).join('');
+  pgResults.querySelectorAll('.pgcard__copy').forEach(btn => {
+    btn.addEventListener('click', () => pgCopy(pgCurrent[btn.dataset.tier] || '', btn));
+  });
+}
+
+if (pgBtn) {
+  pgBtn.addEventListener('click', () => {
+    pgBtn.classList.add('is-rolling');
+    setTimeout(() => {
+      pgBtn.classList.remove('is-rolling');
+      pgBtn.querySelector('.gacha__dice').textContent = '🎰';
+      pgRoll();
+    }, 600);
+  });
+}
+
+// =========================================================================
+// ウォームアップ：要約ワーク＋ロック式クイズ
+// =========================================================================
+function copyEl(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  pgCopy(el.innerText, btn);
+}
+
+const QUIZ_PASS = 'ひらけ';
+function unlockQuiz() {
+  const inp = document.getElementById('quizPass');
+  const msg = document.getElementById('quizPassMsg');
+  const zone = document.getElementById('quizzone');
+  const v = (inp.value || '').trim();
+  if (v.toLowerCase() === QUIZ_PASS.toLowerCase()) {
+    zone.classList.remove('is-locked');
+    if (msg) { msg.textContent = '解除しました！ がんばって！'; msg.classList.remove('is-err'); }
+  } else {
+    if (msg) { msg.textContent = 'ちがうみたい。先生に合言葉を聞いてね。'; msg.classList.add('is-err'); }
+  }
+}
+
+document.querySelectorAll('.quizq').forEach(q => {
+  q.querySelectorAll('.quizopt').forEach((opt, idx) => {
+    opt.addEventListener('click', () => {
+      if (q.dataset.graded) return;
+      q.querySelectorAll('.quizopt').forEach(o => o.classList.remove('is-sel'));
+      opt.classList.add('is-sel');
+      q.dataset.sel = idx;
+    });
+  });
+});
+
+function gradeQuiz() {
+  let score = 0, total = 0;
+  document.querySelectorAll('.quizq').forEach(q => {
+    total++;
+    const correct = parseInt(q.dataset.correct, 10);
+    const sel = (q.dataset.sel !== undefined) ? parseInt(q.dataset.sel, 10) : -1;
+    const opts = q.querySelectorAll('.quizopt');
+    opts.forEach((o, i) => {
+      o.classList.remove('is-wrong', 'is-sel');
+      if (i === correct) o.classList.add('is-correct');
+    });
+    if (sel === correct) score++;
+    else if (sel >= 0) opts[sel].classList.add('is-wrong');
+    q.dataset.graded = '1';
+  });
+  const s = document.getElementById('quizScore');
+  if (s) s.textContent = `けっか：${score} / ${total} 問せいかい！`;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadWork('wu', ['wuTopic', 'wuPoints']);
+});
+
+// =========================================================================
+// INITIALIZE
+// =========================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  loadWork('w1', ['w1name','w1who','w1mvp','w1rule']);
+  loadWork('s2', ['s2app','s2prompt','s2iter'], ['s2c1','s2c2','s2c3','s2c4']);
+  loadWork('w5', ['w5ai','w5me','w5level','w5peer','w5key']);
+
+  const seed = storage.get('ideaSeed');
+  if (seed && gachaChosen) {
+    gachaChosen.innerHTML = `前回のお題のタネ → <strong>${seed}</strong><br><span style="font-size:12.5px;opacity:0.85;">引き直したいときは上のボタンをもう一度押してね。</span>`;
+    gachaChosen.classList.add('is-shown');
+  }
+});
+</script>
+
+</body>
+</html>
