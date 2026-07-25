@@ -1,0 +1,3011 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Course SPECIAL ｜ Akky先生のプログラミング教室</title>
+<style>
+/* =================================================================
+   DESIGN TOKENS — Navy × Off-white × 2 Accents（ai01–03 と共通）
+   ================================================================= */
+:root {
+  --bg: #FAF8F3;
+  --bg-alt: #F4F1EA;
+  --paper: #FFFFFF;
+  --paper-alt: #FCFAF6;
+
+  --ink: #1A2D5C;
+  --ink-soft: #4A5878;
+  --ink-mid: #6B7A99;
+  --ink-muted: #8B95AD;
+  --ink-dim: #B8BFCC;
+
+  --line: #E8E4DA;
+  --line-soft: #F0EDE5;
+  --line-strong: #1A2D5C;
+
+  --accent: #FFC830;
+  --accent-soft: #FFF6D9;
+  --accent-deep: #E8AC1A;
+
+  --coral: #F26D5B;
+  --coral-soft: #FCE5DF;
+  --coral-deep: #D04E3D;
+
+  --green: #5DAB6E;
+  --green-soft: #E5F0E8;
+
+  --m-blue: #3D5FBA;
+  --m-purple: #7B6CC4;
+  --m-pink: #D67898;
+  --m-mint: #5BB5AA;
+
+  --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+  --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, Menlo, monospace;
+
+  --nav-w: 280px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+
+  --shadow-xs: 0 1px 2px rgba(26,45,92,0.04);
+  --shadow-sm: 0 2px 6px rgba(26,45,92,0.05);
+  --shadow: 0 4px 12px rgba(26,45,92,0.06);
+  --shadow-md: 0 8px 20px rgba(26,45,92,0.08);
+
+  --pop: 4px 4px 0 var(--ink);
+  --pop-sm: 2px 2px 0 var(--ink);
+}
+
+/* =================================================================
+   RESET & BASE
+   ================================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-feature-settings: 'palt';
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.85;
+  font-size: 15.5px;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+button { font-family: inherit; font-size: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+::selection { background: var(--accent); color: var(--ink); }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(26,45,92,0.025) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* =================================================================
+   PROGRESS BAR
+   ================================================================= */
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 100;
+  background: var(--line-soft);
+  pointer-events: none;
+}
+.progress__bar {
+  height: 100%;
+  background: var(--ink);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* =================================================================
+   LAYOUT
+   ================================================================= */
+.app {
+  display: grid;
+  grid-template-columns: var(--nav-w) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 960px) {
+  .app { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   NAV (Sidebar)
+   ================================================================= */
+.nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: var(--paper-alt);
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.nav::-webkit-scrollbar { width: 4px; }
+.nav::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+}
+
+.nav__brand-mark { width: 36px; height: 36px; flex-shrink: 0; }
+.nav__brand-text { line-height: 1.3; }
+
+.nav__brand-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.nav__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.nav__school {
+  background: var(--ink);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.nav__list { list-style: none; }
+
+.nav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin: 1px 0;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.nav__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+  min-width: 22px;
+  font-weight: 700;
+}
+
+.nav__item:hover { color: var(--ink); background: var(--bg); }
+
+.nav__item.is-active {
+  color: var(--ink);
+  background: var(--bg);
+  font-weight: 700;
+}
+.nav__item.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.nav__item.is-active .nav__num { color: var(--ink); }
+
+.nav__phase {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.18em;
+  margin: 18px 12px 6px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.nav__footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.nav-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,45,92,0.4);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 960px) {
+  .nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  .nav.is-open { transform: translateX(0); }
+  .nav-toggle { display: flex; align-items: center; justify-content: center; }
+  .backdrop.is-shown { display: block; }
+}
+
+/* =================================================================
+   MAIN
+   ================================================================= */
+.main { min-width: 0; padding: 0 64px; }
+@media (max-width: 960px) { .main { padding: 0 20px; } }
+
+.section {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 100px 0 80px;
+  scroll-margin-top: 20px;
+  position: relative;
+}
+
+/* =================================================================
+   HERO
+   ================================================================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0;
+  position: relative;
+}
+
+.hero__school {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.hero__school::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--ink-soft);
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.hero__eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  color: var(--ink);
+}
+
+.hero__title .hl { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -4px; right: -4px;
+  height: 18px;
+  background: var(--accent);
+  z-index: -1;
+}
+.hero__title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.hero__title .hl-coral::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -4px; right: -4px;
+  height: 18px;
+  background: var(--coral);
+  z-index: -1;
+  opacity: 0.7;
+}
+
+.hero__lead {
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  max-width: 720px;
+}
+
+.hero__meta-item {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.hero__meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hero__meta-value {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+.hero__scroll-line {
+  width: 1px; height: 28px;
+  background: var(--ink-muted);
+  animation: scrollHint 2s ease-in-out infinite;
+}
+@keyframes scrollHint {
+  0%, 100% { transform: scaleY(0.3); transform-origin: top; opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.hero__mascot {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 280px;
+  pointer-events: none;
+  opacity: 0.95;
+}
+@media (max-width: 1100px) { .hero__mascot { display: none; } }
+
+/* =================================================================
+   SECTION HEADINGS
+   ================================================================= */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.section-tag::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent-deep);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.section-title .hl { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -3px; right: -3px;
+  height: 14px;
+  background: var(--accent);
+  z-index: -1;
+}
+.section-title .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.section-title .hl-coral::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -3px; right: -3px;
+  height: 14px;
+  background: var(--coral);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+.section-lead {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  max-width: 700px;
+  margin-bottom: 56px;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.3;
+  font-weight: 800;
+  margin: 60px 0 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 22px;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: var(--ink);
+  letter-spacing: 0.005em;
+}
+
+p {
+  margin: 0 0 18px;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+ul, ol { padding-left: 22px; margin: 0 0 22px; }
+li { margin-bottom: 8px; font-size: 15px; line-height: 1.85; color: var(--ink-soft); }
+
+strong { color: var(--ink); font-weight: 700; }
+
+em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 65%, var(--accent) 65%, var(--accent) 95%, transparent 95%);
+  padding: 0 2px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-alt);
+  color: var(--ink);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* =================================================================
+   PHASE BADGE
+   ================================================================= */
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 5px 14px 5px 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-xs);
+}
+.phase-badge svg { width: 28px; height: 28px; }
+
+/* =================================================================
+   CARDS & GRID
+   ================================================================= */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+.card:hover { border-color: var(--ink-dim); box-shadow: var(--shadow-sm); }
+.card--soft { background: var(--bg-alt); box-shadow: none; }
+.card--soft:hover { border-color: var(--line); }
+.card--ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.card--ink * { color: var(--paper); }
+.card--ink strong { color: var(--accent); }
+.card--ink h4 { color: var(--accent); }
+.card--ink em {
+  background: linear-gradient(180deg, transparent 65%, rgba(255,200,48,0.4) 65%);
+  color: var(--accent);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 12px; }
+  .grid-auto { grid-template-columns: 1fr; }
+}
+
+/* =================================================================
+   TABLES
+   ================================================================= */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.table th, .table td {
+  padding: 13px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+.table th {
+  background: var(--bg-alt);
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.table tr:last-child td { border-bottom: none; }
+.table td { color: var(--ink-soft); }
+.table td strong { color: var(--ink); }
+.table tr:hover { background: var(--bg-alt); }
+.table-scroll { overflow-x: auto; }
+
+/* =================================================================
+   CALLOUTS
+   ================================================================= */
+.callout {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  margin: 22px 0;
+  box-shadow: var(--shadow-xs);
+}
+.callout__label {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.callout p { margin: 0; color: var(--ink); font-weight: 500; }
+.callout strong { color: var(--ink); }
+.callout--warn { border-left-color: var(--coral-deep); background: var(--coral-soft); }
+.callout--warn .callout__label { background: var(--coral-deep); color: white; }
+.callout--gold { border-left-color: var(--accent-deep); background: var(--accent-soft); }
+.callout--gold .callout__label { background: var(--accent-deep); color: var(--ink); }
+.callout--insight { border-left-color: var(--ink); background: var(--bg-alt); }
+
+/* =================================================================
+   PILLS
+   ================================================================= */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; }
+.pill {
+  padding: 4px 12px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* =================================================================
+   WORK BOX
+   ================================================================= */
+.work {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 30px 34px;
+  margin: 36px 0;
+  position: relative;
+  box-shadow: var(--pop);
+}
+.work__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.work__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.work__label::before { content: '✎'; font-size: 12px; }
+.work__title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.4;
+  flex: 1;
+  margin: 0;
+}
+.work__title::before { display: none; }
+.work__desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  line-height: 1.85;
+  font-weight: 500;
+}
+
+.field { display: flex; flex-direction: column; margin-bottom: 14px; }
+.field__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  background: var(--ink);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(26,45,92,0.08);
+}
+.textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+.btn:hover { background: var(--ink); transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn--secondary { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn--secondary:hover { background: var(--bg-alt); }
+.btn--accent { background: var(--accent); color: var(--ink); }
+.btn--accent:hover { background: var(--accent-deep); }
+
+/* =================================================================
+   DEEP DIVE
+   ================================================================= */
+details.deep {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: 24px 0;
+  overflow: hidden;
+}
+details.deep summary {
+  padding: 16px 22px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+details.deep summary::-webkit-details-marker { display: none; }
+details.deep summary::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+details.deep[open] summary::before { content: '−'; }
+details.deep summary:hover { background: var(--bg-alt); }
+.deep__body {
+  padding: 0 22px 22px;
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+.deep__body p { color: var(--ink-soft); }
+
+/* =================================================================
+   PORTRAIT GRID（写真版）
+   ================================================================= */
+.portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin: 26px 0;
+}
+.portrait {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
+}
+.portrait:hover { border-color: var(--ink-dim); box-shadow: var(--shadow-sm); }
+.portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin: 0 auto 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-alt);
+}
+.portrait__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.portrait__years {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.portrait__role {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  font-weight: 500;
+}
+.portrait__country { display: inline-block; font-size: 14px; margin-right: 4px; }
+
+/* =================================================================
+   TIMELINE (EPOCH)
+   ================================================================= */
+.epoch { position: relative; padding-left: 90px; margin: 24px 0; }
+.epoch__year {
+  position: absolute;
+  left: 0; top: 0;
+  width: 70px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+}
+.epoch__year-num {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.epoch__year-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+.epoch__year--accent { background: var(--accent); }
+.epoch__content {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-xs);
+}
+.epoch__title {
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.2vw, 21px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.epoch__title-sub { font-size: 0.7em; font-weight: 500; color: var(--ink-muted); }
+.epoch__desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.epoch__example {
+  background: var(--bg-alt);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+.epoch__example strong { color: var(--ink); }
+.epoch__keywords { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.epoch__kw {
+  font-size: 10px;
+  padding: 3px 9px;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.epoch--winter .epoch__year { background: var(--bg-alt); border-style: dashed; }
+.epoch--winter .epoch__content { background: var(--bg-alt); border-style: dashed; }
+
+.epoch__photo { margin: 14px 0 4px; text-align: center; }
+.epoch__photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--bg-alt);
+}
+.epoch__photo-cap {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-top: 7px;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .epoch { padding-left: 60px; }
+  .epoch__year { width: 50px; padding: 8px 4px; }
+  .epoch__year-num { font-size: 13px; }
+}
+
+/* =================================================================
+   AI WAVE CHART
+   ================================================================= */
+.wave-chart {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 24px 0;
+  box-shadow: var(--shadow-xs);
+}
+.wave-chart svg { width: 100%; height: auto; }
+
+/* =================================================================
+   DIAGRAM（AIの包含関係・ai01と共通）
+   ================================================================= */
+.diagram-wrap { margin: 40px 0 60px; }
+
+.box {
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.box:hover > .box__head > .box__title { transform: translateX(4px); }
+
+.box__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.box__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(18px, 2.5vw, 22px);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  transition: transform 0.2s ease;
+}
+.box__en {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.box__desc {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  font-weight: 500;
+  max-width: 90%;
+}
+.box-row { display: flex; gap: 16px; margin-top: 20px; }
+@media (max-width: 768px) {
+  .box-row { flex-direction: column; }
+  .box { padding: 20px; }
+}
+
+/* Layer 1: AI (最も外側) */
+.box--ai {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: var(--pop);
+}
+/* Layer 2-A: ルールベースAI */
+.box--expert {
+  flex: 1;
+  background: var(--bg-alt);
+  border: 2px dashed var(--ink-dim);
+  border-radius: var(--radius);
+}
+/* Layer 2-B: 機械学習 */
+.box--ml {
+  flex: 2;
+  background: var(--paper-alt);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+/* Layer 3: ニューラルネットワーク */
+.box--nn {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-deep);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+/* Layer 4: ディープラーニング */
+.box--dl {
+  background: var(--accent);
+  border: 1px solid var(--ink);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+/* Layer 5: 生成AI */
+.box--genai {
+  background: var(--coral);
+  border: 1px solid var(--ink);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.2);
+  margin-top: 20px;
+  border-radius: var(--radius);
+}
+.box--genai .box__title,
+.box--genai .box__desc,
+.box--genai .box__en { color: var(--paper); }
+.box .pills { margin-top: 14px; margin-bottom: 0; }
+
+/* =================================================================
+   GIANTS (AI企業カード)
+   ================================================================= */
+.giants {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 22px 0;
+}
+@media (max-width: 768px) { .giants { grid-template-columns: 1fr; } }
+.giant {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.giant:hover { border-color: var(--ink-dim); box-shadow: var(--shadow-sm); }
+.giant::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--ink);
+}
+.giant__logo {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  margin: 6px 0 14px;
+  color: var(--paper);
+  background: var(--ink);
+}
+.giant__name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.giant__country {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+}
+.giant__model {
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+.giant__model-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.giant__model-name {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--ink);
+  font-weight: 800;
+}
+.giant__desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  font-weight: 500;
+}
+.giant__desc strong { color: var(--ink); }
+
+/* =================================================================
+   NEXT-WORD SIMULATOR
+   ================================================================= */
+.sim {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin: 30px 0;
+  box-shadow: var(--pop);
+}
+.sim__title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sim__desc { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 18px; }
+.sim__input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.sim__input:focus { outline: none; border-color: var(--ink); }
+.sim__predictions { margin-top: 16px; min-height: 110px; }
+.sim__placeholder { color: var(--ink-muted); font-size: 13px; font-style: italic; padding: 20px 0; }
+.sim__pred-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.sim__pred-word {
+  min-width: 110px;
+  font-weight: 800;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.sim__pred-bar {
+  flex: 1;
+  height: 14px;
+  background: var(--bg-alt);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.sim__pred-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+.sim__pred-pct {
+  min-width: 46px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.sim__examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.sim__ex {
+  padding: 7px 14px;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--line);
+  border-radius: 100px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.sim__ex:hover { border-color: var(--ink); color: var(--ink); }
+
+/* =================================================================
+   PROMPT BLOCKS
+   ================================================================= */
+.promptblock {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  margin: 20px 0 14px;
+  position: relative;
+}
+.promptblock__label {
+  position: absolute;
+  top: -9px; left: 14px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+}
+.prompter__output {
+  background: var(--ink);
+  color: #E8EDF7;
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  margin: 16px 0;
+  min-height: 60px;
+}
+
+/* =================================================================
+   STEP CARDS（演習の手順）
+   ================================================================= */
+.exsteps { counter-reset: exs; margin: 24px 0; }
+.exstep {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+}
+.exstep::before {
+  counter-increment: exs;
+  content: counter(exs);
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--coral);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 15px;
+}
+.exstep__body { flex: 1; }
+.exstep__title { font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 3px; }
+.exstep__desc { font-size: 13.5px; color: var(--ink-soft); margin: 0; line-height: 1.7; }
+
+/* =================================================================
+   PREVIEW WIDGET
+   ================================================================= */
+.preview {
+  margin: 26px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+.preview__tabs {
+  display: flex;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+}
+.preview__tab {
+  padding: 12px 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid transparent;
+  text-transform: uppercase;
+}
+.preview__tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+  background: var(--paper);
+}
+.preview__panel { display: none; height: 440px; }
+.preview__panel.is-active { display: block; }
+.preview__code {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  background: var(--ink);
+  color: #E8EDF7;
+  border: none;
+  resize: none;
+}
+.preview__code:focus { outline: none; }
+.preview__frame { width: 100%; height: 100%; border: none; background: white; }
+.preview__actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-alt);
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+/* =================================================================
+   MASCOT SAYS
+   ================================================================= */
+.ailasays {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.ailasays__avatar { flex-shrink: 0; width: 52px; height: 52px; }
+.ailasays__bubble { flex: 1; }
+.ailasays__bubble p { margin: 0; font-size: 14.5px; color: var(--ink-soft); line-height: 1.8; }
+.ailasays__name {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+/* =================================================================
+   RULES（5か条）
+   ================================================================= */
+.rules { counter-reset: rules; margin: 26px 0; }
+.rule {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 10px;
+  box-shadow: var(--pop-sm);
+}
+.rule::before {
+  counter-increment: rules;
+  content: counter(rules);
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 17px;
+}
+.rule__body { flex: 1; }
+.rule__title { font-weight: 800; font-size: 16px; color: var(--ink); margin-bottom: 2px; font-family: var(--font-display); }
+.rule__desc { font-size: 13.5px; color: var(--ink-soft); margin: 0; line-height: 1.7; }
+
+/* =================================================================
+   CLOSING
+   ================================================================= */
+.closing { text-align: center; padding: 40px 0; }
+.closing__kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.closing__message {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.5vw, 44px);
+  line-height: 1.3;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.closing__message .hl { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -3px; right: -3px;
+  height: 14px;
+  background: var(--accent);
+  z-index: -1;
+}
+.closing__message .hl-coral { position: relative; display: inline-block; z-index: 1; }
+.closing__message .hl-coral::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: -3px; right: -3px;
+  height: 14px;
+  background: var(--coral);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+/* =================================================================
+   REVEAL
+   ================================================================= */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@media print {
+  .nav, .nav-toggle, .progress, .hero__scroll { display: none !important; }
+  .app { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<button class="nav-toggle" id="navToggle" aria-label="メニュー">≡</button>
+<div class="backdrop" id="backdrop"></div>
+
+<!-- ===================== SVG DEFS（共通マスコット） ===================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="brand-logo" viewBox="0 0 36 36">
+      <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+      <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+      <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+      <line x1="14" y1="23" x2="22" y2="23" stroke="#FFC830" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+
+    <symbol id="aila-sprout" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="#FFC830" opacity="0.12"/>
+      <polygon points="50,18 76,33 76,63 50,78 24,63 24,33" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="41" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="59" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="42" cy="45" r="1.8" fill="#1A2D5C"/>
+      <circle cx="60" cy="45" r="1.8" fill="#1A2D5C"/>
+      <path d="M 43 60 Q 50 65 57 60" stroke="#1A2D5C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <line x1="50" y1="18" x2="50" y2="10" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="50" cy="7" r="3.5" fill="#F26D5B" stroke="#1A2D5C" stroke-width="1.8"/>
+    </symbol>
+
+    <symbol id="aila-mind" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="#7B6CC4" opacity="0.12"/>
+      <polygon points="50,18 76,33 76,63 50,78 24,63 24,33" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="41" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="59" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="42" cy="45" r="1.8" fill="#1A2D5C"/>
+      <circle cx="60" cy="45" r="1.8" fill="#1A2D5C"/>
+      <path d="M 44 61 Q 50 64 56 61" stroke="#1A2D5C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M 62 22 Q 70 12 80 16" stroke="#1A2D5C" stroke-width="2" fill="none"/>
+      <circle cx="83" cy="17" r="4" fill="#FFC830" stroke="#1A2D5C" stroke-width="1.8"/>
+    </symbol>
+
+    <symbol id="aila-maker" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="#F26D5B" opacity="0.12"/>
+      <polygon points="50,18 76,33 76,63 50,78 24,63 24,33" fill="#5BB5AA" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="41" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="59" cy="46" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <circle cx="42" cy="45" r="1.8" fill="#1A2D5C"/>
+      <circle cx="60" cy="45" r="1.8" fill="#1A2D5C"/>
+      <path d="M 42 59 Q 50 66 58 59" stroke="#1A2D5C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <rect x="70" y="66" width="16" height="12" rx="2" fill="#FFC830" stroke="#1A2D5C" stroke-width="2" transform="rotate(12 78 72)"/>
+    </symbol>
+
+    <symbol id="aila-hero" viewBox="0 0 280 280">
+      <circle cx="140" cy="140" r="120" fill="#FFC830" opacity="0.08"/>
+      <polygon points="155,55 230,98 230,182 155,225 80,182 80,98" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5" opacity="0.35"/>
+      <polygon points="140,40 215,83 215,167 140,210 65,167 65,83" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="3"/>
+      <line x1="80" y1="100" x2="100" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="180" y1="100" x2="200" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <line x1="80" y1="155" x2="200" y2="155" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
+      <circle cx="115" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="165" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="118" cy="122" r="5" fill="#1A2D5C"/>
+      <circle cx="168" cy="122" r="5" fill="#1A2D5C"/>
+      <circle cx="120" cy="120" r="1.5" fill="white"/>
+      <circle cx="170" cy="120" r="1.5" fill="white"/>
+      <line x1="140" y1="40" x2="140" y2="22" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="140" cy="16" r="6" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="140" cy="16" r="2" fill="#FFC830"/>
+      <path d="M 120 165 Q 140 176 160 165" stroke="#1A2D5C" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <line x1="65" y1="125" x2="52" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="46" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+      <line x1="215" y1="125" x2="228" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
+      <circle cx="234" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav" id="nav">
+    <div class="nav__brand">
+      <svg class="nav__brand-mark"><use href="#brand-logo"/></svg>
+      <div class="nav__brand-text">
+        <div class="nav__brand-title">AI COURSE</div>
+        <div class="nav__brand-sub">SPECIAL / STUDENT</div>
+      </div>
+    </div>
+    <div class="nav__school">Akky先生のプログラミング教室</div>
+
+    <ul class="nav__list">
+      <li><a class="nav__item" href="#hero"><span class="nav__num">00</span>はじめに</a></li>
+      <li><div class="nav__phase">PART 1 — 知る</div></li>
+      <li><a class="nav__item" href="#ch1"><span class="nav__num">01</span>AIって、なに？</a></li>
+      <li><a class="nav__item" href="#ch2"><span class="nav__num">02</span>AIの歴史としくみ</a></li>
+      <li><a class="nav__item" href="#ch3"><span class="nav__num">03</span>生成AIのしくみ</a></li>
+      <li><a class="nav__item" href="#ch4"><span class="nav__num">04</span>2026年・AIの最前線</a></li>
+      <li><div class="nav__phase">PART 2 — そなえる</div></li>
+      <li><a class="nav__item" href="#ch5"><span class="nav__num">05</span>使い方と注意</a></li>
+      <li><a class="nav__item" href="#ch6"><span class="nav__num">06</span>使いこなすコツ</a></li>
+      <li><div class="nav__phase">PART 3 — 創る</div></li>
+      <li><a class="nav__item" href="#exercise"><span class="nav__num">07</span>演習・学校PRサイト</a></li>
+      <li><a class="nav__item" href="#closing"><span class="nav__num">08</span>おわりに</a></li>
+    </ul>
+
+    <div class="nav__footer">
+      AI COURSE · SPECIAL<br>
+      2026
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main">
+
+    <!-- =================================================
+         HERO
+         ================================================= -->
+    <section class="section hero" id="hero">
+      <div class="hero__school">AKKY先生のプログラミング教室</div>
+      <div class="hero__eyebrow">AI COURSE · SPECIAL LESSON</div>
+
+      <h1 class="hero__title">
+        AIを<span class="hl">知って</span>、<br>
+        AIと<span class="hl-coral">創ろう</span>。
+      </h1>
+
+      <p class="hero__lead">
+        AIって、結局なに？ どこから来て、どこまで来ているの？<br>
+        今日は1回だけの特別授業。AIの正体と歴史・最新のようす・上手な使い方をぎゅっと学んで、
+        最後は<strong>AIと一緒に「私の学校のPRサイト」を創ります</strong>。
+      </p>
+
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">THEME</div>
+          <div class="hero__meta-value">知る→そなえる→創る</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">OUTPUT</div>
+          <div class="hero__meta-value">学校PRサイト</div>
+        </div>
+        <div class="hero__meta-item">
+          <div class="hero__meta-label">TOOL</div>
+          <div class="hero__meta-value">用意されたAI</div>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        SCROLL
+        <div class="hero__scroll-line"></div>
+      </div>
+
+      <svg class="hero__mascot"><use href="#aila-hero"/></svg>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 1 — AIとは？
+         ================================================= -->
+    <section class="section" id="ch1">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        PART 1 · 知る
+      </div>
+      <div class="section-tag">CHAPTER 01</div>
+      <h2 class="section-title">AIって、<span class="hl">なに</span>？</h2>
+      <p class="section-lead">
+        「AI＝ChatGPT」だと思っていませんか？ 実はAIはもっと広くて、君の毎日にとっくに溶けこんでいます。まずは「AIとは何か」をはっきりさせましょう。
+      </p>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">DEFINITION</div>
+        <p><strong>AI（人工知能）＝ 人間が「頭」を使ってやっていることを、機械にやらせる技術。</strong> 見る・聞く・話す・予想する・創る……ぜんぶ「知能」の仕事です。</p>
+      </div>
+
+      <h3>「強いAI」と「弱いAI」</h3>
+      <div class="grid-2">
+        <div class="card card--soft">
+          <h4>🤖 強いAI（まだ存在しない）</h4>
+          <p style="margin:0;">人間みたいに<strong>なんでも考えられるAI</strong>。映画やアニメに出てくるロボットのイメージ。世界中の会社が目指しているけど、<em>まだ実現していない</em>。</p>
+        </div>
+        <div class="card">
+          <h4>📱 弱いAI（いま使っているのは全部これ）</h4>
+          <p style="margin:0;"><strong>決まった仕事だけ</strong>が人間なみ（かそれ以上）にできるAI。翻訳、顔認証、おすすめ動画、そしてChatGPTも、実はぜんぶ「弱いAI」です。</p>
+        </div>
+      </div>
+
+      <h3>AIには2つのタイプがある</h3>
+      <p>いまのAIは、大きく<strong>「見分けるAI」</strong>と<strong>「作り出すAI」</strong>に分けられます。</p>
+
+      <div class="table-scroll">
+      <table class="table">
+        <tr><th></th><th>見分けるAI（識別系）</th><th>作り出すAI（生成系）</th></tr>
+        <tr>
+          <td><strong>やること</strong></td>
+          <td>分類・判定・予測する</td>
+          <td>新しいものを生み出す</td>
+        </tr>
+        <tr>
+          <td><strong>例</strong></td>
+          <td>「この写真は猫？犬？」</td>
+          <td>「猫のイラストを描いて」</td>
+        </tr>
+        <tr>
+          <td><strong>身近なもの</strong></td>
+          <td>顔認証・迷惑メール判定・YouTubeのおすすめ</td>
+          <td>ChatGPT・画像生成・作曲AI</td>
+        </tr>
+        <tr>
+          <td><strong>いつから？</strong></td>
+          <td>ずっと前から生活の裏側で活躍</td>
+          <td>2022年から大ブーム（←今日の主役）</td>
+        </tr>
+      </table>
+      </div>
+
+      <div class="pills">
+        <span class="pill">顔認証でスマホのロック解除</span>
+        <span class="pill">TikTok・YouTubeのおすすめ</span>
+        <span class="pill">Siri・アレクサ</span>
+        <span class="pill">カメラの自動きれい補正</span>
+        <span class="pill">翻訳アプリ</span>
+        <span class="pill">乗換案内のルート検索</span>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">MAME CHISHIKI</div>
+        <p><strong>「AIエフェクト」</strong>という現象があります。昔は電卓もチェスのコンピュータも「AIだ！」と呼ばれたのに、当たり前になると「ただの機械でしょ」と言われる。<em>AIの定義は、時代とともに動く</em>んです。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 2 — AIの歴史としくみ
+         ================================================= -->
+    <section class="section" id="ch2">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        PART 1 · 知る
+      </div>
+      <div class="section-tag">CHAPTER 02</div>
+      <h2 class="section-title">AIの<span class="hl">歴史</span>。<br>ブームと冬をこえて。</h2>
+      <p class="section-lead">
+        AIは2022年に突然生まれたわけではありません。<strong>約80年前</strong>から、期待（ブーム）とガッカリ（冬の時代）を繰り返しながら進化してきました。そして面白いのは、<strong>時代ごとに「AIの中身（しくみ）」がぜんぜん違う</strong>こと。歴史を「しくみの進化」として見ていきましょう。
+      </p>
+
+      <h3>この物語の登場人物</h3>
+      <p>まず、AIの歴史をつくった人たちの顔を見ておこう。あとで何度も登場します。</p>
+
+      <div class="portrait-grid">
+        <div class="portrait">
+          <img src="../写真/チューリング.jpg" alt="アラン・チューリング">
+          <div class="portrait__name"><span class="portrait__country">🇬🇧</span>アラン・チューリング</div>
+          <div class="portrait__years">1912 - 1954</div>
+          <div class="portrait__role"><strong>すべての始まり</strong>。「機械は考えられるか？」を最初に問いかけ、<em>チューリング・テスト</em>を考案。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ジョンマッカーシー.png" alt="ジョン・マッカーシー">
+          <div class="portrait__name"><span class="portrait__country">🇺🇸</span>ジョン・マッカーシー</div>
+          <div class="portrait__years">1927 - 2011</div>
+          <div class="portrait__role"><strong>「AI」の名付け親</strong>。1956年ダートマス会議を主催し、AI研究をスタートさせた。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ヒントン.jpg" alt="ジェフリー・ヒントン">
+          <div class="portrait__name"><span class="portrait__country">🇬🇧→🇨🇦</span>ジェフリー・ヒントン</div>
+          <div class="portrait__years">1947 -</div>
+          <div class="portrait__role"><strong>ディープラーニングの父</strong>。冬の時代もあきらめず研究を続け、2024年<em>ノーベル物理学賞</em>。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ルカン.jpeg" alt="ヤン・ルカン">
+          <div class="portrait__name"><span class="portrait__country">🇫🇷</span>ヤン・ルカン</div>
+          <div class="portrait__years">1960 -</div>
+          <div class="portrait__role">画像認識AI（CNN）の立役者。ヒントンらと<strong>チューリング賞</strong>を受賞した「3人組」の1人。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ベンジオ.jpg" alt="ヨシュア・ベンジオ">
+          <div class="portrait__name"><span class="portrait__country">🇨🇦</span>ヨシュア・ベンジオ</div>
+          <div class="portrait__years">1964 -</div>
+          <div class="portrait__role">言葉を扱うAIの基礎を築いた「3人組」の1人。いまは<strong>AIの安全性</strong>を訴える研究者。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/Fei-Fei Li.jpg" alt="フェイフェイ・リー">
+          <div class="portrait__name"><span class="portrait__country">🇨🇳→🇺🇸</span>フェイフェイ・リー</div>
+          <div class="portrait__years">1976 -</div>
+          <div class="portrait__role"><strong>「AIのゴッドマザー」</strong>。巨大画像データベース<em>ImageNet</em>を作り、第3次ブームの舞台を用意した。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/サツケヴァー.jpeg" alt="イリヤ・サツケヴァー">
+          <div class="portrait__name"><span class="portrait__country">🇷🇺→🇨🇦</span>イリヤ・サツケヴァー</div>
+          <div class="portrait__years">1986 -</div>
+          <div class="portrait__role">ヒントンの弟子。<strong>OpenAIをつくった1人</strong>で、ChatGPT誕生の原動力になった。</div>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">STORY</div>
+        <p><strong>チューリング（問い）→ マッカーシー（名前）→ ヒントンたち（技術）→ サツケヴァー（製品）。</strong> AIの歴史は、世代をこえた<em>バトンリレー</em>です。</p>
+      </div>
+
+      <h3>ブームと冬の波</h3>
+      <p>AIには<strong>3回のブーム</strong>と<strong>2回の冬</strong>がありました。いまは<em>第4次ブーム（生成AI）</em>の真っただ中です。</p>
+
+      <div class="wave-chart">
+        <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIブームの波">
+          <line x1="40" y1="170" x2="700" y2="170" stroke="#1A2D5C" stroke-width="1.5"/>
+          <text x="60" y="195" fill="#8B95AD" font-size="11" font-family="monospace">1956</text>
+          <text x="170" y="195" fill="#8B95AD" font-size="11" font-family="monospace">1980</text>
+          <text x="320" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2000</text>
+          <text x="460" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2012</text>
+          <text x="630" y="195" fill="#8B95AD" font-size="11" font-family="monospace">2026</text>
+          <path d="M 60 165 Q 90 80 130 90 Q 160 100 200 165 Q 230 160 250 100 Q 290 80 320 90 Q 350 110 380 165 Q 420 165 460 80 Q 500 50 540 60 Q 570 70 600 30 Q 640 15 680 20" fill="none" stroke="#1A2D5C" stroke-width="2.5"/>
+          <text x="80" y="60" fill="#1A2D5C" font-size="11" font-weight="700">第1次</text>
+          <text x="80" y="73" fill="#8B95AD" font-size="9" font-family="monospace">推論・探索</text>
+          <text x="270" y="60" fill="#1A2D5C" font-size="11" font-weight="700">第2次</text>
+          <text x="270" y="73" fill="#8B95AD" font-size="9" font-family="monospace">エキスパート</text>
+          <text x="445" y="50" fill="#1A2D5C" font-size="11" font-weight="700">第3次</text>
+          <text x="445" y="63" fill="#8B95AD" font-size="9" font-family="monospace">ディープラーニング</text>
+          <text x="595" y="20" fill="#E8AC1A" font-size="11" font-weight="700">第4次・今</text>
+          <text x="595" y="33" fill="#8B95AD" font-size="9" font-family="monospace">生成AI</text>
+          <text x="180" y="155" fill="#8B95AD" font-size="10" font-style="italic">第1の冬</text>
+          <text x="370" y="155" fill="#8B95AD" font-size="10" font-style="italic">第2の冬</text>
+          <text x="20" y="100" fill="#8B95AD" font-size="10" font-family="monospace" transform="rotate(-90 20 100)">期待値</text>
+        </svg>
+      </div>
+
+      <h3>時代ごとの「AIの中身」を見てみよう</h3>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">1950</div>
+          <div class="epoch__year-label">QUESTION</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">チューリングの問い — 「機械は考えられるか？」</div>
+          <p class="epoch__desc">コンピュータが生まれたばかりの時代に、チューリングが<strong>「機械が人間と区別つかない会話をできたら、考えていると言っていいのでは？」</strong>と提案（チューリング・テスト）。AIという分野が生まれる前に、その土台を作った。</p>
+          <div class="epoch__photo">
+            <img src="../写真/Dartmouth Conference.jpg" alt="1956年ダートマス会議の参加者たち">
+            <div class="epoch__photo-cap">📷 1956年・ダートマス会議に集まった科学者たち。この夏、「AI」という言葉が生まれた。</div>
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">チューリング・テスト</span>
+            <span class="epoch__kw">1956 ダートマス会議で「AI」誕生</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1960s</div>
+          <div class="epoch__year-label">BOOM 1</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第1次ブーム<span class="epoch__title-sub"> — しくみ：「探索」（場合分けをしらべる）</span></div>
+          <p class="epoch__desc">迷路やパズルを、<strong>「分かれ道を全部しらべる」</strong>ことで解くAI。ぜんぶの選択肢を枝分かれの図（木）にして、ゴールへの道をしらみつぶしに探した。</p>
+          <div class="epoch__example">
+            <strong>しくみメモ</strong>：スタート→「右？左？」→「その先は？」…と枝を伸ばして調べる。ルールがはっきりした「おもちゃの問題」しか解けず、現実の問題（病気の診断・翻訳）には歯が立たなかった。
+          </div>
+          <div class="epoch__photo">
+            <img src="../写真/世界初チャットボットELIZA.jpg" alt="世界初のチャットボットELIZAの画面">
+            <div class="epoch__photo-cap">📷 世界初のチャットボットELIZA（1966）。単純なルールなのに、「本当に話を聞いてもらえた」と感じる人が続出した。</div>
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">探索木</span>
+            <span class="epoch__kw">迷路・パズル</span>
+            <span class="epoch__kw">チャットボットELIZA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch epoch--winter">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1970s</div>
+          <div class="epoch__year-label">WINTER 1</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第1の冬</div>
+          <p class="epoch__desc">「もうすぐ人間なみのAIができる」という期待が空振り。ガッカリが広がり、研究のお金が消えた。</p>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1980s</div>
+          <div class="epoch__year-label">BOOM 2</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第2次ブーム<span class="epoch__title-sub"> — しくみ：「知識とルール」（人間が教えこむ）</span></div>
+          <p class="epoch__desc">専門家の知識を<strong>「もし〜ならば〜」のルール</strong>として大量に書きこむ「エキスパートシステム」が流行。医療診断などで実用化された。</p>
+          <div class="epoch__example">
+            <strong>しくみメモ</strong>：<code>もし 熱が38度以上 で のどが痛い → インフルエンザのうたがい</code> のようなルールを人間が手で書く。でも常識は例外だらけ（「鳥は飛ぶ。でもペンギンは…」）で、<strong>ルールを書ききれずに</strong>行きづまった。
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">エキスパートシステム</span>
+            <span class="epoch__kw">IF-THENルール</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch epoch--winter">
+        <div class="epoch__year">
+          <div class="epoch__year-num">1990s</div>
+          <div class="epoch__year-label">WINTER 2</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第2の冬<span class="epoch__title-sub"> — でも、種は育っていた</span></div>
+          <p class="epoch__desc">再びガッカリの時代。<strong>でもヒントンたちは、この間もあきらめずに「ニューラルネットワーク」を研究し続けていた</strong>。この粘りが、のちに世界を変える。</p>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year">
+          <div class="epoch__year-num">2012</div>
+          <div class="epoch__year-label">BOOM 3</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第3次ブーム<span class="epoch__title-sub"> — しくみ：「機械学習」（データから自分で学ぶ）</span></div>
+          <p class="epoch__desc">大転換！ 人間がルールを教えるのを<strong>やめて</strong>、<strong>大量のデータからAI自身にパターンを見つけさせる</strong>方式へ。ヒントンと弟子のサツケヴァーたちが作った<strong>AlexNet</strong>が画像認識コンテストで圧勝し、ブームに火がついた。</p>
+          <div class="epoch__example">
+            <strong>しくみメモ</strong>：脳の神経細胞をマネした「ニューラルネットワーク」に猫の写真を1万枚見せる → 答えとのズレを測る → ズレが減るように中身（重み）を少しずつ調整 → 繰り返すうちに<strong>見分け方をAIが自分で発見</strong>する。層を深く重ねたものが「ディープラーニング」。
+          </div>
+          <div class="epoch__photo">
+            <img src="../写真/アルファ碁対局.jpg" alt="AlphaGoとイ・セドルの対局">
+            <div class="epoch__photo-cap">📷 2016年・AlphaGo対イ・セドル戦。AIが囲碁の世界トップ棋士に勝った歴史的瞬間。世界中が震えた。</div>
+          </div>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">ニューラルネットワーク</span>
+            <span class="epoch__kw">ディープラーニング</span>
+            <span class="epoch__kw">GPU</span>
+            <span class="epoch__kw">AlphaGo（囲碁で勝利）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">2017</div>
+          <div class="epoch__year-label">PIVOT</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">Transformer登場 — すべての転換点</div>
+          <p class="epoch__desc">Googleの研究者が発表した新しいしくみ<strong>「Transformer（トランスフォーマー）」</strong>が、その後のAIすべての土台になる。ChatGPTの「GPT」の<em>Tはこれ</em>。</p>
+        </div>
+      </div>
+
+      <div class="epoch">
+        <div class="epoch__year epoch__year--accent">
+          <div class="epoch__year-num">2022→</div>
+          <div class="epoch__year-label">NOW</div>
+        </div>
+        <div class="epoch__content">
+          <div class="epoch__title">第4次ブーム<span class="epoch__title-sub"> — しくみ：「生成」（次を予測して創る）</span></div>
+          <p class="epoch__desc">2022年11月、<strong>ChatGPT</strong>登場。たった2か月で1億人が使う史上最速の大ヒット。文章・画像・音楽・動画をAIが「創る」時代へ。<strong>君がいま生きているのが、この時代</strong>。</p>
+          <div class="epoch__keywords">
+            <span class="epoch__kw">ChatGPT</span>
+            <span class="epoch__kw">生成AI</span>
+            <span class="epoch__kw">今ここ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">KEY INSIGHT</div>
+        <p><strong>歴史の最大の転換点は「人間が教える → 機械が学ぶ」への切りかえ。</strong> 探索（調べる）→ 知識（教えこむ）→ 学習（自分で学ぶ）→ 生成（創り出す）。しくみの進化として覚えよう。</p>
+      </div>
+
+      <h3>ここまでの言葉を、一枚の図に整理しよう</h3>
+      <p>「AI」「機械学習」「ディープラーニング」「生成AI」……いろいろな言葉が出てきたけど、これらは別物ではなく<strong>マトリョーシカのような入れ子（包含）関係</strong>になっています。歴史で出てきた言葉が、ぜんぶこの1枚に収まります。</p>
+
+      <div class="diagram-wrap">
+
+        <div class="box box--ai">
+          <div class="box__head">
+            <div class="box__title">人工知能</div>
+            <div class="box__en">Artificial Intelligence (AI)</div>
+          </div>
+          <div class="box__desc">
+            人間の知能（考える・見分ける・判断する）を機械で再現する技術ぜんぶ。いちばん広い言葉。
+          </div>
+
+          <div class="box-row">
+            <div class="box box--expert">
+              <div class="box__head">
+                <div class="box__title" style="font-size: 16px;">ルールベースAI</div>
+                <div class="box__en">Expert System</div>
+              </div>
+              <div class="box__desc">
+                人間が「もし〜なら〜する」というルールを手で書きこんだ、昔ながらのAI。<strong>第1次・第2次ブーム</strong>の主役。
+              </div>
+              <div class="pills">
+                <span class="pill">ELIZA</span>
+                <span class="pill">エキスパートシステム</span>
+              </div>
+            </div>
+
+            <div class="box box--ml">
+              <div class="box__head">
+                <div class="box__title">機械学習</div>
+                <div class="box__en">Machine Learning (ML)</div>
+              </div>
+              <div class="box__desc">
+                人間がルールを書くのではなく、<strong>大量のデータから機械が自分で法則を学ぶ</strong>技術。「教える→学ぶ」の大転換。
+              </div>
+
+              <div class="box box--nn">
+                <div class="box__head">
+                  <div class="box__title">ニューラルネットワーク</div>
+                  <div class="box__en">Neural Networks (NN)</div>
+                </div>
+                <div class="box__desc">
+                  脳の神経細胞（ニューロン）のつながりを数学でマネした、機械学習のやり方のひとつ。
+                </div>
+
+                <div class="box box--dl">
+                  <div class="box__head">
+                    <div class="box__title">ディープラーニング</div>
+                    <div class="box__en">Deep Learning (DL)</div>
+                  </div>
+                  <div class="box__desc">
+                    ニューラルネットワークの層を深〜く重ねて、画像や音声もあつかえるようにした技術。<strong>第3次ブーム</strong>の主役。ヒントンたちが育てた。
+                  </div>
+                  <div class="pills">
+                    <span class="pill">AlexNet</span>
+                    <span class="pill">Transformer</span>
+                  </div>
+
+                  <div class="box box--genai">
+                    <div class="box__head">
+                      <div class="box__title">生成AI</div>
+                      <div class="box__en">Generative AI</div>
+                    </div>
+                    <div class="box__desc">
+                      ディープラーニング（特にTransformer）を使って、新しい文章・画像・音楽を「創り出す」ことに特化した最新のAI。<strong>第4次ブーム＝今</strong>の主役。
+                    </div>
+                    <div class="pills">
+                      <span class="pill">ChatGPT</span>
+                      <span class="pill">Claude</span>
+                      <span class="pill">Gemini</span>
+                      <span class="pill">Midjourney</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">KEY INSIGHT</div>
+        <p>ChatGPTは、<strong>生成AI</strong>であり、<strong>ディープラーニング</strong>で動いていて、<strong>機械学習</strong>の一種で、大きく見れば<strong>AI</strong>。この入れ子を頭に入れておくと、AIのニュースが「どの階層の話か」で整理できるようになります。</p>
+      </div>
+
+      <details class="deep">
+        <summary>[+] DEEP DIVE: 冬の時代は「負け」だったのか？</summary>
+        <div class="deep__body">
+          <p>冬の時代は、技術が止まった時代ではなく<strong>「期待がふくらみすぎた反動」</strong>の時代でした。実は、いまのAIを支える大事な発明（誤差逆伝播法など）は、冬の間に生まれています。</p>
+          <p>ヒントンは、まわりから「ニューラルネットは終わった」と言われ続けても30年研究をやめませんでした。<em>流行に流されず続けた人が、次の時代をつくった</em>——これはAIに限らない話かもしれません。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 3 — 生成AIのしくみ
+         ================================================= -->
+    <section class="section" id="ch3">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        PART 1 · 知る
+      </div>
+      <div class="section-tag">CHAPTER 03</div>
+      <h2 class="section-title">生成AIの<span class="hl-coral">しくみ</span>。<br>中身はなにをしてる？</h2>
+      <p class="section-lead">
+        ChatGPTのようなAI（<strong>LLM＝大規模言語モデル</strong>）は、魔法でも心でもありません。やっていることは、突きつめると<strong>たった1つ</strong>です。
+      </p>
+
+      <div class="card card--ink">
+        <h4>LLMの正体</h4>
+        <p style="font-size:17px;margin:0;"><strong>「ここまでの文章の続きに来る、次の言葉はなに？」を確率で予測する</strong>——これを高速で繰り返しているだけ。スマホの予測変換の、超・超・超巨大版です。</p>
+      </div>
+
+      <div class="sim">
+        <div class="sim__title">🔮 次のことば予測ゲーム</div>
+        <div class="sim__desc">AIの気持ちになってみよう。下のサンプルを押すと、「次に来ることば」の確率予測が見られます。</div>
+        <input type="text" class="sim__input" id="simInput" placeholder="例：犬も歩けば" autocomplete="off">
+        <div class="sim__predictions" id="simPredictions">
+          <div class="sim__placeholder">↑ 上に入力するか、下のサンプルをクリック</div>
+        </div>
+        <div class="sim__examples">
+          <button class="sim__ex" data-text="犬も歩けば">犬も歩けば</button>
+          <button class="sim__ex" data-text="日本で一番高い山は">日本で一番高い山は</button>
+          <button class="sim__ex" data-text="おはようご">おはようご</button>
+          <button class="sim__ex" data-text="明日の天気は">明日の天気は</button>
+        </div>
+      </div>
+
+      <p>「次の言葉当て」をきわめただけなのに、翻訳も、要約も、相談も、プログラミングまでできるようになった——これは研究者たちにとっても<em>驚き</em>でした。学習した文章の量とAIの大きさがケタ違い（インターネット全体レベル）だからこそ起きたことです。</p>
+
+      <h3>心臓部「Transformer」— 注目のしくみ</h3>
+      <p>2017年生まれのTransformerのポイントは<strong>「Attention（アテンション＝注目）」</strong>。文の中の<strong>どの言葉とどの言葉が関係しているか</strong>を、ぜんぶ同時に計算します。</p>
+
+      <div class="card card--soft">
+        <h4>例：「あまい」ってどういう意味？</h4>
+        <p>「この<strong>ケーキ</strong>、あまい！」→ 味のあまさ 🍰<br>
+        「その考えは<strong>あまい</strong>よ」→ 考えが不十分 💭</p>
+        <p style="margin:0;">同じ「あまい」でも、<em>まわりのどの言葉に注目するか</em>で意味が変わる。この「注目」を数学でやるのがAttention。だからAIは長い文章でも意味を取りちがえにくい。</p>
+      </div>
+
+      <h3>ChatGPTができるまでの3ステップ</h3>
+      <div class="exsteps">
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">事前学習 — ひたすら「次の言葉当て」</div>
+            <p class="exstep__desc">インターネット上の大量の文章で、何か月も「次の言葉」を予測する練習。ここで言葉と知識の土台ができる。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">指示の練習 — 「お願い→良い答え」のお手本を学ぶ</div>
+            <p class="exstep__desc">「質問されたら答える」「頼まれたら手伝う」というお手本データで、指示に従えるように調整。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">人間のフィードバック — 「良い答え」に育てる</div>
+            <p class="exstep__desc">人間がAIの答えに点数をつけて、「役に立つ・失礼じゃない・危なくない」答えを選ぶように育てる。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">IMPORTANT</div>
+        <p><strong>AIは「理解」ではなく「確率の予測」で動いている。</strong> だから、それっぽいウソ（＝<strong>ハルシネーション</strong>）を自信満々で言うことがある。この弱点は、あとの章でくわしく扱います。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 4 — 2026年・AIの最前線
+         ================================================= -->
+    <section class="section" id="ch4">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-sprout"/></svg>
+        PART 1 · 知る
+      </div>
+      <div class="section-tag">CHAPTER 04</div>
+      <h2 class="section-title">2026年、<br>AIの<span class="hl">最前線</span>。</h2>
+      <p class="section-lead">
+        いまAIの世界では、少数の会社が<strong>世界規模の開発競争</strong>を繰り広げています。ニュースでよく聞く名前を、ここで一気に整理しましょう。
+      </p>
+
+      <h3>三つの巨人 — 主要AI企業とモデル</h3>
+      <div class="giants">
+        <div class="giant">
+          <div class="giant__logo">O</div>
+          <div class="giant__name">OpenAI</div>
+          <div class="giant__country">🇺🇸 USA · ChatGPTの会社</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">GPT-5.5系</div>
+          </div>
+          <p class="giant__desc">生成AIブームの<strong>火付け役</strong>。世界でいちばん多くの人が使う。動画生成のSoraもこの会社。</p>
+        </div>
+        <div class="giant">
+          <div class="giant__logo">A</div>
+          <div class="giant__name">Anthropic</div>
+          <div class="giant__country">🇺🇸 USA · Claudeの会社</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">Claude Opus 4.8</div>
+          </div>
+          <p class="giant__desc">「<strong>AIの安全性</strong>」を看板に掲げて生まれた会社。文章の自然さや、プログラミングの強さで人気。</p>
+        </div>
+        <div class="giant">
+          <div class="giant__logo">G</div>
+          <div class="giant__name">Google DeepMind</div>
+          <div class="giant__country">🇺🇸/🇬🇧 · Geminiの会社</div>
+          <div class="giant__model">
+            <div class="giant__model-label">LATEST</div>
+            <div class="giant__model-name">Gemini 3.5系</div>
+          </div>
+          <p class="giant__desc">検索・Gmail・マップと連携できるのが強み。囲碁AI「<strong>AlphaGo</strong>」を作った研究所が中心。</p>
+        </div>
+      </div>
+
+      <p>ほかにも、X（旧Twitter）と組んだ<strong>xAI（Grok）</strong>、Instagram・LINEのようなSNSを持つ<strong>Meta</strong>、低コストで世界を驚かせた中国の<strong>DeepSeek</strong>などが競い合っています。</p>
+
+      <h3>いまを動かすキーパーソン</h3>
+      <div class="portrait-grid">
+        <div class="portrait">
+          <img src="../写真/サムアルトマン.jpg" alt="サム・アルトマン">
+          <div class="portrait__name"><span class="portrait__country">🇺🇸</span>サム・アルトマン</div>
+          <div class="portrait__years">OpenAI CEO</div>
+          <div class="portrait__role">ChatGPTブームの<strong>顔</strong>。AIの未来について、世界でいちばん発言が注目される経営者。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ダリオ・アモデイ.jpg" alt="ダリオ・アモデイ">
+          <div class="portrait__name"><span class="portrait__country">🇺🇸</span>ダリオ・アモデイ</div>
+          <div class="portrait__years">Anthropic CEO</div>
+          <div class="portrait__role">元OpenAIの研究者。<strong>「安全なAI」</strong>を目指してAnthropicを設立し、Claudeを生んだ。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/Amanda Askell.jpg" alt="アマンダ・アスケル">
+          <div class="portrait__name"><span class="portrait__country">🇬🇧</span>アマンダ・アスケル</div>
+          <div class="portrait__years">Anthropic 哲学者・研究者</div>
+          <div class="portrait__role">哲学の博士としてAI企業で働き、<strong>Claudeの「性格・価値観」を設計</strong>する。AIを作るのはプログラマーだけじゃない！</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ミラ・ムラティ.jpeg" alt="ミラ・ムラティ">
+          <div class="portrait__name"><span class="portrait__country">🇦🇱→🇺🇸</span>ミラ・ムラティ</div>
+          <div class="portrait__years">元OpenAI CTO</div>
+          <div class="portrait__role"><strong>ChatGPTやDALL·Eの開発を指揮</strong>した技術トップ。いまは独立して自分のAI会社を立ち上げた起業家。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/デミス・ハサビス.jpg" alt="デミス・ハサビス">
+          <div class="portrait__name"><span class="portrait__country">🇬🇧</span>デミス・ハサビス</div>
+          <div class="portrait__years">Google DeepMind CEO</div>
+          <div class="portrait__role">AlphaGoの生みの親。タンパク質の謎を解くAIで<strong>ノーベル化学賞</strong>（2024）を受賞。</div>
+        </div>
+        <div class="portrait">
+          <img src="../写真/ジェンスン・フアン.jpg" alt="ジェンスン・フアン">
+          <div class="portrait__name"><span class="portrait__country">🇹🇼→🇺🇸</span>ジェンスン・フアン</div>
+          <div class="portrait__years">NVIDIA CEO</div>
+          <div class="portrait__role">AIの計算に必要な<strong>GPU</strong>をつくる会社のトップ。すべてのAI企業が彼の会社に頼っている。</div>
+        </div>
+      </div>
+
+      <h3>2026年の3大トレンド</h3>
+      <div class="grid-3">
+        <div class="card">
+          <h4>🧠 考えるAI（推論モデル）</h4>
+          <p style="margin:0;">すぐ答えず、<strong>「考える時間」を使ってから</strong>答えるAI。数学やプログラミングが大幅に得意になった。</p>
+        </div>
+        <div class="card">
+          <h4>🤝 AIエージェント</h4>
+          <p style="margin:0;">答えるだけでなく、<strong>自分で計画して作業をやりとげる</strong>AI。「調べて→作って→直す」を任せられる。今年最大のキーワード。</p>
+        </div>
+        <div class="card">
+          <h4>🎨 マルチモーダル</h4>
+          <p style="margin:0;">文章だけでなく<strong>画像・音声・動画</strong>もまとめて理解・生成。「絵を見せて質問」が当たり前に。</p>
+        </div>
+      </div>
+
+      <div class="callout callout--insight">
+        <div class="callout__label">SUMMARY</div>
+        <p><strong>歴史の天才たちが作った土台（Transformer）の上で、いま数社が競争中。</strong> 競争の軸は「①賢さ ②自律性 ③安さ」。AIは電気や水道のような「当たり前のインフラ」になりつつあります。</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 5 — 使い方と注意
+         ================================================= -->
+    <section class="section" id="ch5">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        PART 2 · そなえる
+      </div>
+      <div class="section-tag">CHAPTER 05</div>
+      <h2 class="section-title">AIの<span class="hl">使い方</span>と、<br><span class="hl-coral">注意</span>すること。</h2>
+      <p class="section-lead">
+        AIは「切れる包丁」と同じ。便利さと危なさは同じ根っこから来ています。だから大事なのは「禁止」ではなく<strong>「正しい扱い方を知る」</strong>こと。
+      </p>
+
+      <h3>なにが得意で、なにが苦手？</h3>
+      <div class="table-scroll">
+      <table class="table">
+        <tr><th>信頼度</th><th>使い方</th><th>例</th></tr>
+        <tr>
+          <td><strong>🟢 得意</strong></td>
+          <td>下書き・変換・アイデア出し</td>
+          <td>要約、翻訳、文章の下書き、アイデアを20個出す、勉強のヒント</td>
+        </tr>
+        <tr>
+          <td><strong>🟡 確認しながら</strong></td>
+          <td>事実しらべ・計算</td>
+          <td>歴史の年号、人物名、数字 → <strong>それっぽいウソが混ざる</strong>ので確認必須</td>
+        </tr>
+        <tr>
+          <td><strong>🔴 任せない</strong></td>
+          <td>大事な判断・最終チェック</td>
+          <td>健康・お金・進路の決定、確認せずに提出・公開</td>
+        </tr>
+      </table>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-mind"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA'S MEMO</div>
+          <p><strong>AIは「答えの機械」じゃなくて「下書きの機械」。</strong> たたき台はAI、最後の確認と決定は人間。この分担が黄金ルールだよ。</p>
+        </div>
+      </div>
+
+      <h3>知っておくべき3つの弱点</h3>
+      <div class="grid-3">
+        <div class="card card--soft">
+          <h4>😵 ハルシネーション</h4>
+          <p style="margin:0;">存在しない事実・本・URLを<strong>自信満々で作り出す</strong>。しくみが「確率予測」だから起きる、宿命の弱点。</p>
+        </div>
+        <div class="card card--soft">
+          <h4>🕰 情報が古いことがある</h4>
+          <p style="margin:0;">AIの知識は<strong>学習した時点</strong>のもの。最新ニュースは知らないか、間違っていることがある。</p>
+        </div>
+        <div class="card card--soft">
+          <h4>⚖️ かたより（バイアス）</h4>
+          <p style="margin:0;">ネットの文章で学んでいるので、そこにある<strong>思いこみや偏見</strong>も一緒に学んでしまっている。</p>
+        </div>
+      </div>
+
+      <h3>ぜったいに、してはいけないこと</h3>
+      <div class="callout callout--warn">
+        <div class="callout__label">NG</div>
+        <p>
+          ❌ <strong>個人情報を入力する</strong>（自分・友達の本名、住所、顔写真など）<br>
+          ❌ <strong>人を傷つける・だます</strong>ために使う（なりすまし、偽画像、悪口の文章）<br>
+          ❌ <strong>宿題やテストで、禁止されているのに使う</strong>（ルールの中で使うのはOK。だまって丸写しはカンニングと同じ）<br>
+          ❌ <strong>AIの答えを確認せずに、そのまま信じて広める</strong>
+        </p>
+      </div>
+
+      <h3>AIと付き合う5か条</h3>
+      <div class="rules">
+        <div class="rule">
+          <div class="rule__body">
+            <div class="rule__title">確かめる</div>
+            <p class="rule__desc">AIの答えは下書き。名前・数字・事実は、自分で確認してから使う。</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule__body">
+            <div class="rule__title">守る</div>
+            <p class="rule__desc">自分と他人の個人情報は入力しない。秘密はAIにも秘密。</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule__body">
+            <div class="rule__title">正直に</div>
+            <p class="rule__desc">AIを使ったら「使った」と言える使い方をする。ルールの範囲で堂々と。</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule__body">
+            <div class="rule__title">傷つけない</div>
+            <p class="rule__desc">人をだます・傷つける目的では、ぜったいに使わない。</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule__body">
+            <div class="rule__title">考える</div>
+            <p class="rule__desc">まず自分の頭で考えてから、AIと対話する。考える力は、自分の財産。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 6 — 使いこなすコツ
+         ================================================= -->
+    <section class="section" id="ch6">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-mind"/></svg>
+        PART 2 · そなえる
+      </div>
+      <div class="section-tag">CHAPTER 06</div>
+      <h2 class="section-title">AIを<span class="hl">使いこなす</span>、<br>3つのコツ。</h2>
+      <p class="section-lead">
+        同じAIなのに、使う人によって結果がぜんぜん違う。その差は<strong>「指示（プロンプト）の質」</strong>で決まります。このあとの演習で全部使うので、しっかりおさえよう。
+      </p>
+
+      <h3>コツ① 「型」で頼む — 役割・目的・条件・形式</h3>
+      <p>AIは<strong>「なんでも知ってるけど、君のことは何も知らない転校生」</strong>。だから、背景から具体的に伝えるほど良い答えが返ってきます。</p>
+
+      <div class="grid-2">
+        <div class="card card--soft">
+          <h4>❌ ざんねんな頼み方</h4>
+          <p style="margin:0;">「学校の紹介文を書いて」<br><br>→ どこの学校にも当てはまる、ふわっとした文章が出てくる。<em>AIは君の学校を知らないから</em>。</p>
+        </div>
+        <div class="card">
+          <h4>⭕ 上手な頼み方</h4>
+          <p style="margin:0;"><strong>役割</strong>「あなたはプロのライターです」<br>
+          <strong>目的</strong>「学校の紹介文を書いて」<br>
+          <strong>条件</strong>「〇〇中、自慢は合唱祭、明るい文体で」<br>
+          <strong>形式</strong>「200字、キャッチコピー付き」</p>
+        </div>
+      </div>
+
+      <h3>コツ② 一発で終わらせない — 対話で育てる</h3>
+      <p>プロンプトは<strong>会話で育てるもの</strong>。1回目は60点でOK。「もっとかわいく」「2番目の案を短く」と<em>修正の指示を重ねる</em>方が、最初から完璧をねらうより速くて上手くいきます。</p>
+      <div class="pills">
+        <span class="pill">もっとやわらかい言葉で</span>
+        <span class="pill">中学生向けに直して</span>
+        <span class="pill">案を5つ出して</span>
+        <span class="pill">いちばん大事な1行だけ残して</span>
+        <span class="pill">この部分だけ変えて</span>
+      </div>
+
+      <h3>コツ③ マークダウンで伝える — AIの「母語」</h3>
+      <p>長いお願いは、<strong>マークダウン</strong>という書き方（<code>#</code>で見出し、<code>-</code>で箇条書き）で整理すると、AIへの伝わり方が劇的に良くなります。AIはこの形式の文章を大量に学んでいる——いわば<em>AIの母語</em>だからです。</p>
+
+      <div class="promptblock"><span class="promptblock__label">MARKDOWN PROMPT の例</span># 依頼
+学校紹介文の作成
+
+## あなたの役割
+プロのコピーライター
+
+## 前提
+- 学校名：〇〇中学校
+- 自慢：合唱祭がすごい・図書室が広い
+
+## 条件
+- 200字以内
+- 明るく親しみやすい文体
+
+## 出力形式
+キャッチコピー → 本文 の順</div>
+
+      <h3>おまけ：明日から使える小ワザ5選</h3>
+      <p>3つのコツに加えて、AIが上手な人がみんなやっている習慣がこれ。今日ぜんぶ覚えなくてOK。<strong>①だけは今日から使ってみて</strong>。</p>
+
+      <div class="exsteps">
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">「答え」じゃなくて「ヒント」をもらう — 勉強の最強ワザ</div>
+            <p class="exstep__desc">宿題でわからない問題は「答えを教えて」ではなく<strong>「答えは言わずにヒントだけちょうだい」「私の解き方、途中まで合ってる？」</strong>と聞く。答えを写すと何も残らないけど、これなら家庭教師になる。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">逆に質問させる</div>
+            <p class="exstep__desc">お願いの最後に<strong>「足りない情報があれば、先に私に質問して」</strong>と一言。AIの思いこみによるズレを防げる、プロも使う一手。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">話題が変わったら、新しいチャット</div>
+            <p class="exstep__desc">前の話題が混ざると答えの質が下がる。<strong>別の話は別のチャットで</strong>。逆に、同じ作業の続きは同じチャットが有利。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">大事なことは、別のAIで答え合わせ</div>
+            <p class="exstep__desc">重要な事実は<strong>別のAIにも同じ質問</strong>をして、答えを突き合わせる。2つが食いちがったら要注意のサイン。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">自分の答えをチェックさせる</div>
+            <p class="exstep__desc">答えが出たら<strong>「この答えの弱点や、まちがっているかもしれない所を教えて」</strong>と追い打ち。AIは自分の答えのアラ探しも意外と得意。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--gold">
+        <div class="callout__label">KEY INSIGHT</div>
+        <p><strong>①型で頼む → ②対話で育てる → ③マークダウンで整理。</strong> うまくいったプロンプトは保存して使い回すと、どんどん楽になる。次の演習で、この3つをぜんぶ実戦投入します！</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CHAPTER 7 — 演習
+         ================================================= -->
+    <section class="section" id="exercise">
+      <div class="phase-badge">
+        <svg width="28" height="28"><use href="#aila-maker"/></svg>
+        PART 3 · 創る
+      </div>
+      <div class="section-tag">EXERCISE ｜ 実戦演習</div>
+      <h2 class="section-title">私の学校の<span class="hl">PRサイト</span>を、<br>AIと<span class="hl-coral">創ろう</span>。</h2>
+      <p class="section-lead">
+        いよいよ本番。AIに<strong>君の学校のことを調べさせて</strong>、その情報から<strong>本物のWebサイト</strong>を作ります。ポイントは——学校のことを世界でいちばん知っている専門家は、AIじゃなくて<strong>君</strong>だということ！
+      </p>
+
+      <div class="card card--ink">
+        <h4>🎯 ミッション</h4>
+        <p style="font-size:16px;margin:0;"><strong>「AIに学校を調査させる → 君がまちがい探し（ファクトチェック）→ 正しい情報でPRサイトを生成」</strong>。今日学んだ<em>型・対話・確認</em>をぜんぶ使う総合演習です。</p>
+      </div>
+
+      <div class="exsteps">
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">AIに学校を調査させる</div>
+            <p class="exstep__desc">下の調査プロンプトをコピーして、用意されたAIに貼りつける。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">まちがい探し（ファクトチェック）</div>
+            <p class="exstep__desc">AIの答えを読んで「本当？」と確認。まちがいはAIに教えて直させる。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">プロンプトの型でサイトを注文</div>
+            <p class="exstep__desc">確認ずみの情報をフォームに入れて、サイト生成プロンプトを作って送る。</p>
+          </div>
+        </div>
+        <div class="exstep">
+          <div class="exstep__body">
+            <div class="exstep__title">表示して、対話で育てる</div>
+            <p class="exstep__desc">できたHTMLを下のプレビューに貼って表示。気になる所を1つずつ直す。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <div class="callout__label">SAFETY</div>
+        <p><strong>学校名はOK（公開情報）だけど、自分や友達・先生の名前、顔写真はサイトに入れない。</strong> 「守る」の5か条、ここで実践！</p>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 1</span>
+          <h3 class="work__title">AIに学校を調査させよう</h3>
+        </div>
+        <p class="work__desc">学校名を入れると、調査プロンプトが完成します。コピーして、用意されたAIに貼りつけよう。</p>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>学校名</label>
+          <input class="input" id="r1school" placeholder="例：〇〇市立△△中学校" autocomplete="off">
+        </div>
+
+        <div class="prompter__output" id="r1output">↑ 学校名を入れると、ここに調査プロンプトが出ます</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn" id="r1copy">📋 コピーしてAIへ</button>
+          <span id="r1status" style="align-self:center;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 2</span>
+          <h3 class="work__title">まちがい探し — 君が世界一の専門家</h3>
+        </div>
+        <p class="work__desc">AIの調査結果を読んで、<strong>「これ、本当？」</strong>の目でチェック。存在しない行事や間違った特色が混ざっていたら、それが<strong>ハルシネーション</strong>の実物だ！ 見つけたらAIにこう伝えて直させよう：</p>
+
+        <div class="promptblock"><span class="promptblock__label">修正プロンプトの例</span>「〇〇」の部分はまちがいです。正しくは「△△」です。
+修正した内容で、もう一度まとめ直してください。</div>
+
+        <div class="field">
+          <label class="field__label"><span class="field__badge">1</span>AIがまちがえていたこと（なければ「なし」）</label>
+          <input class="input" id="f1wrong" placeholder="例：実際にはない「マラソン大会」があることになっていた">
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">2</span>確認できた、学校の自慢ポイント（3つくらい）</label>
+          <textarea class="textarea" id="f1points" placeholder="例：合唱祭がもりあがる／テニス部が強い／制服がかわいい"></textarea>
+        </div>
+        <button class="btn" onclick="saveWork('fact', ['f1wrong','f1points'])">💾 保存する</button>
+        <span id="factstatus" style="margin-left:12px;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 3</span>
+          <h3 class="work__title">プロンプトの型で、サイトを注文しよう</h3>
+        </div>
+        <p class="work__desc">確認ずみの正しい情報を入れると、<strong>マークダウンの型</strong>に沿ったサイト生成プロンプトが完成。コピーしてAIに送ろう。</p>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label"><span class="field__badge">1</span>学校名</label>
+            <input class="input" id="s3school" placeholder="例：〇〇市立△△中学校">
+          </div>
+          <div class="field">
+            <label class="field__label"><span class="field__badge">2</span>キャッチコピー</label>
+            <input class="input" id="s3copy" placeholder="例:歌声がひびく、緑の丘の学校">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label"><span class="field__badge">3</span>自慢ポイント（STEP 2で確認したもの）</label>
+          <textarea class="textarea" id="s3points" placeholder="例：合唱祭が有名／テニス部が県大会常連／広い図書室"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label"><span class="field__badge">4</span>色・ふんいき</label>
+            <input class="input" id="s3theme" placeholder="例：ミントグリーンでさわやか / パステルピンクでかわいく">
+          </div>
+          <div class="field">
+            <label class="field__label"><span class="field__badge">5</span>入れたいコーナー</label>
+            <input class="input" id="s3sections" placeholder="例：学校の特色／行事しょうかい／部活しょうかい">
+          </div>
+        </div>
+
+        <button class="btn btn--accent" id="s3generate">⚡ プロンプトを生成する</button>
+        <div class="prompter__output" id="s3output" style="margin-top:18px;">↑ 上を埋めて「⚡生成」を押してください</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn" id="s3copybtn">📋 コピーしてAIへ</button>
+          <button class="btn btn--secondary" onclick="saveWork('s3', ['s3school','s3copy','s3points','s3theme','s3sections'])">💾 保存</button>
+          <span id="s3status" style="align-self:center;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="work">
+        <div class="work__head">
+          <span class="work__label">STEP 4</span>
+          <h3 class="work__title">できたサイトを表示してみよう</h3>
+        </div>
+        <p class="work__desc">AIが出してくれた<strong>HTMLコードをぜんぶコピー</strong>して、下の「CODE」タブに貼りつけ→「▶ 表示」。君の学校のサイトが現れる！</p>
+
+        <div class="preview">
+          <div class="preview__tabs">
+            <button class="preview__tab is-active" data-tab="code">CODE（ここに貼る）</button>
+            <button class="preview__tab" data-tab="result">RESULT（表示）</button>
+          </div>
+          <div class="preview__panel is-active" data-panel="code">
+            <textarea class="preview__code" id="previewCode" spellcheck="false" placeholder="ここにAIが作ったHTMLコードを貼りつけてね"></textarea>
+          </div>
+          <div class="preview__panel" data-panel="result">
+            <iframe class="preview__frame" id="previewFrame" title="サイトのプレビュー"></iframe>
+          </div>
+          <div class="preview__actions">
+            <button class="btn" id="previewRun">▶ 表示</button>
+            <button class="btn btn--secondary" id="previewSample">✨ サンプルを見る</button>
+            <button class="btn btn--secondary" id="previewSave">💾 保存</button>
+            <button class="btn btn--secondary" id="previewDownload">⬇ ダウンロード</button>
+            <span id="previewStatus" style="align-self:center;color:var(--green);font-size:12.5px;font-weight:600;"></span>
+          </div>
+        </div>
+
+        <h4>🌱 仕上げ：対話で育てる（1回に1つだけ！）</h4>
+        <p>気になるところをAIに伝えて、直したコードをまた貼る。<strong>「1回の指示で1つだけ」</strong>がコツ。</p>
+        <div class="pills">
+          <span class="pill">タイトルをもっと大きく</span>
+          <span class="pill">色をもう少し濃く</span>
+          <span class="pill">部活のコーナーを追加して</span>
+          <span class="pill">絵文字を増やして</span>
+          <span class="pill">スマホで見やすくして</span>
+        </div>
+      </div>
+
+      <div class="ailasays">
+        <svg class="ailasays__avatar"><use href="#aila-maker"/></svg>
+        <div class="ailasays__bubble">
+          <div class="ailasays__name">AILA'S MEMO</div>
+          <p>いま君がやったこと——<strong>型で頼む・確認する・対話で育てる</strong>——は、プロがAIを使うときとまったく同じ手順。もう「AIを使いこなす側」の入口に立ってるよ。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         CLOSING
+         ================================================= -->
+    <section class="section" id="closing">
+      <div class="closing">
+        <div class="closing__kicker">— SPECIAL LESSON · CLOSING —</div>
+        <h2 class="closing__message">
+          AIは<span class="hl">道具</span>。<br>
+          使いこなすのは、<span class="hl-coral">あなた</span>。
+        </h2>
+        <p style="max-width:560px;margin:0 auto 18px;">
+          80年の歴史の上に生まれた生成AI。そのしくみは「次の言葉の予測」で、だから賢くて、だからウソもつく。<br>
+          <strong>確かめる・守る・正直に・傷つけない・考える。</strong><br>
+          この5か条を持っていれば、AIは君の最強の相棒になります。
+        </p>
+        <p style="max-width:560px;margin:0 auto;">
+          今日作ったサイトと、覚えた「型」は、おうちでも学校でも使えます。<br>
+          次に何かを作りたくなったら——まず自分で考えて、それからAIに話しかけてみよう。
+        </p>
+        <p style="margin-top:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;color:var(--ink-muted);font-weight:700;">— Akky先生のプログラミング教室 —</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ================= NAV / PROGRESS ================= */
+const navToggle = document.getElementById('navToggle');
+const nav = document.getElementById('nav');
+const backdrop = document.getElementById('backdrop');
+
+navToggle?.addEventListener('click', () => {
+  nav.classList.toggle('is-open');
+  backdrop.classList.toggle('is-shown');
+});
+backdrop?.addEventListener('click', () => {
+  nav.classList.remove('is-open');
+  backdrop.classList.remove('is-shown');
+});
+document.querySelectorAll('.nav__item').forEach(a => {
+  a.addEventListener('click', () => {
+    nav.classList.remove('is-open');
+    backdrop.classList.remove('is-shown');
+  });
+});
+
+const progressBar = document.getElementById('progressBar');
+const sections = Array.from(document.querySelectorAll('.section'));
+const navItems = Array.from(document.querySelectorAll('.nav__item'));
+
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  if (progressBar) progressBar.style.width = (scrolled * 100) + '%';
+
+  let cur = sections[0]?.id;
+  sections.forEach(sec => {
+    if (sec.getBoundingClientRect().top < window.innerHeight * 0.4) cur = sec.id;
+  });
+  navItems.forEach(item => {
+    item.classList.toggle('is-active', item.getAttribute('href') === '#' + cur);
+  });
+}, { passive: true });
+
+/* ================= REVEAL ================= */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.card, .epoch, .portrait, .giant, .rule, .callout, .work, .exstep').forEach(el => {
+  el.classList.add('reveal');
+  io.observe(el);
+});
+
+/* ================= SAVE (localStorage) ================= */
+function saveWork(key, fieldIds) {
+  const data = {};
+  fieldIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  try { localStorage.setItem('aisp_' + key, JSON.stringify(data)); } catch(e) {}
+  const st = document.getElementById(key + 'status');
+  if (st) { st.textContent = '✔ 保存したよ'; setTimeout(() => st.textContent = '', 2500); }
+}
+// restore
+['fact','s3'].forEach(key => {
+  try {
+    const data = JSON.parse(localStorage.getItem('aisp_' + key) || '{}');
+    Object.entries(data).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    });
+  } catch(e) {}
+});
+
+/* ================= NEXT-WORD SIM ================= */
+const simInput = document.getElementById('simInput');
+const simPredictions = document.getElementById('simPredictions');
+
+const vocab = {
+  '犬も歩けば': [ {w:'棒に当たる', p:91}, {w:'疲れる', p:4}, {w:'楽しい', p:2} ],
+  '日本で一番高い山は': [ {w:'富士山', p:93}, {w:'富士', p:4}, {w:'北岳', p:1.5} ],
+  'おはようご': [ {w:'ざいます', p:97}, {w:'ざいました', p:2}, {w:'はん', p:0.5} ],
+  '明日の天気は': [ {w:'晴れ', p:42}, {w:'雨', p:31}, {w:'くもり', p:18} ]
+};
+
+function renderSim(val) {
+  if (!simPredictions) return;
+  if (!val) {
+    simPredictions.innerHTML = '<div class="sim__placeholder">↑ 上に入力するか、下のサンプルをクリック</div>';
+    return;
+  }
+  const key = val.trim();
+  let preds = vocab[key] || [
+    { w: 'です', p: 22 }, { w: 'と', p: 14 }, { w: 'ね', p: 9 }
+  ];
+  simPredictions.innerHTML = preds.map(p => `
+    <div class="sim__pred-row">
+      <div class="sim__pred-word">${p.w}</div>
+      <div class="sim__pred-bar"><div class="sim__pred-fill" style="width:${p.p}%"></div></div>
+      <div class="sim__pred-pct">${p.p}%</div>
+    </div>`).join('') + (vocab[key] ? '' : '<div class="sim__placeholder" style="padding:8px 0 0;">※このデモは決まった例だけ本物っぽく出ます。本物のAIは、どんな文でも予測できるよ。</div>');
+}
+
+simInput?.addEventListener('input', () => renderSim(simInput.value));
+document.querySelectorAll('.sim__ex').forEach(btn => {
+  btn.addEventListener('click', () => {
+    simInput.value = btn.dataset.text;
+    renderSim(btn.dataset.text);
+  });
+});
+
+/* ================= COPY HELPER ================= */
+function copyText(text, statusId) {
+  const done = () => {
+    const st = document.getElementById(statusId);
+    if (st) { st.textContent = '✔ コピーしたよ！AIに貼りつけよう'; setTimeout(() => st.textContent = '', 3000); }
+  };
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  done();
+}
+
+/* ================= STEP 1: RESEARCH PROMPT ================= */
+const r1school = document.getElementById('r1school');
+const r1output = document.getElementById('r1output');
+
+function buildResearchPrompt() {
+  const name = (r1school?.value || '').trim();
+  if (!name) {
+    r1output.textContent = '↑ 学校名を入れると、ここに調査プロンプトが出ます';
+    return '';
+  }
+  const prompt =
+`あなたはプロの取材ライターです。
+「${name}」の公式サイトや紹介ページをWebで調べて、次の3つを箇条書きでまとめてください。
+
+1. 学校の基本情報（どこにある？ どんな学校？）
+2. 自慢できそうなポイントを5つ（部活・行事・施設・雰囲気など）
+3. 学校の魅力が伝わるキャッチコピー案を3つ
+
+大事なルール：わからないことは推測で書かず「不明」と書いてください。`;
+  r1output.textContent = prompt;
+  return prompt;
+}
+r1school?.addEventListener('input', buildResearchPrompt);
+document.getElementById('r1copy')?.addEventListener('click', () => {
+  const p = buildResearchPrompt();
+  if (p) copyText(p, 'r1status');
+  else {
+    const st = document.getElementById('r1status');
+    if (st) { st.textContent = '先に学校名を入れてね'; setTimeout(() => st.textContent = '', 2500); }
+  }
+});
+
+/* ================= STEP 3: SITE PROMPT ================= */
+let s3prompt = '';
+document.getElementById('s3generate')?.addEventListener('click', () => {
+  const school = (document.getElementById('s3school')?.value || '（学校名）').trim() || '（学校名）';
+  const copy = (document.getElementById('s3copy')?.value || '').trim();
+  const points = (document.getElementById('s3points')?.value || '').trim();
+  const theme = (document.getElementById('s3theme')?.value || 'あかるくて親しみやすい').trim();
+  const sectionsWanted = (document.getElementById('s3sections')?.value || '学校の特色／行事しょうかい').trim();
+
+  s3prompt =
+`# 依頼
+私の学校の紹介Webサイト（PRサイト）をつくる
+
+## あなたの役割
+プロのWebデザイナー
+
+## 前提情報（私が確認ずみの正しい情報）
+- 学校名：${school}
+- キャッチコピー：${copy || '（あなたが1つ提案して）'}
+- 自慢ポイント：${points || '（前の会話で確認した内容を使って）'}
+
+## 条件
+- 色・ふんいき：${theme}
+- 入れたいコーナー：${sectionsWanted}
+- スマホでもきれいに見えること
+- ここに書いていない情報を勝手に作らないこと
+- 個人の名前や顔写真は入れないこと
+
+## 出力形式
+HTML・CSS・JavaScriptを1つのHTMLファイルにまとめて、コードだけを出力してください。`;
+
+  document.getElementById('s3output').textContent = s3prompt;
+});
+document.getElementById('s3copybtn')?.addEventListener('click', () => {
+  if (s3prompt) copyText(s3prompt, 's3status');
+  else {
+    const st = document.getElementById('s3status');
+    if (st) { st.textContent = '先に「⚡生成」を押してね'; setTimeout(() => st.textContent = '', 2500); }
+  }
+});
+
+/* ================= STEP 4: PREVIEW ================= */
+const pTabs = document.querySelectorAll('.preview__tab');
+const pPanels = document.querySelectorAll('.preview__panel');
+const pCode = document.getElementById('previewCode');
+const pFrame = document.getElementById('previewFrame');
+
+pTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    pTabs.forEach(t => t.classList.remove('is-active'));
+    pPanels.forEach(p => p.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    document.querySelector(`.preview__panel[data-panel="${tab.dataset.tab}"]`)?.classList.add('is-active');
+  });
+});
+
+function updatePreview() {
+  if (!pFrame || !pCode) return;
+  pFrame.srcdoc = pCode.value;
+}
+
+document.getElementById('previewRun')?.addEventListener('click', () => {
+  updatePreview();
+  document.querySelector('.preview__tab[data-tab="result"]')?.click();
+});
+
+const SAMPLE_SITE = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ひかり中学校</title>
+<style>
+  body { font-family: sans-serif; margin: 0; background: #FDF9F4; color: #333; }
+  header { background: linear-gradient(135deg, #7FD4C1, #5BB5AA); color: white; text-align: center; padding: 60px 20px; }
+  h1 { margin: 0 0 8px; font-size: 34px; }
+  .catch { font-size: 16px; opacity: 0.95; }
+  section { max-width: 680px; margin: 0 auto; padding: 32px 20px; }
+  h2 { color: #3A9188; border-bottom: 3px solid #7FD4C1; padding-bottom: 6px; }
+  .cards { display: grid; gap: 12px; }
+  .card { background: white; border-radius: 12px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  footer { text-align: center; padding: 24px; color: #999; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🌱 ひかり中学校</h1>
+  <div class="catch">歌声がひびく、緑の丘の学校。</div>
+</header>
+<section>
+  <h2>私たちの自慢</h2>
+  <div class="cards">
+    <div class="card">🎵 <strong>合唱祭</strong> — 全クラスが本気になる、一年でいちばん熱い日。</div>
+    <div class="card">🎾 <strong>テニス部</strong> — 県大会常連！朝の素振りの音が始業のチャイム。</div>
+    <div class="card">📚 <strong>図書室</strong> — 窓が大きくて、放課後の人気スポット。</div>
+  </div>
+</section>
+<footer>これはサンプルサイトです（架空の学校）</footer>
+</body>
+</html>`;
+
+document.getElementById('previewSample')?.addEventListener('click', () => {
+  if (pCode) pCode.value = SAMPLE_SITE;
+  updatePreview();
+  document.querySelector('.preview__tab[data-tab="result"]')?.click();
+});
+
+document.getElementById('previewSave')?.addEventListener('click', () => {
+  try { localStorage.setItem('aisp_previewCode', pCode?.value || ''); } catch(e) {}
+  const st = document.getElementById('previewStatus');
+  if (st) { st.textContent = '✔ 保存したよ'; setTimeout(() => st.textContent = '', 2500); }
+});
+try {
+  const savedCode = localStorage.getItem('aisp_previewCode');
+  if (savedCode && pCode) pCode.value = savedCode;
+} catch(e) {}
+
+document.getElementById('previewDownload')?.addEventListener('click', () => {
+  const blob = new Blob([pCode?.value || ''], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'わたしの学校PRサイト.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+</script>
+
+</body>
+</html>
