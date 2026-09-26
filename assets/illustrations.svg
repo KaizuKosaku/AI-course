@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
 <!--
   AIコース 共通イラストセット
-  各教材ページの先頭の <defs> にコピーして、<use href="#aila"> のように使う。
+  tools/build.py が各ページの「KIT」の目印の位置に差しこむ。ページでは use 要素で #aila のように呼び出す。
   色：紺 #1a2d5c（線）／黄 #ffc830／コーラル #f26d5b／水色 #dfe7f6・#b9c8e8／ミント #bfe3d6／下地 #f7f4ec
   生徒（kid, kid-up, kid-pc）の服の色は、use 要素の style="color:…" で変える。
 -->

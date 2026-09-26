@@ -2,7 +2,8 @@
 
 使い方:
     python tools/build.py ai06        # 1つの回
-    python tools/build.py all         # すべての回
+    python tools/build.py home        # ホーム（index.html）の共通イラストだけ更新
+    python tools/build.py all         # ホームとすべての回
 
 教師用ページ（aiNN-教師.html）が原本。ビルドすると次の2つを行う。
 1. <!--KIT--> 〜 <!--/KIT--> の間を、assets/illustrations.svg の共通イラストで入れかえる
@@ -19,7 +20,8 @@ LESSONS = ["ai01", "ai02", "ai03", "ai04", "ai05", "ai06", "ai-sp"]
 
 def kit_block():
     kit = (ROOT / "assets" / "illustrations.svg").read_text(encoding="utf-8")
-    defs = kit[kit.index("<defs>") + len("<defs>"): kit.index("</defs>")].strip("\n")
+    kit = re.sub(r"\A\s*<svg[^>]*>\s*<!--.*?-->", "", kit, count=1, flags=re.S)  # 先頭の説明コメントは入れない
+    defs = kit[kit.index("<defs>") + len("<defs>"): kit.rindex("</defs>")].strip("\n")
     return "<!--KIT-->\n" + defs + "\n<!--/KIT-->"
 
 
@@ -46,9 +48,24 @@ def build(lesson):
     print(f"{lesson}: 教師用 {len(src):,} 文字 / 生徒用 {len(student):,} 文字")
 
 
+def build_home():
+    path = ROOT / "index.html"
+    src = path.read_text(encoding="utf-8")
+    if "<!--/KIT-->" in src:
+        src = re.sub(r"<!--KIT-->.*?<!--/KIT-->", lambda m: kit_block(), src, count=1, flags=re.S)
+    else:
+        src = src.replace("<!--KIT-->", kit_block(), 1)
+    path.write_text(src, encoding="utf-8")
+    print("index.html: 共通イラストを更新")
+
+
 if __name__ == "__main__":
     targets = sys.argv[1:] or ["all"]
     if targets == ["all"]:
         targets = [l for l in LESSONS if (ROOT / l / f"{l}-教師.html").exists() and "<!--KIT" in (ROOT / l / f"{l}-教師.html").read_text(encoding="utf-8")]
+        build_home()
     for t in targets:
-        build(t)
+        if t == "home":
+            build_home()
+        else:
+            build(t)
