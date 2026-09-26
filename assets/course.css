@@ -839,3 +839,27 @@ img, svg { display: block; max-width: 100%; }
 .gallery svg { display: block; width: 100%; }
 .gallery .tiles__name { margin-top: 8px; }
 @media (max-width: 767px) { .gallery { grid-template-columns: 1fr 1fr; } }
+
+/* 2つのAIの答えを並べる */
+.chatpair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.chatpair .panel { margin: 0; }
+.chatpair .panel__head { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
+.chatpair .panel__head svg { width: 22px; height: 22px; }
+.chatpair .panel__body { min-height: 150px; font-size: var(--fs-s); line-height: 1.8; }
+@media (max-width: 639px) { .chatpair { grid-template-columns: 1fr; } }
+
+/* 切りかえボタンの列 */
+.lenses { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.lenses .btn.is-active { color: #fff; background: var(--brand); }
+.lens-out { margin-top: 12px; padding: 16px 20px; border-radius: var(--radius); background: var(--surface); }
+.lens-out b { display: block; margin-bottom: 4px; color: var(--brand); }
+
+/* 時間配分の帯 */
+.timebar { display: flex; gap: 4px; margin: 20px 0 8px; }
+.timebar__seg { min-width: 0; padding: 10px 12px; border-radius: 6px; font-size: var(--fs-s); line-height: 1.5; }
+.timebar__seg b { display: block; font-size: var(--fs-m); }
+.timebar__seg:nth-child(1) { background: var(--il-sky); }
+.timebar__seg:nth-child(2) { background: var(--il-sky-2); }
+.timebar__seg:nth-child(3) { background: #fff4d6; }
+.timebar__seg:nth-child(4) { background: var(--il-mint); }
+@media (max-width: 639px) { .timebar { flex-direction: column; } .timebar__seg { flex: none !important; } }
