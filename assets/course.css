@@ -863,3 +863,23 @@ img, svg { display: block; max-width: 100%; }
 .timebar__seg:nth-child(3) { background: #fff4d6; }
 .timebar__seg:nth-child(4) { background: var(--il-mint); }
 @media (max-width: 639px) { .timebar { flex-direction: column; } .timebar__seg { flex: none !important; } }
+
+/* 会話の例（君とAIのやりとり） */
+.thread { margin: 20px 0; display: grid; gap: 12px; }
+.thread__turn { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; max-width: 36em; }
+.thread__turn--ai { margin-left: auto; grid-template-columns: minmax(0, 1fr) 40px; }
+.thread__turn svg { width: 40px; height: 40px; }
+.thread__turn--ai svg { order: 2; }
+.thread__bubble { padding: 10px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--line-strong); line-height: 1.7; }
+.thread__turn--ai .thread__bubble { background: var(--task-bg); border-color: var(--il-sky-2); }
+
+/* プロンプトガチャのカード */
+.pgcard { margin: 12px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; }
+.pgcard__head { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.pgcard__stars { color: #c98a00; letter-spacing: 2px; }
+.pgcard__tier { font-weight: 700; font-size: var(--fs-s); }
+.pgcard__head .btn { margin-left: auto; }
+.pgcard__prompt { padding: 12px 16px 4px; white-space: pre-wrap; font-size: var(--fs-s); line-height: 1.75; }
+.pgcard__why { padding: 4px 16px 12px; font-size: var(--fs-s); color: var(--text-2); }
+.pgcard__why::before { content: "ポイント："; font-weight: 700; color: var(--brand); }
+.pgcard--t3 { border-color: var(--brand); }
