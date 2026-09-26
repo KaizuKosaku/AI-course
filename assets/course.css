@@ -925,3 +925,7 @@ img, svg { display: block; max-width: 100%; }
 @media (max-width: 639px) { .table th { white-space: normal; width: auto; min-width: 5.5em; } }
 /* 文字の多い横長の図は、狭い画面では図の中だけ横にスクロールさせる */
 @media (max-width: 639px) { .figure--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; } .figure--scroll > svg { min-width: 620px; } }
+
+/* 人物の写真（特別授業） */
+.person__art--photo { padding: 0; overflow: hidden; }
+.person__art--photo img { aspect-ratio: 1 / 1; object-position: 50% 22%; border-radius: 8px; }
