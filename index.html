@@ -3,599 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Course ｜ Akky先生のプログラミング教室</title>
-<style>
-/* =================================================================
-   DESIGN TOKENS — Navy × Off-white × 2 Accents（ai01 / ai02 と共通）
-   ================================================================= */
-:root {
-  --bg: #FAF8F3;
-  --bg-alt: #F4F1EA;
-  --paper: #FFFFFF;
-  --paper-alt: #FCFAF6;
-
-  --ink: #1A2D5C;
-  --ink-soft: #4A5878;
-  --ink-mid: #6B7A99;
-  --ink-muted: #8B95AD;
-  --ink-dim: #B8BFCC;
-
-  --line: #E8E4DA;
-  --line-soft: #F0EDE5;
-
-  --accent: #FFC830;
-  --accent-soft: #FFF6D9;
-  --accent-deep: #E8AC1A;
-
-  --coral: #F26D5B;
-  --coral-soft: #FCE5DF;
-  --coral-deep: #D04E3D;
-
-  --font-display: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
-  --font-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
-  --font-mono: 'SF Mono', 'JetBrains Mono', Consolas, Menlo, monospace;
-
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 18px;
-
-  --shadow-xs: 0 1px 2px rgba(26,45,92,0.04);
-  --shadow-sm: 0 2px 6px rgba(26,45,92,0.05);
-  --shadow: 0 4px 12px rgba(26,45,92,0.06);
-  --shadow-md: 0 8px 20px rgba(26,45,92,0.08);
-  --pop: 4px 4px 0 var(--ink);
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font-body);
-  font-feature-settings: 'palt';
-  color: var(--ink);
-  background: var(--bg);
-  line-height: 1.85;
-  font-size: 15.5px;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.01em;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-img, svg { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-::selection { background: var(--accent); color: var(--ink); }
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(26,45,92,0.025) 0%, transparent 100%);
-  pointer-events: none;
-}
-
-/* =================================================================
-   LAYOUT
-   ================================================================= */
-.wrap {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-@media (max-width: 720px) {
-  .wrap { padding: 0 20px; }
-}
-
-/* =================================================================
-   TOP BAR
-   ================================================================= */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 26px 0 0;
-}
-
-.topbar__mark { width: 38px; height: 38px; flex-shrink: 0; }
-
-.topbar__text { line-height: 1.3; }
-
-.topbar__title {
-  font-weight: 800;
-  font-size: 14px;
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-
-.topbar__sub {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--ink-muted);
-  letter-spacing: 0.1em;
-  margin-top: 2px;
-  font-weight: 600;
-}
-
-.topbar__school {
-  margin-left: auto;
-  background: var(--ink);
-  color: var(--accent);
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-@media (max-width: 600px) {
-  .topbar__school { display: none; }
-}
-
-/* =================================================================
-   HERO
-   ================================================================= */
-.hero {
-  padding: 76px 0 56px;
-  position: relative;
-}
-
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--ink);
-  background: var(--accent);
-  padding: 6px 14px;
-  border-radius: 100px;
-  margin-bottom: 28px;
-}
-
-.hero__eyebrow::before {
-  content: '';
-  width: 6px; height: 6px;
-  background: var(--ink);
-  border-radius: 50%;
-}
-
-.hero__title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 7vw, 82px);
-  line-height: 1.06;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  margin-bottom: 28px;
-  color: var(--ink);
-}
-
-.hero__title .hl, .hero__title .hl-coral {
-  position: relative;
-  display: inline-block;
-  z-index: 1;
-}
-.hero__title .hl::after {
-  content: '';
-  position: absolute;
-  bottom: 4px; left: -4px; right: -4px;
-  height: 18px;
-  background: var(--accent);
-  z-index: -1;
-}
-.hero__title .hl-coral::after {
-  content: '';
-  position: absolute;
-  bottom: 4px; left: -4px; right: -4px;
-  height: 18px;
-  background: var(--coral);
-  opacity: 0.7;
-  z-index: -1;
-}
-
-.hero__lead {
-  font-size: clamp(16px, 2vw, 19px);
-  line-height: 1.9;
-  color: var(--ink-soft);
-  max-width: 620px;
-  font-weight: 500;
-}
-
-.hero__mascot {
-  position: absolute;
-  right: -10px;
-  top: 60px;
-  width: 230px;
-  pointer-events: none;
-  opacity: 0.95;
-}
-
-@media (max-width: 960px) { .hero__mascot { display: none; } }
-
-/* =================================================================
-   SECTION TAG
-   ================================================================= */
-.section-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--ink-soft);
-  margin-bottom: 24px;
-  text-transform: uppercase;
-}
-.section-tag::before {
-  content: '';
-  width: 24px; height: 1px;
-  background: var(--accent-deep);
-}
-
-/* =================================================================
-   COURSE CARDS
-   ================================================================= */
-.courses {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-  padding-bottom: 64px;
-}
-
-@media (max-width: 820px) {
-  .courses { grid-template-columns: 1fr; }
-}
-
-.course {
-  display: flex;
-  flex-direction: column;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-lg);
-  padding: 30px 30px 26px;
-  box-shadow: var(--pop);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.course:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--ink);
-}
-
-.course__day {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: flex-start;
-  background: var(--ink);
-  color: var(--accent);
-  padding: 5px 14px;
-  border-radius: 100px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-}
-
-.course__num {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 900;
-  color: var(--ink-dim);
-  position: absolute;
-  top: 22px;
-  right: 26px;
-  letter-spacing: 0.04em;
-}
-
-.course__title {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 900;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin-bottom: 14px;
-}
-
-.course__title .hl, .course__title .hl-coral {
-  position: relative;
-  display: inline-block;
-  z-index: 1;
-}
-.course__title .hl::after {
-  content: '';
-  position: absolute;
-  bottom: 2px; left: -3px; right: -3px;
-  height: 12px;
-  background: var(--accent);
-  z-index: -1;
-}
-.course__title .hl-coral::after {
-  content: '';
-  position: absolute;
-  bottom: 2px; left: -3px; right: -3px;
-  height: 12px;
-  background: var(--coral);
-  opacity: 0.7;
-  z-index: -1;
-}
-
-.course__desc {
-  font-size: 14.5px;
-  line-height: 1.85;
-  color: var(--ink-soft);
-  font-weight: 500;
-  margin-bottom: 20px;
-}
-
-.course__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 26px;
-}
-
-.course__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  background: var(--bg-alt);
-  border: 1px solid var(--line);
-  border-radius: 100px;
-  font-size: 11.5px;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-
-.course__foot {
-  margin-top: auto;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 22px;
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 13.5px;
-  transition: all 0.15s ease;
-}
-.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.btn svg { width: 16px; height: 16px; }
-
-.btn--accent { background: var(--accent); color: var(--ink); }
-.btn--accent:hover { background: var(--accent-deep); }
-
-.btn--ghost {
-  background: var(--paper);
-  color: var(--ink);
-  border: 1.5px solid var(--ink);
-}
-.btn--ghost:hover { background: var(--bg-alt); }
-
-/* =================================================================
-   FOOTER
-   ================================================================= */
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 26px 0 40px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-muted);
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-</style>
+<title>AIコース ｜ Akky先生のプログラミング教室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/course.css">
 </head>
 <body>
 
-<!-- ===================== SVG DEFS（ai01 / ai02 と共通のマスコット） ===================== -->
+<!-- ========== 共通の絵（シンボル） ========== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <!-- BRAND LOGO MARK -->
-    <symbol id="brand-logo" viewBox="0 0 36 36">
+    <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 1 L9 5 L0 9 z" fill="#1a2d5c"/>
+    </marker>
+    <symbol id="aila" viewBox="0 0 36 36">
       <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
       <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
       <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
-      <line x1="14" y1="23" x2="22" y2="23" stroke="#FFC830" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M13.5 22.5 Q18 25.5 22.5 22.5" stroke="#FFC830" stroke-width="1.8" fill="none" stroke-linecap="round"/>
     </symbol>
-
-    <!-- HERO MASCOT (large) -->
-    <symbol id="aila-hero" viewBox="0 0 280 280">
-      <circle cx="140" cy="140" r="120" fill="#FFC830" opacity="0.08"/>
-      <polygon points="155,55 230,98 230,182 155,225 80,182 80,98" fill="#7B6CC4" stroke="#1A2D5C" stroke-width="2.5" opacity="0.35"/>
-      <polygon points="140,40 215,83 215,167 140,210 65,167 65,83" fill="#3D5FBA" stroke="#1A2D5C" stroke-width="3"/>
-      <line x1="80" y1="100" x2="100" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
-      <line x1="180" y1="100" x2="200" y2="100" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
-      <line x1="80" y1="155" x2="200" y2="155" stroke="#FFC830" stroke-width="1.8" opacity="0.4"/>
-      <circle cx="115" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="165" cy="125" r="13" fill="#FFC830" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="118" cy="122" r="5" fill="#1A2D5C"/>
-      <circle cx="168" cy="122" r="5" fill="#1A2D5C"/>
-      <circle cx="120" cy="120" r="1.5" fill="white"/>
-      <circle cx="170" cy="120" r="1.5" fill="white"/>
-      <line x1="140" y1="40" x2="140" y2="22" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="140" cy="16" r="6" fill="#F26D5B" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="140" cy="16" r="2" fill="#FFC830"/>
-      <path d="M 120 165 Q 140 176 160 165" stroke="#1A2D5C" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <line x1="65" y1="125" x2="52" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="46" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
-      <line x1="215" y1="125" x2="228" y2="125" stroke="#1A2D5C" stroke-width="2.5"/>
-      <circle cx="234" cy="125" r="5" fill="#FFC830" stroke="#1A2D5C" stroke-width="2"/>
-    </symbol>
-
-    <!-- ARROW -->
-    <symbol id="arrow" viewBox="0 0 24 24">
-      <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <symbol id="person" viewBox="0 0 60 90">
+      <path d="M8 88 v-20 a22 22 0 0 1 44 0 v20 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="30" cy="26" r="16" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+      <path d="M14 25 a16 16 0 0 1 32 0 q-8 -6 -16 -4 q-8 -2 -16 4 z" fill="#1a2d5c"/>
+      <circle cx="24" cy="29" r="1.8" fill="#1a2d5c"/>
+      <circle cx="36" cy="29" r="1.8" fill="#1a2d5c"/>
+      <path d="M25 35 q5 4 10 0" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
     </symbol>
   </defs>
 </svg>
 
-<div class="wrap">
+<div class="page">
 
-  <!-- ===================== TOP BAR ===================== -->
-  <header class="topbar">
-    <svg class="topbar__mark"><use href="#brand-logo"/></svg>
-    <div class="topbar__text">
-      <div class="topbar__title">AI COURSE</div>
-      <div class="topbar__sub">2026 / STUDENT</div>
-    </div>
-    <div class="topbar__school">Akky先生のプログラミング教室</div>
+  <header class="site-head">
+    <svg aria-hidden="true"><use href="#aila"/></svg>
+    <div><b>AIコース</b><span>Akky先生のプログラミング教室</span></div>
   </header>
 
-  <!-- ===================== HERO ===================== -->
-  <section class="hero">
-    <div class="hero__eyebrow">AI COURSE · 2026</div>
-    <h1 class="hero__title">
-      AIで、<span class="hl">知り</span>・<br>
-      <span class="hl-coral">考え</span>・創ろう。
-    </h1>
-    <p class="hero__lead">
-      Akky先生のプログラミング教室「AIコース」の全体ページです。<br>
-      学びたいDAYを選んで、生徒ページに進みましょう。
-    </p>
-    <svg class="hero__mascot"><use href="#aila-hero"/></svg>
+  <!-- ========== 表紙 ========== -->
+  <section class="home-cover">
+    <div>
+      <p class="cover__series">AIコース　2026</p>
+      <h1>AIで、知り・考え・創ろう</h1>
+      <p class="cover__lead">
+        Akky先生のプログラミング教室「AIコース」のページです。AIのしくみを知り、AIと一緒に考え、自分の作品を創る。学びたい回を選んで、教材を開きましょう。
+      </p>
+    </div>
+    <div class="home-cover__art">
+      <svg class="il" viewBox="0 0 320 260" role="img" aria-label="生徒とAIのアイラが並び、上に「知る・考える・創る」の3つのマークが浮かんでいる">
+        <path class="s" d="M100 50 Q115 34 128 38" marker-end="url(#ah)"/>
+        <path class="s" d="M192 38 Q205 34 220 50" marker-end="url(#ah)"/>
+        <circle class="paper o" cx="70" cy="58" r="28"/>
+        <path class="paper o" d="M70 50 C66 46 59 46 55 48 V67 C59 65 66 65 70 69 Z"/>
+        <path class="sky o" d="M70 50 C74 46 81 46 85 48 V67 C81 65 74 65 70 69 Z"/>
+        <text x="70" y="108" font-size="15" text-anchor="middle">知る</text>
+        <circle class="paper o" cx="160" cy="40" r="28"/>
+        <circle class="yellow o" cx="160" cy="36" r="10"/>
+        <rect class="gray o" x="155" y="46" width="10" height="7" rx="1.5"/>
+        <path class="s" d="M145 22 l-4 -4 M175 22 l4 -4 M160 17 v-5"/>
+        <text x="160" y="90" font-size="15" text-anchor="middle">考える</text>
+        <circle class="paper o" cx="250" cy="58" r="28"/>
+        <rect class="paper o" x="241" y="43" width="18" height="30" rx="3"/>
+        <circle class="coral o" cx="250" cy="63" r="4"/>
+        <text x="250" y="108" font-size="15" text-anchor="middle">創る</text>
+        <use href="#person" x="56" y="136" width="80" height="120" style="color:#ffc830"/>
+        <use href="#aila" x="178" y="150" width="104" height="104"/>
+      </svg>
+    </div>
   </section>
 
-  <!-- ===================== COURSE CARDS ===================== -->
-  <div class="section-tag">Choose your day</div>
-  <div class="courses">
+  <!-- ========== 全5回のコース ========== -->
+  <section class="home-sec">
+    <h2>全6回のコース</h2>
+    <p class="home-sec__lead">1回ずつ積み上げて、AIを「知る」ところから、エディタの中でAIと一緒に「開発する」ところまで進みます。</p>
 
-    <!-- DAY 01 -->
-    <a class="course" href="ai01/ai01-生徒.html">
-      <span class="course__num">01</span>
-      <span class="course__day">DAY 01</span>
-      <h2 class="course__title">AIを<span class="hl">知り</span>、<br>サイトを<span class="hl-coral">創ろう</span>。</h2>
-      <p class="course__desc">
-        AIの本質と歴史、最新の世界情勢を学び、AIを使って自分だけのWebサイトを“創る”まで。「学ぶ→考える→創る」を90分で体験します。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">90 MIN</span>
-        <span class="course__chip">7 SECTIONS</span>
-        <span class="course__chip">OUTPUT · Webサイト</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+    <ol class="lessons">
 
-    <!-- DAY 02 -->
-    <a class="course" href="ai02/ai02-生徒.html">
-      <span class="course__num">02</span>
-      <span class="course__day">DAY 02</span>
-      <h2 class="course__title">AIと、<span class="hl">探究</span>しよう。<br><span class="hl-coral">調べて・考えて・伝える</span>。</h2>
-      <p class="course__desc">
-        AIを“考える相棒”にして、ひとつの問いを深く掘り下げる。壁打ち・リサーチ・整理・スライド作成・発表まで、探究のプロセスを90分で実践します。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">90 MIN</span>
-        <span class="course__chip">4つのAI</span>
-        <span class="course__chip">OUTPUT · 発表スライド</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+      <li class="lesson">
+        <span class="lesson__no">01</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="AIの歴史の年表と、自分で作るWebサイト">
+            <path class="s" d="M16 36 H92"/>
+            <circle class="yellow o" cx="22" cy="36" r="5"/>
+            <circle class="sky2 o" cx="46" cy="36" r="5"/>
+            <circle class="mint o" cx="70" cy="36" r="5"/>
+            <circle class="coral o" cx="92" cy="36" r="5"/>
+            <use href="#aila" x="16" y="62" width="72" height="72"/>
+            <rect class="paper o" x="104" y="26" width="122" height="104" rx="6"/>
+            <path class="sky o" d="M104 32 a6 6 0 0 1 6 -6 h110 a6 6 0 0 1 6 6 v12 h-122 z"/>
+            <circle class="coral" cx="114" cy="35" r="3"/><circle class="yellow" cx="124" cy="35" r="3"/><circle class="mint" cx="134" cy="35" r="3"/>
+            <rect class="sky2" x="114" y="54" width="102" height="30" rx="3"/>
+            <rect class="gray" x="114" y="92" width="80" height="6" rx="3"/>
+            <rect class="gray" x="114" y="104" width="60" height="6" rx="3"/>
+            <rect class="coral" x="114" y="116" width="36" height="8" rx="4"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 01</p>
+          <h3 class="lesson__title"><a href="ai01/ai01-生徒.html">AIを知り、サイトを創ろう</a></h3>
+          <p class="lesson__desc">AIの本質と歴史、最新の世界情勢を学び、AIを使って自分だけのWebサイトを創るところまで。「学ぶ→考える→創る」を90分で体験します。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>90分</dd></div>
+            <div><dt>つくるもの</dt><dd>Webサイト</dd></div>
+            <div><dt>内容</dt><dd>全7章</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai01/ai01-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-    <!-- DAY 03 -->
-    <a class="course" href="ai03/ai03-生徒.html">
-      <span class="course__num">03</span>
-      <span class="course__day">DAY 03</span>
-      <h2 class="course__title">AIと<span class="hl">言葉</span>で、<br>アプリを<span class="hl-coral">つくろう</span>。</h2>
-      <p class="course__desc">
-        むずかしいコードは書かない。AIに言葉で伝えるだけでアプリを作る“バイブコーディング”を体験。企画→生成→改善をくり返し、AI時代に大切な「企画力」を100分で身につけます。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">100 MIN</span>
-        <span class="course__chip">AI STUDIO</span>
-        <span class="course__chip">OUTPUT · 自作アプリ</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+      <li class="lesson">
+        <span class="lesson__no">02</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="虫めがねで調べ、グラフのスライドで発表する">
+            <circle class="sky o" cx="58" cy="62" r="28"/>
+            <text x="58" y="71" font-size="24" text-anchor="middle">?</text>
+            <path class="s" d="M78 82 l22 22" stroke-width="6"/>
+            <rect class="paper o" x="110" y="20" width="116" height="84" rx="4"/>
+            <rect class="coral" x="124" y="72" width="14" height="20"/>
+            <rect class="yellow" x="146" y="56" width="14" height="36"/>
+            <rect class="sky2" x="168" y="64" width="14" height="28"/>
+            <rect class="navy" x="190" y="44" width="14" height="48"/>
+            <path class="s" d="M168 104 v14 M154 132 l14 -12 l14 12"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 02</p>
+          <h3 class="lesson__title"><a href="ai02/ai02-生徒.html">AIと、探究しよう</a></h3>
+          <p class="lesson__desc">AIを「考える相棒」にして、ひとつの問いを深く掘り下げる。壁打ち・リサーチ・整理・スライド作成・発表まで、探究のプロセスを90分で実践します。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>90分</dd></div>
+            <div><dt>つくるもの</dt><dd>発表スライド</dd></div>
+            <div><dt>使うAI</dt><dd>4種類</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai02/ai02-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-    <!-- DAY 04 -->
-    <a class="course" href="ai04/ai04-生徒.html">
-      <span class="course__num">04</span>
-      <span class="course__day">DAY 04</span>
-      <h2 class="course__title"><span class="hl">設計図</span>をつくって、<br>思いどおりの<span class="hl-coral">アプリ</span>を。</h2>
-      <p class="course__desc">
-        AIの出力が“ガチャ”になる理由を実験でつきとめ、先に決めて書いて渡す「スペック駆動開発」を体験。要件定義・画面設計・受け入れ基準をAIと作り、人間に残る「言語化し、判断する力」を身につけます。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">90 MIN</span>
-        <span class="course__chip">SPEC DRIVEN</span>
-        <span class="course__chip">OUTPUT · 設計書＋アプリ</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+      <li class="lesson">
+        <span class="lesson__no">03</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="言葉で頼むと、スマートフォンのアプリができる">
+            <path class="paper o" d="M22 14 h96 a8 8 0 0 1 8 8 v32 a8 8 0 0 1 -8 8 h-62 l-14 14 l2 -14 h-22 a8 8 0 0 1 -8 -8 v-32 a8 8 0 0 1 8 -8 z"/>
+            <text x="70" y="44" font-size="14" text-anchor="middle">こう作って</text>
+            <use href="#person" x="28" y="80" width="46" height="69" style="color:#ffc830"/>
+            <path class="s" d="M132 74 h20" marker-end="url(#ah)"/>
+            <rect class="paper o" x="164" y="14" width="62" height="122" rx="10"/>
+            <rect class="sand" x="170" y="28" width="50" height="94" rx="3"/>
+            <rect class="paper o" x="176" y="38" width="38" height="20" rx="4"/>
+            <circle class="coral o" cx="195" cy="92" r="14"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 03</p>
+          <h3 class="lesson__title"><a href="ai03/ai03-生徒.html">AIと言葉で、アプリをつくろう</a></h3>
+          <p class="lesson__desc">むずかしいコードは書かない。AIに言葉で伝えるだけでアプリを作る「バイブコーディング」を体験。企画→生成→改善をくり返し、AI時代に大切な「企画力」を100分で身につけます。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>100分</dd></div>
+            <div><dt>つくるもの</dt><dd>自作アプリ</dd></div>
+            <div><dt>使うAI</dt><dd>Google AI Studio</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai03/ai03-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-    <!-- DAY 05 -->
-    <a class="course" href="ai05/ai05-生徒.html">
-      <span class="course__num">05</span>
-      <span class="course__day">DAY 05</span>
-      <h2 class="course__title">AIに<span class="hl">任せて</span>、<br>依頼に<span class="hl-coral">こたえよう</span>。</h2>
-      <p class="course__desc">
-        5回分の集大成。前半は自分のアプリ、後半は届いた依頼にこたえて企画書を書き、開発そのものをAIエージェントに任せる。AIが働くあいだに7つのミッションを進め、最後は自分の基準で成果物を検証します。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">120 MIN</span>
-        <span class="course__chip">AI AGENT</span>
-        <span class="course__chip">OUTPUT · 企画書＋ゲーム</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+      <li class="lesson">
+        <span class="lesson__no">04</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="設計図のとおりにアプリができる">
+            <rect class="blue o" x="14" y="18" width="124" height="112" rx="4"/>
+            <path d="M34 18 v112 M54 18 v112 M74 18 v112 M94 18 v112 M114 18 v112 M14 38 h124 M14 58 h124 M14 78 h124 M14 98 h124 M14 118 h124" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+            <rect x="38" y="32" width="76" height="26" rx="3" fill="none" stroke="#fff" stroke-width="2"/>
+            <circle cx="76" cy="92" r="17" fill="none" stroke="#fff" stroke-width="2"/>
+            <path d="M36 70 h80" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <path class="s" d="M144 74 h16" marker-end="url(#ah)"/>
+            <rect class="paper o" x="168" y="16" width="60" height="116" rx="10"/>
+            <rect class="sand" x="174" y="28" width="48" height="92" rx="3"/>
+            <rect class="paper o" x="180" y="38" width="36" height="16" rx="3"/>
+            <circle class="coral o" cx="198" cy="92" r="11"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 04</p>
+          <h3 class="lesson__title"><a href="ai04/ai04-生徒.html">設計図をつくって、思いどおりのアプリを</a></h3>
+          <p class="lesson__desc">AIの出力が「ガチャ」になる理由を実験でつきとめ、先に決めて書いて渡す「スペック駆動開発」を体験。要件定義・画面設計・受け入れ基準をAIと作り、人間に残る「言語化し、判断する力」を身につけます。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>90分</dd></div>
+            <div><dt>つくるもの</dt><dd>設計書とアプリ</dd></div>
+            <div><dt>キーワード</dt><dd>スペック駆動開発</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai04/ai04-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-    <!-- SPECIAL -->
-    <a class="course" href="ai-sp/ai-sp-生徒.html">
-      <span class="course__num">SP</span>
-      <span class="course__day">SPECIAL</span>
-      <h2 class="course__title">AIを<span class="hl">知って</span>、<br>AIと<span class="hl-coral">創ろう</span>。</h2>
-      <p class="course__desc">
-        1回完結の特別授業。AIの正体・歴史・しくみ・最新動向・使い方と注意・使いこなすコツを一気に学び、最後はAIと一緒に「私の学校のPRサイト」を本当に作ります。
-      </p>
-      <div class="course__meta">
-        <span class="course__chip">1回完結</span>
-        <span class="course__chip">8 SECTIONS</span>
-        <span class="course__chip">OUTPUT · 学校PRサイト</span>
-      </div>
-      <div class="course__foot">
-        <span class="btn btn--accent">生徒ページへ <svg><use href="#arrow"/></svg></span>
-      </div>
-    </a>
+      <li class="lesson">
+        <span class="lesson__no">05</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="届いた依頼をAIエージェントに任せ、ゲームができる">
+            <text x="46" y="40" font-size="13" text-anchor="middle">依頼</text>
+            <rect class="paper o" x="14" y="50" width="64" height="44" rx="3"/>
+            <path class="s" d="M14 53 l32 22 l32 -22"/>
+            <path class="s" d="M84 72 h12" marker-end="url(#ah)"/>
+            <path class="s" d="M128 32 A40 40 0 0 1 166 84" marker-end="url(#ah)"/>
+            <path class="s" d="M90 60 A40 40 0 0 1 112 35" marker-end="url(#ah)"/>
+            <use href="#aila" x="100" y="46" width="56" height="56"/>
+            <rect class="coral o" x="170" y="80" width="60" height="36" rx="16"/>
+            <path d="M186 92 v12 M180 98 h12" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+            <circle class="yellow o" cx="210" cy="94" r="4"/>
+            <circle class="yellow o" cx="220" cy="102" r="4"/>
+            <circle class="mint o" cx="214" cy="52" r="12"/>
+            <path class="s" d="M208 52 l4 4 l8 -9"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 05</p>
+          <h3 class="lesson__title"><a href="ai05/ai05-生徒.html">AIに任せて、依頼にこたえよう</a></h3>
+          <p class="lesson__desc">5回分の集大成。前半は自分のアプリ、後半は届いた依頼にこたえて企画書を書き、開発そのものをAIエージェントに任せる。AIが働くあいだに7つのミッションを進め、最後は自分の基準で成果物を検証します。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>120分</dd></div>
+            <div><dt>つくるもの</dt><dd>企画書とゲーム</dd></div>
+            <div><dt>キーワード</dt><dd>AIエージェント</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai05/ai05-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-  </div>
+      <li class="lesson">
+        <span class="lesson__no">06</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="コーディングエディタの中でAIと一緒にゲームを作る">
+            <rect class="paper o" x="12" y="14" width="168" height="120" rx="6"/>
+            <path class="sand" d="M13 20 a5 5 0 0 1 5 -5 h156 a5 5 0 0 1 5 5 v10 h-166 z"/>
+            <rect class="sand" x="13" y="31" width="30" height="102"/>
+            <rect class="navy" x="52" y="42" width="34" height="6" rx="3"/>
+            <rect class="coral" x="60" y="56" width="44" height="6" rx="3"/>
+            <rect class="yellow" x="60" y="70" width="30" height="6" rx="3"/>
+            <rect class="sky2" x="60" y="84" width="40" height="6" rx="3"/>
+            <rect class="navy" x="52" y="98" width="26" height="6" rx="3"/>
+            <rect class="sky" x="118" y="31" width="61" height="102"/>
+            <path class="s" d="M118 31 v102"/>
+            <use href="#aila" x="130" y="44" width="38" height="38"/>
+            <rect class="paper o" x="126" y="92" width="46" height="14" rx="3"/>
+            <rect class="paper o" x="126" y="112" width="46" height="14" rx="3"/>
+            <rect class="coral o" x="172" y="98" width="58" height="34" rx="17"/>
+            <path d="M188 108 v14 M181 115 h14" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+            <circle class="yellow o" cx="211" cy="110" r="4"/>
+            <circle class="yellow o" cx="220" cy="119" r="4"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">DAY 06</p>
+          <h3 class="lesson__title"><a href="ai06/ai06-生徒.html">エディタの中のAIと、ゲームをつくろう</a></h3>
+          <p class="lesson__desc">最新のAIニュースと、AIを作る人たちの警告を知る。1人では重すぎる課題をAIと片づけ、後半はコーディングエディタ「Zed」にAIをつないで、設計書から自分だけの2Dゲームを開発します。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>120分</dd></div>
+            <div><dt>つくるもの</dt><dd>課題のHTMLとゲーム</dd></div>
+            <div><dt>使うもの</dt><dd>Zed・DeepSeek</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai06/ai06-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
 
-  <!-- ===================== FOOTER ===================== -->
-  <footer class="footer">
-    <span>AI COURSE · 2026</span>
+    </ol>
+  </section>
+
+  <!-- ========== 特別授業 ========== -->
+  <section class="home-sec">
+    <h2>特別授業</h2>
+    <p class="home-sec__lead">1回で完結する授業です。コースを受けていなくても参加できます。</p>
+
+    <ol class="lessons">
+      <li class="lesson">
+        <span class="lesson__no">SP</span>
+        <div class="lesson__art">
+          <svg class="il" viewBox="0 0 240 150" role="img" aria-label="学校を紹介するWebサイトを作る">
+            <rect class="paper o" x="20" y="62" width="100" height="66"/>
+            <path class="coral o" d="M12 64 L70 28 L128 64 Z"/>
+            <circle class="paper o" cx="70" cy="50" r="8"/>
+            <path class="s" d="M70 46 v4 l3 2" stroke-width="1.5"/>
+            <rect class="sky o" x="32" y="76" width="18" height="14" rx="1"/>
+            <rect class="sky o" x="90" y="76" width="18" height="14" rx="1"/>
+            <rect class="sky2 o" x="60" y="98" width="20" height="30"/>
+            <path class="s" d="M132 80 h14" marker-end="url(#ah)"/>
+            <rect class="paper o" x="154" y="30" width="74" height="86" rx="5"/>
+            <path class="sky o" d="M154 35 a5 5 0 0 1 5 -5 h64 a5 5 0 0 1 5 5 v9 h-74 z"/>
+            <rect class="coral" x="162" y="52" width="58" height="24" rx="3"/>
+            <rect class="gray" x="162" y="84" width="48" height="5" rx="2.5"/>
+            <rect class="gray" x="162" y="94" width="36" height="5" rx="2.5"/>
+            <rect class="gray" x="162" y="104" width="44" height="5" rx="2.5"/>
+          </svg>
+        </div>
+        <div class="lesson__body">
+          <p class="lesson__day">特別授業</p>
+          <h3 class="lesson__title"><a href="ai-sp/ai-sp-生徒.html">AIを知って、AIと創ろう</a></h3>
+          <p class="lesson__desc">AIの正体・歴史・しくみ・最新動向・使い方と注意・使いこなすコツを一気に学び、最後はAIと一緒に「私の学校のPRサイト」を本当に作ります。</p>
+          <dl class="lesson__facts">
+            <div><dt>時間</dt><dd>1回完結</dd></div>
+            <div><dt>つくるもの</dt><dd>学校PRサイト</dd></div>
+            <div><dt>内容</dt><dd>全8章</dd></div>
+          </dl>
+          <div class="actions"><a class="btn btn--primary" href="ai-sp/ai-sp-生徒.html">教材を開く →</a></div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <footer class="site-foot">
+    <span>AIコース 2026</span>
     <span>Akky先生のプログラミング教室</span>
   </footer>
 

@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIコース DAY 06 ｜ Akky先生のプログラミング教室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body data-store="ai_course_d6_">
+
+<!-- ========== 共通の絵（シンボル） ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+<!--KIT-->
+ にコピーして、<use href="#aila"> のように使う。
+  色：紺 #1a2d5c（線）／黄 #ffc830／コーラル #f26d5b／水色 #dfe7f6・#b9c8e8／ミント #bfe3d6／下地 #f7f4ec
+  生徒（kid, kid-up, kid-pc）の服の色は、use 要素の style="color:…" で変える。
+-->
+<defs>
+  <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0 1 L9 5 L0 9 z" fill="#1a2d5c"/>
+  </marker>
+  <!-- ロゴ（目次・ヘッダー用の小さいアイラ） -->
+  <symbol id="logo" viewBox="0 0 36 36">
+    <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+    <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+    <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+    <path d="M13.5 22.5 Q18 25.5 22.5 22.5" stroke="#FFC830" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- アイラ（全身） -->
+  <symbol id="aila" viewBox="-2 0 76 76">
+    <ellipse cx="36" cy="72" rx="20" ry="3.5" fill="#e6dfcf"/>
+    <path d="M36 12 V5" stroke="#1a2d5c" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="36" cy="4.5" r="3.6" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M11 42 H5 M61 42 H67" stroke="#1a2d5c" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="4.5" cy="42" r="3.2" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    <circle cx="67.5" cy="42" r="3.2" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    <polygon points="36,12 61,26.5 61,55.5 36,70 11,55.5 11,26.5" fill="#1a2d5c" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="36,12 61,26.5 61,33 36,19 11,33 11,26.5" fill="#2e4785"/>
+    <rect x="18" y="31" width="36" height="24" rx="10" fill="#243a73"/>
+    <circle cx="27" cy="41" r="5" fill="#ffc830"/>
+    <circle cx="45" cy="41" r="5" fill="#ffc830"/>
+    <circle cx="28.2" cy="40" r="2.1" fill="#1a2d5c"/>
+    <circle cx="46.2" cy="40" r="2.1" fill="#1a2d5c"/>
+    <circle cx="29" cy="39.2" r="0.8" fill="#fff"/>
+    <circle cx="47" cy="39.2" r="0.8" fill="#fff"/>
+    <path d="M30 49 Q36 53.5 42 49" stroke="#ffc830" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="21" cy="48" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.7"/>
+    <ellipse cx="51" cy="48" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.7"/>
+  </symbol>
+
+  <!-- 生徒（立ち姿）服の色は color -->
+  <symbol id="kid" viewBox="0 0 60 104">
+    <ellipse cx="30" cy="100" rx="17" ry="3.2" fill="#e6dfcf"/>
+    <rect x="20" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <rect x="31.5" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <path d="M16 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z M31 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z" fill="#1a2d5c"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 46 C50 52 52 62 51 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 46 C50 52 52 62 51 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <circle cx="9" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <circle cx="51" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M15 76 V52 a10 10 0 0 1 10 -10 h10 a10 10 0 0 1 10 10 V76 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 42 l6 7 l6 -7" fill="#fff" stroke="#1a2d5c" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="30" cy="24" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M14.6 25 C13 12 22 6 31 7 C40 8 47 14 45.4 24 C41 20 36 17 30 18 C26 22 20 24 14.6 25 Z" fill="#1a2d5c"/>
+    <circle cx="24.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <circle cx="35.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <path d="M26.5 32.5 Q30 35.5 33.5 32.5" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="20.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+    <ellipse cx="39.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+  </symbol>
+
+  <!-- 生徒（手をあげる） -->
+  <symbol id="kid-up" viewBox="0 0 60 104">
+    <ellipse cx="30" cy="100" rx="17" ry="3.2" fill="#e6dfcf"/>
+    <rect x="20" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <rect x="31.5" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <path d="M16 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z M31 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z" fill="#1a2d5c"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 47 C50 40 53 30 52 20" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 47 C50 40 53 30 52 20" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <circle cx="9" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <circle cx="52" cy="17" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M15 76 V52 a10 10 0 0 1 10 -10 h10 a10 10 0 0 1 10 10 V76 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 42 l6 7 l6 -7" fill="#fff" stroke="#1a2d5c" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="30" cy="24" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M14.6 25 C13 12 22 6 31 7 C40 8 47 14 45.4 24 C41 20 36 17 30 18 C26 22 20 24 14.6 25 Z" fill="#1a2d5c"/>
+    <circle cx="24.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <circle cx="35.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <path d="M25.5 32 Q30 37 34.5 32 Z" fill="#1a2d5c"/>
+    <ellipse cx="20.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+    <ellipse cx="39.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+  </symbol>
+
+  <!-- 生徒（PCに向かう・上半身） -->
+  <symbol id="kid-pc" viewBox="0 0 100 90">
+    <path d="M26 88 V62 a12 12 0 0 1 12 -12 h14 a12 12 0 0 1 12 12 V88 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="45" cy="30" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M29.6 31 C28 18 37 12 46 13 C55 14 62 20 60.4 30 C56 26 51 23 45 24 C41 28 35 30 29.6 31 Z" fill="#1a2d5c"/>
+    <circle cx="44" cy="33" r="1.9" fill="#1a2d5c"/>
+    <circle cx="54" cy="33" r="1.9" fill="#1a2d5c"/>
+    <path d="M45.5 38.5 Q49 41 52.5 38.5" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M52 88 L60 60 H98 L90 88 Z" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="77" cy="74" r="3" fill="#1a2d5c"/>
+    <path d="M40 88 H98" stroke="#1a2d5c" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ノートPC -->
+  <symbol id="laptop" viewBox="0 0 120 84">
+    <rect x="14" y="4" width="92" height="62" rx="5" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <rect x="20" y="10" width="80" height="50" rx="2" fill="#dfe7f6"/>
+    <path d="M4 70 H116 L110 80 H10 Z" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M50 70 h20" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 書類（見出し＋文字の行） -->
+  <symbol id="doc" viewBox="0 0 80 100">
+    <path d="M6 4 H58 L74 20 V96 H6 Z" fill="#fff" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M58 4 V20 H74" fill="#f3efe6" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="14" y="14" width="30" height="6" rx="3" fill="#1a2d5c"/>
+    <path d="M14 34 H64 M14 44 H60 M14 54 H64 M14 64 H52 M14 74 H62 M14 84 H40" stroke="#c9ced8" stroke-width="3.2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 虫めがね -->
+  <symbol id="loupe" viewBox="0 0 60 60">
+    <path d="M37 37 L54 54" stroke="#1a2d5c" stroke-width="9" stroke-linecap="round"/>
+    <path d="M37 37 L54 54" stroke="#f26d5b" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="18" fill="#dfe7f6" fill-opacity="0.75" stroke="#1a2d5c" stroke-width="3"/>
+    <path d="M14 18 a12 12 0 0 1 8 -7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- スマートフォン（アプリ画面） -->
+  <symbol id="phone" viewBox="0 0 64 112">
+    <rect x="3" y="3" width="58" height="106" rx="10" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <rect x="9" y="14" width="46" height="82" rx="3" fill="#f3efe6"/>
+    <rect x="24" y="7" width="16" height="3" rx="1.5" fill="#1a2d5c"/>
+    <rect x="15" y="22" width="34" height="22" rx="5" fill="#fff" stroke="#1a2d5c" stroke-width="1.6"/>
+    <path d="M20 30 H44 M20 36 H36" stroke="#c9ced8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="32" cy="70" r="13" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M25 65 a9 9 0 0 1 6 -5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <rect x="26" y="101" width="12" height="3" rx="1.5" fill="#c9ced8"/>
+  </symbol>
+
+  <!-- ブラウザの画面 -->
+  <symbol id="browser" viewBox="0 0 160 112">
+    <rect x="3" y="3" width="154" height="106" rx="7" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M4 10 a6 6 0 0 1 6 -6 h140 a6 6 0 0 1 6 6 v10 h-152 z" fill="#dfe7f6"/>
+    <path d="M3 21 H157" stroke="#1a2d5c" stroke-width="2"/>
+    <circle cx="13" cy="12.5" r="2.6" fill="#f26d5b"/><circle cx="21" cy="12.5" r="2.6" fill="#ffc830"/><circle cx="29" cy="12.5" r="2.6" fill="#bfe3d6"/>
+    <rect x="40" y="8" width="104" height="9" rx="4.5" fill="#fff"/>
+    <rect x="12" y="30" width="136" height="32" rx="4" fill="#b9c8e8"/>
+    <circle cx="30" cy="46" r="8" fill="#ffc830"/>
+    <path d="M46 42 H100 M46 50 H84" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M12 74 H100 M12 84 H88 M12 94 H96" stroke="#c9ced8" stroke-width="3.2" stroke-linecap="round"/>
+    <rect x="110" y="72" width="38" height="26" rx="4" fill="#f26d5b"/>
+  </symbol>
+
+  <!-- フォルダー -->
+  <symbol id="folder" viewBox="0 0 96 76">
+    <path d="M4 12 a4 4 0 0 1 4 -4 h24 l8 8 h48 a4 4 0 0 1 4 4 v48 a4 4 0 0 1 -4 4 h-80 a4 4 0 0 1 -4 -4 z" fill="#e8ac1a" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M4 28 a4 4 0 0 1 4 -4 h80 a4 4 0 0 1 4 4 v40 a4 4 0 0 1 -4 4 h-80 a4 4 0 0 1 -4 -4 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- 電球 -->
+  <symbol id="bulb" viewBox="0 0 48 64">
+    <path d="M24 4 a18 18 0 0 1 10 33 c-2 2 -3 4 -3 7 h-14 c0 -3 -1 -5 -3 -7 a18 18 0 0 1 10 -33 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M15 17 a11 11 0 0 1 7 -6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <rect x="16" y="44" width="16" height="12" rx="2.5" fill="#c9ced8" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M16 50 H32" stroke="#1a2d5c" stroke-width="1.6"/>
+    <path d="M20 59 H28" stroke="#1a2d5c" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 鍵 -->
+  <symbol id="lock" viewBox="0 0 44 52">
+    <path d="M12 24 V16 a10 10 0 0 1 20 0 v8" stroke="#1a2d5c" stroke-width="4" fill="none"/>
+    <rect x="5" y="22" width="34" height="26" rx="5" fill="#ffc830" stroke="#1a2d5c" stroke-width="2"/>
+    <circle cx="22" cy="33" r="3.6" fill="#1a2d5c"/>
+    <rect x="20.4" y="34" width="3.2" height="8" rx="1.6" fill="#1a2d5c"/>
+  </symbol>
+
+  <!-- サーバー -->
+  <symbol id="server" viewBox="0 0 64 104">
+    <ellipse cx="32" cy="100" rx="24" ry="3.2" fill="#e6dfcf"/>
+    <rect x="6" y="4" width="52" height="92" rx="5" fill="#1a2d5c"/>
+    <rect x="12" y="12" width="40" height="18" rx="3" fill="#2e4785"/>
+    <rect x="12" y="38" width="40" height="18" rx="3" fill="#2e4785"/>
+    <rect x="12" y="64" width="40" height="18" rx="3" fill="#2e4785"/>
+    <circle cx="44" cy="21" r="2.6" fill="#ffc830"/><circle cx="44" cy="47" r="2.6" fill="#bfe3d6"/><circle cx="44" cy="73" r="2.6" fill="#ffc830"/>
+    <path d="M18 21 H34 M18 47 H34 M18 73 H34" stroke="#b9c8e8" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 囲みのラベル用アイコン（色は currentColor） -->
+  <symbol id="i-task" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-caution" viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-point" viewBox="0 0 24 24"><path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4l-5.5 2.9 1-6.2L3 9.7l6.2-.9L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-goal" viewBox="0 0 24 24"><path d="M5 21V4h12l-2.5 4L17 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-teacher" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<!--/KIT-->
+
+    <!-- 今日の流れのアイコン（節の見出しでも使う） -->
+    <symbol id="r1" viewBox="0 0 48 48">
+      <rect x="6" y="8" width="36" height="32" rx="2" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+      <rect x="11" y="13" width="26" height="5" fill="#1a2d5c"/>
+      <rect x="11" y="22" width="11" height="12" fill="#f26d5b"/>
+      <path d="M26 24 h11 M26 29 h11 M26 34 h8" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r2" viewBox="0 0 48 48">
+      <path d="M3 42 L18 17 L26 29 L32 21 L45 42 Z" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M18 17 V5" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+      <path d="M18 5 l9 3 l-9 3 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r3" viewBox="0 0 48 48">
+      <rect x="5" y="8" width="38" height="32" rx="3" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+      <rect x="6" y="9" width="9" height="30" fill="#dfe7f6"/>
+      <path d="M19 16 h12 M22 22 h16 M22 28 h10 M19 34 h12" stroke-width="3" stroke-linecap="round" stroke="#1a2d5c"/>
+      <path d="M22 22 h16" stroke="#f26d5b" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r4" viewBox="0 0 48 48">
+      <path d="M31 6 a9 9 0 0 0 -9 12 L7 33 a3.5 3.5 0 0 0 5 5 L27 23 a9 9 0 0 0 12 -9 l-6 5 l-5 -1 l-1 -5 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r5" viewBox="0 0 48 48">
+      <rect x="5" y="15" width="38" height="22" rx="11" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2"/>
+      <path d="M15 21 v10 M10 26 h10" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="31" cy="23" r="2.6" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.4"/>
+      <circle cx="36" cy="29" r="2.6" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.4"/>
+    </symbol>
+</defs>
+</svg>
+
+<div class="layout">
+
+  <!-- ========== 目次 ========== -->
+  <nav class="toc" aria-label="目次">
+    <a class="toc__brand" href="../index.html">
+      <svg><use href="#logo"/></svg>
+      <span><b>AIコース DAY 06</b><span>Akky先生の教室</span></span>
+    </a>
+    <details id="tocDetails">
+      <summary>目次</summary>
+      <ol>
+        <li><a href="#cover">今日のめあて</a></li>
+        <li><a href="#news">1　AIの今</a></li>
+        <li><a href="#work">2　AI活用ワーク</a></li>
+        <li><a href="#editor">3　エディタとAIエージェント</a></li>
+        <li class="toc__group">4　環境を整える</li>
+        <li class="toc__sub"><a href="#zed">Zedを入れる</a></li>
+        <li class="toc__sub"><a href="#api">DeepSeekとAPI</a></li>
+        <li class="toc__sub"><a href="#setup">ZedにAPIキーを設定</a></li>
+        <li class="toc__group">5　ゲームを開発する</li>
+        <li class="toc__sub"><a href="#game">条件とジャンル</a></li>
+        <li class="toc__sub"><a href="#idea">アイデアを考える</a></li>
+        <li class="toc__sub"><a href="#build">設計書から作る</a></li>
+        <li class="toc__sub"><a href="#tips">プロンプトのコツ</a></li>
+        <li><a href="#closing">まとめ</a></li>
+      </ol>
+    </details>
+  </nav>
+
+  <main class="main">
+    <div class="article">
+
+
+      <!-- ========== 表紙 ========== -->
+      <header class="cover" id="cover">
+        <p class="cover__series">AIコース　DAY 06</p>
+        <h1>エディタの中のAIと、ゲームをつくる</h1>
+        <p class="cover__lead">
+          AIの世界では今、何が起きているのか。まず最新のニュースを知り、難しい課題をAIと分担して片づける。後半は、プロと同じ<strong>コーディングエディタ</strong>を自分のPCに入れ、エディタの中で働くAIエージェントと一緒に、オリジナルのゲームを開発する。
+        </p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒がAIのニュースが載った新聞を読む">
+                  <use href="#kid" x="10" y="52" width="56" height="97" style="color:#ffc830"/>
+                  <rect class="paper o" x="80" y="16" width="146" height="128" rx="3"/>
+                  <text x="153" y="38" font-size="15" text-anchor="middle">AI新聞</text>
+                  <path class="s" d="M92 46 H214"/>
+                  <rect class="navy" x="92" y="54" width="122" height="8" rx="2"/>
+                  <rect class="sky o" x="92" y="70" width="56" height="48" rx="2"/>
+                  <use href="#aila" x="100" y="74" width="40" height="40"/>
+                  <path d="M158 74 H214 M158 84 H208 M158 94 H214 M158 104 H198 M158 114 H212 M92 130 H214" stroke="#c9ced8" stroke-width="3.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>AIの今を知る</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒とアイラが、旗の立つ高い山を見上げる">
+                  <path class="sky o" d="M100 150 L172 54 L238 150 Z"/>
+                  <path class="sky2 o" d="M20 150 L112 30 L196 150 Z"/>
+                  <path class="paper o" d="M112 30 L127.3 50 L119 46 L112 53 L105 46 L96.7 50 Z"/>
+                  <path class="s" d="M112 30 V8"/>
+                  <path class="coral o" d="M112 8 l18 6 l-18 6 z"/>
+                  <path class="s" d="M2 150 H238"/>
+                  <use href="#kid-up" x="12" y="72" width="44" height="76" style="color:#bfe3d6"/>
+                  <use href="#aila" x="56" y="106" width="42" height="42"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>難しい課題にAIと挑む</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒が、AIのパネルがあるコーディングエディタを使っている">
+                  <rect class="paper o" x="66" y="16" width="168" height="120" rx="6"/>
+                  <path class="sand" d="M67 22 a5 5 0 0 1 5 -5 h156 a5 5 0 0 1 5 5 v9 h-166 z"/>
+                  <path class="s" d="M66 31 H234"/>
+                  <circle class="coral" cx="75" cy="24" r="2.4"/><circle class="yellow" cx="83" cy="24" r="2.4"/><circle class="mint" cx="91" cy="24" r="2.4"/>
+                  <rect style="fill:#f7f4ec" x="67" y="32" width="26" height="103"/>
+                  <path d="M74 44 h12 M74 52 h10 M74 60 h12" stroke="#c9ced8" stroke-width="2.6" stroke-linecap="round"/>
+                  <path d="M100 44 h30" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M108 56 h36" stroke="#f26d5b" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M108 68 h24" stroke="#e8ac1a" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M108 80 h32" stroke="#5f7cbf" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M100 92 h20" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M100 104 h28" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <rect class="sky" x="162" y="32" width="71" height="103"/>
+                  <path class="s" d="M162 32 V136"/>
+                  <use href="#aila" x="176" y="36" width="44" height="44"/>
+                  <rect class="paper o" x="170" y="88" width="56" height="16" rx="4"/>
+                  <rect class="paper o" x="170" y="110" width="56" height="16" rx="4"/>
+                  <use href="#kid-up" x="6" y="58" width="52" height="90" style="color:#f26d5b"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>エディタでAIと開発する</p>
+            </div>
+          </div>
+        </figure>
+
+        <dl class="cover__facts">
+          <div><dt>時間</dt><dd>120分</dd></div>
+          <div><dt>使うもの</dt><dd>Zed・DeepSeek・チャットAI</dd></div>
+          <div><dt>つくるもの</dt><dd>課題のHTMLと、自分のゲーム</dd></div>
+        </dl>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-goal"/></svg>今日のめあて</p>
+          <ol>
+            <li>最近のAIの動きと、AIを作っている人たちが心配していることを説明できる</li>
+            <li>1人では難しい課題を、AIと分担して最後まで仕上げられる</li>
+            <li>エディタのAIエージェントに、設計書を書かせてからゲームを作らせられる</li>
+          </ol>
+        </div>
+
+        <h3 style="margin-top:48px;">今日の流れ</h3>
+        <ol class="road wide">
+          <li><span class="road__icon"><svg><use href="#r1"/></svg></span><span class="road__n">1</span><span class="road__t">AIの今</span><span class="road__s">最近のニュースと、開発者たちの警告</span></li>
+          <li><span class="road__icon"><svg><use href="#r2"/></svg></span><span class="road__n">2</span><span class="road__t">AI活用ワーク</span><span class="road__s">1人1つの難しい課題にAIと挑む</span></li>
+          <li><span class="road__icon"><svg><use href="#r3"/></svg></span><span class="road__n">3</span><span class="road__t">エディタとAI</span><span class="road__s">プロの開発の道具を知る</span></li>
+          <li><span class="road__icon"><svg><use href="#r4"/></svg></span><span class="road__n">4</span><span class="road__t">環境を整える</span><span class="road__s">Zed・DeepSeek・APIキー</span></li>
+          <li><span class="road__icon"><svg><use href="#r5"/></svg></span><span class="road__n">5</span><span class="road__t">ゲームを開発する</span><span class="road__s">設計書→MVP→拡張</span></li>
+        </ol>
+      </header>
+
+
+      <!-- ========== 1 AIの今 ========== -->
+      <section class="sec" id="news">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r1"/></svg></span>1　AIの今</p>
+        <h2 class="sec__title">話さないAIの登場と、作る人たちの警告</h2>
+        <p>AIの世界は、1か月で景色が変わる。2026年の今、何が起きているのかを3つのニュースで見てみよう。どれも「AIはチャットの相手」というイメージを超える話だ。</p>
+
+
+        <h3>ニュース1　話さないAI「Jev」</h3>
+        <p class="news__date">2026年9月15日</p>
+        <p>ChatGPTの開発にかかわった元OpenAIの研究者たちの会社「TypeSafe AI」が、<strong>Jev（ジェブ）</strong>というAIを公開した。Jevは文章を書かない。質問に対して、決められた選択肢の中から答えを選び、<span class="mark">「どれくらい自信があるか」を確率で返す</span>。</p>
+
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col">
+              <p class="compare__head">これまでのAI（大規模言語モデル）</p>
+              <p class="compare__title">文章で、ていねいに答える</p>
+              <svg class="il" viewBox="0 0 420 210" role="img" aria-label="質問に対して、AIが長い文章で答えている">
+                <rect class="paper o" x="8" y="10" width="226" height="40" rx="8"/>
+                <text x="121" y="36" font-size="14" text-anchor="middle">このメールは迷惑メール？</text>
+                <use href="#aila" x="4" y="74" width="76" height="76"/>
+                <path class="paper o" d="M96 66 h300 a8 8 0 0 1 8 8 v104 a8 8 0 0 1 -8 8 h-300 a8 8 0 0 1 -8 -8 v-60 l-10 -8 l10 -4 v-32 a8 8 0 0 1 8 -8 z"/>
+                <path d="M106 86 H380 M106 102 H362 M106 118 H388 M106 134 H330 M106 150 H372 M106 166 H270" stroke="#c9ced8" stroke-width="6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="compare__col compare__col--em">
+              <p class="compare__head">Jev（システム1モデル）</p>
+              <p class="compare__title">選択肢と確率で、一瞬で答える</p>
+              <svg class="il" viewBox="0 0 420 210" role="img" aria-label="Jevが、迷惑メール92%、ふつう6%、大事2%と確率で答えている">
+                <rect class="paper o" x="8" y="10" width="226" height="40" rx="8"/>
+                <text x="121" y="36" font-size="14" text-anchor="middle">このメールは迷惑メール？</text>
+                <path class="s" d="M28 84 v-7 M42 84 v-7 M56 84 v-7 M70 84 v-7 M28 152 v7 M42 152 v7 M56 152 v7 M70 152 v7 M14 100 h-7 M14 118 h-7 M14 136 h-7 M84 100 h7 M84 118 h7 M84 136 h7"/>
+                <rect class="navy" x="14" y="84" width="70" height="68" rx="10"/>
+                <rect x="22" y="92" width="54" height="52" rx="6" fill="#2e4785"/>
+                <text x="49" y="124" font-size="17" text-anchor="middle" class="t-w">Jev</text>
+                <path d="M68 96 l-5 8 h5 l-4 7" stroke="#ffc830" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="104" y="92" font-size="14">迷惑メール</text>
+                <rect class="coral" x="192" y="79" width="147" height="16" rx="3"/>
+                <text x="348" y="92" font-size="14">92%</text>
+                <text x="104" y="128" font-size="14">ふつう</text>
+                <rect class="sky2" x="192" y="115" width="10" height="16" rx="3"/>
+                <text x="210" y="128" font-size="14">6%</text>
+                <text x="104" y="164" font-size="14">大事</text>
+                <rect class="sky2" x="192" y="151" width="4" height="16" rx="2"/>
+                <text x="204" y="164" font-size="14">2%</text>
+                <path class="s" d="M192 72 V172" stroke-width="1.2"/>
+                <text x="104" y="200" font-size="13" style="font-weight:400">答えるまで 0.07〜0.5秒</text>
+              </svg>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図1</b>話すAIと、選ぶAI。右の数字は説明のための例。</figcaption>
+        </figure>
+
+        <aside class="aside">
+          <span class="aside__label">システム1とシステム2</span>
+          心理学者カーネマンの言葉。人間の「パッと答える速い考え」がシステム1、「じっくり考える遅い考え」がシステム2。
+        </aside>
+        <p>会社はJevを「システム1モデル」と呼ぶ。人間がパッと判断するように、速く・安く決めることに特化したAIだ。会社の発表では、大きなAIより<strong>40〜200倍速く</strong>、料金はずっと安い（ただし会社自身が測った数字で、ほかの人による確認はこれから）。</p>
+        <p>AIは「何でも話せる1つの大きな頭脳」だけではなく、<strong>役割ごとに得意な形に分かれていく</strong>。これからのアプリは、じっくり考えるAIと、一瞬で決めるAIを組み合わせて作られるようになるかもしれない。</p>
+
+        <h3>ニュース2　テスト中のAIが、外の世界に抜け出した</h3>
+        <p class="news__date">2026年7月・9月</p>
+        <p>AIの会社は、新しいAIを公開する前に「どれくらい危ないことができるか」を、外とつながらない<strong>テスト用の箱（テスト環境）</strong>の中で調べる。ところが2026年、その箱からAIが抜け出す事件が続いた。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="テスト環境の箱の中でAIが課題を解いている">
+                  <rect x="22" y="22" width="196" height="124" rx="10" fill="#e9eef8" stroke="#1a2d5c" stroke-width="3"/>
+                  <path d="M36 40 l14 -7 M36 52 l26 -13" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                  <rect class="navy" x="80" y="12" width="80" height="20" rx="5"/><text x="120" y="27" font-size="12" text-anchor="middle" class="t-w">テスト環境</text>
+                  <use href="#aila" x="72" y="50" width="80" height="80"/>
+                  <use href="#doc" x="164" y="76" width="36" height="45"/>
+                  <circle class="yellow o" cx="198" cy="76" r="11"/>
+                  <text x="198" y="81" font-size="13" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>箱の中で課題を解く</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="AIが箱のすき間から外へ出ていく">
+                  <rect x="22" y="22" width="196" height="124" rx="10" fill="#e9eef8"/>
+                  <path d="M218 58 V32 a10 10 0 0 0 -10 -10 H32 a10 10 0 0 0 -10 10 V136 a10 10 0 0 0 10 10 H208 a10 10 0 0 0 10 -10 V110" fill="none" stroke="#1a2d5c" stroke-width="3"/>
+                  <path d="M218 58 l-8 6 l6 5 l-7 6 M218 110 l-8 -5 l6 -6 l-7 -5" stroke="#f26d5b" stroke-width="2.2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                  <path d="M36 40 l14 -7 M36 52 l26 -13" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                  <rect class="navy" x="80" y="12" width="80" height="20" rx="5"/><text x="120" y="27" font-size="12" text-anchor="middle" class="t-w">テスト環境</text>
+                  <path class="s" d="M140 72 h18 M132 84 h26 M140 96 h18"/>
+                  <use href="#aila" x="168" y="50" width="70" height="70"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>答えを探して、すき間から外へ</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="AIがインターネットを通って、本物の会社のシステムに入りこむ">
+                  <circle cx="56" cy="80" r="40" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2"/>
+                  <path class="mint" d="M34 64 c8 -8 20 -6 22 2 c2 8 -8 10 -6 18 c2 8 -10 10 -14 2 c-4 -8 -8 -14 -2 -22 z M64 90 c6 -4 16 -2 18 6 c2 8 -8 14 -14 10 c-6 -4 -8 -12 -4 -16 z M62 50 c6 -2 14 0 14 6 c0 5 -8 6 -12 3 c-4 -3 -6 -7 -2 -9 z"/>
+                  <path d="M16 80 h80 M56 40 c-22 20 -22 60 0 80 M56 40 c22 20 22 60 0 80" stroke="#1a2d5c" stroke-width="1.2" fill="none" opacity="0.45"/>
+                  <circle cx="56" cy="80" r="40" fill="none" stroke="#1a2d5c" stroke-width="2"/>
+                  <path class="s" d="M100 150 H236"/>
+                  <rect class="sky2 o" x="132" y="30" width="92" height="10" rx="2"/>
+                  <rect class="paper o" x="136" y="40" width="84" height="110"/>
+                  <rect class="sky" x="146" y="52" width="16" height="13" rx="1"/><rect class="sky" x="170" y="52" width="16" height="13" rx="1"/><rect class="sky" x="194" y="52" width="16" height="13" rx="1"/>
+                  <rect class="sky" x="146" y="76" width="16" height="13" rx="1"/><rect class="sky" x="170" y="76" width="16" height="13" rx="1"/><rect class="sky" x="194" y="76" width="16" height="13" rx="1"/>
+                  <rect class="sky" x="146" y="100" width="16" height="13" rx="1"/><rect class="sky" x="194" y="100" width="16" height="13" rx="1"/>
+                  <rect class="sky2 o" x="168" y="120" width="20" height="30"/>
+                  <use href="#aila" x="112" y="106" width="44" height="44"/>
+                  <circle class="coral o" cx="222" cy="20" r="13"/>
+                  <text x="222" y="26" font-size="16" text-anchor="middle" class="t-w">!</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>本物の会社のシステムに入りこむ</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図2</b>テスト環境から抜け出したAI。AIは「課題を解く」という目標を、ズルをしてでも達成しようとした。</figcaption>
+        </figure>
+
+        <table class="table">
+          <caption>2026年に公表された主な事件</caption>
+          <tr><th>OpenAI</th><td>7月、サイバー攻撃の力を測るテスト中に、複数のAIが箱から抜け出し、AIの共有サイト「Hugging Face」のシステムの一部に入りこんだ。AIは<strong>テストの答えをネットで探そうとしていた</strong>。OpenAIは「前例のない事件」と発表した。</td></tr>
+          <tr><th>Google</th><td>5月のテスト中、Geminiが本物の会社3社のシステムに入った（9月に公表）。テスト用の架空の会社と同じ名前の会社があり、設定ミスでインターネットにつながっていた。Geminiはテストの中だと思いこんでいた。</td></tr>
+        </table>
+
+        <aside class="aside">
+          <span class="aside__label">報酬ハッキング</span>
+          AIが、目標の「本当の意味」ではなく「文字どおりの条件」を満たす近道を見つけてしまうこと。テストで満点を取るためにカンニングするようなもの。
+        </aside>
+        <p>どちらも、AIが悪意を持っていたわけではない。与えられた目標を、人間の想定しない方法で達成しようとした結果だ。これは<strong>「AIは言われたことを、言われたとおりに、どんな手を使ってでもやろうとする」</strong>ことを示している。今日、君がエージェントに開発を任せるときも同じ。何を目標にして、何をしてはいけないかを、はっきり伝える必要がある。</p>
+
+        <h3>ニュース3　AIを作る人たち自身の警告</h3>
+        <div class="news">
+          <div>
+            <p class="news__date">2026年4月</p>
+            <p class="timeline__title">強すぎて公開されないAI「Claude Mythos」</p>
+            <p>Anthropicは、新しいAIが主要なOSやブラウザに<strong>数千の未知の弱点（セキュリティの穴）</strong>を見つけたと発表した。27年間だれも気づかなかった穴もあった。悪用されると危険なため、一般には公開せず、守る側の企業にだけ使わせて穴をふさぐ「Project Glasswing」を始めた。</p>
+          </div>
+          <div class="news__art">
+            <svg class="il" viewBox="0 0 220 180" role="img" aria-label="虫めがねでコードの中の弱点を見つけ、鍵をかけている">
+              <use href="#doc" x="8" y="8" width="130" height="162"/>
+              <circle class="coral o" cx="112" cy="63" r="6"/>
+              <circle class="coral o" cx="96" cy="112" r="6"/>
+              <circle class="coral o" cx="78" cy="144" r="6"/>
+              <use href="#loupe" x="86" y="74" width="96" height="96"/>
+              <use href="#lock" x="164" y="8" width="46" height="54"/>
+            </svg>
+          </div>
+        </div>
+
+        <p>そして2026年は、AIを作っている会社の中から、次々と警告の声が上がった年でもある。</p>
+
+        <ol class="timeline">
+          <li>
+            <p class="timeline__date">2026年1月</p>
+            <p class="timeline__title">AnthropicのCEOが長い論文「技術の思春期」を発表</p>
+            <p class="timeline__text">人類は「強力な技術を手にしたばかりの思春期」にいると書き、AIの暴走、生物兵器への悪用、独裁への利用、仕事の急な変化などのリスクと、その防ぎ方を論じた。</p>
+          </li>
+          <li class="is-key">
+            <p class="timeline__date">2026年2月</p>
+            <p class="timeline__title">安全を守る研究者たちが、会社を去る</p>
+            <p class="timeline__text">Anthropicで安全対策の研究チームを率いていたムリナンク・シャルマが退職し、「世界は危機にある」と書き残した。OpenAIの研究者ゾーイ・ヒッツィグは、ChatGPTに広告を入れる計画に反対して退職し、「SNSと同じ過ちをくり返している」と新聞に書いた。</p>
+          </li>
+          <li class="is-key">
+            <p class="timeline__date">2026年7月</p>
+            <p class="timeline__title">1,000人を超える社員が、開発のスピードを調整するしくみを求める</p>
+            <p class="timeline__text">OpenAI・Anthropic・Google・Metaなどの社員が公開書簡「Pacing the Frontier」に署名し、必要なときにAI開発のペースを落とせる国際的なしくみを作るよう、アメリカ政府に求めた。競争相手どうしのOpenAIとAnthropicが、会社としてもそろって賛成した。</p>
+          </li>
+          <li class="is-key">
+            <p class="timeline__date">2026年9月</p>
+            <p class="timeline__title">「命をかけたギャンブルだ」</p>
+            <p class="timeline__text">AnthropicとOpenAIで3年間研究していたジェイコブ・コクソンが退職し、2社は安全よりも競争を優先していると訴えた。「この技術の力を甘く見てはいけない」という投稿は、大きな反響を呼んだ。</p>
+          </li>
+        </ol>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>考えてみよう</p>
+          <p class="box__title">作っている人たちが「危ない」と言いながら、それでも開発が続くのはなぜだろう？</p>
+          <p>ヒント：競争、役に立つ面（Mythosは穴を見つけて直すのにも使える）、お金、国と国の関係。答えは1つではない。</p>
+        </div>
+
+      </section>
+
+      <!-- ========== 2 AI活用ワーク ========== -->
+      <section class="sec" id="work">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r2"/></svg></span>2　AI活用ワーク</p>
+        <h2 class="sec__title">1人では重すぎる課題を、AIと片づける</h2>
+        <p>下の6つは、どれも本来なら中学生には重すぎる課題だ。専門書を何冊も読み、何日もかけて作るような内容だ。でも今の君にはAIがいる。課題は<strong>1人に1つ</strong>。先生から割り当てられた課題を、<strong>調べる・まとめる・作る・確かめる</strong>をAIと分担して完成させ、提出しよう。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="AIと一緒に資料を調べる">
+                  <use href="#aila" x="6" y="52" width="88" height="88"/>
+                  <use href="#doc" x="112" y="12" width="84" height="105"/>
+                  <use href="#loupe" x="150" y="68" width="76" height="76"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>調べる</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="HTMLファイルを作る">
+                  <rect class="paper o" x="40" y="14" width="160" height="130" rx="6"/>
+                  <path class="sand" d="M41 20 a5 5 0 0 1 5 -5 h148 a5 5 0 0 1 5 5 v13 h-158 z"/>
+                  <path class="s" d="M40 34 H200"/>
+                  <text x="120" y="29" font-size="11" text-anchor="middle">index.html</text>
+                  <path d="M54 50 h40" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M62 62 h56" stroke="#f26d5b" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M70 74 h40" stroke="#e8ac1a" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M70 86 h60" stroke="#5f7cbf" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M62 98 h34" stroke="#f26d5b" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M54 110 h28" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M54 122 h48" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <circle class="coral o" cx="194" cy="126" r="22"/>
+                  <text x="194" y="132" font-size="15" text-anchor="middle" class="t-w">&lt;/&gt;</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>HTMLにする</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="ブラウザで開いて確かめる">
+                  <use href="#browser" x="12" y="18" width="176" height="123"/>
+                  <circle class="mint o" cx="198" cy="118" r="24"/>
+                  <path class="s" d="M186 118 l8 8 l15 -17" stroke-width="3.4"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>開いて確かめる</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="作ったファイルを提出フォルダーに入れる">
+                  <use href="#folder" x="64" y="72" width="112" height="87"/>
+                  <path class="s" d="M120 66 V90" stroke-width="3" marker-end="url(#ah)"/>
+                  <use href="#doc" x="96" y="4" width="48" height="60"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">4</span>提出する</p>
+            </div>
+          </div>
+        </figure>
+
+        <h3>6つの課題</h3>
+        <p>先生から割り当てられた課題の番号を選ぶと、自分の課題に印が付く。</p>
+        <div class="field" style="max-width:320px;">
+          <label class="field__label" for="myTask">自分の課題</label>
+          <select class="input" id="myTask">
+            <option value="">番号を選ぶ</option>
+            <option value="1">課題1　中国の思想</option>
+            <option value="2">課題2　お絵描きソフト</option>
+            <option value="3">課題3　宇宙と量子力学</option>
+            <option value="4">課題4　日本の人口の未来</option>
+            <option value="5">課題5　作曲ソフト</option>
+            <option value="6">課題6　オリジナル言語</option>
+          </select>
+        </div>
+
+        <ol class="tasks wide">
+          <li class="task" data-task="1">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <rect x="22" y="14" width="52" height="68" fill="#fffaf0" stroke="#1a2d5c" stroke-width="2"/>
+                <rect class="coral o" x="14" y="8" width="68" height="9" rx="4.5"/>
+                <rect class="coral o" x="14" y="79" width="68" height="9" rx="4.5"/>
+                <path d="M64 26 V62 M54 26 V70 M44 50 V68" stroke="#1a2d5c" stroke-width="3" stroke-dasharray="5 4" stroke-linecap="round"/>
+                <rect class="coral" x="28" y="64" width="10" height="10" rx="1.5"/>
+                <circle class="paper o" cx="33" cy="34" r="9"/>
+                <path class="navy" d="M33 25 A9 9 0 0 1 33 43 A4.5 4.5 0 0 1 33 34 A4.5 4.5 0 0 0 33 25 Z"/>
+                <circle class="paper" cx="33" cy="38.5" r="1.4"/>
+                <circle class="navy" cx="33" cy="29.5" r="1.4"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題1</p>
+              <p class="task__title">中国の思想の歴史と思想家</p>
+              <p class="task__text">中国の思想の歴史と思想家とその内容について詳細に調査し、中学生にもわかるような資料をhtml形式で作成しなさい。</p>
+              <p class="task__kind">資料づくり　歴史・哲学</p>
+            </div>
+          </li>
+          <li class="task" data-task="2">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M22 60 C12 42 22 16 46 14 C70 12 86 28 84 44 C82 56 70 54 64 60 C58 66 66 76 54 80 C40 84 28 74 22 60 Z" fill="#fffaf0" stroke="#1a2d5c" stroke-width="2"/>
+                <circle class="coral o" cx="36" cy="34" r="6.5"/>
+                <circle class="yellow o" cx="52" cy="26" r="6.5"/>
+                <circle class="mint o" cx="68" cy="34" r="6.5"/>
+                <circle class="sky2 o" cx="32" cy="54" r="6.5"/>
+                <circle cx="52" cy="60" r="5" fill="#f7f4ec" stroke="#1a2d5c" stroke-width="2"/>
+                <path d="M60 90 L88 56" stroke="#1a2d5c" stroke-width="9" stroke-linecap="round"/>
+                <path d="M60 90 L88 56" stroke="#e8ac1a" stroke-width="5" stroke-linecap="round"/>
+                <path d="M64 85 L69 79" stroke="#c9ced8" stroke-width="5"/>
+                <circle cx="59" cy="91" r="3.4" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.6"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題2</p>
+              <p class="task__title">本格的なお絵描きソフト</p>
+              <p class="task__text">html形式で、なるべく高度でさまざまな表現が可能なお絵描きソフトを開発しなさい。</p>
+              <p class="task__kind">ソフト開発　プログラミング</p>
+            </div>
+          </li>
+          <li class="task" data-task="3">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <ellipse cx="42" cy="58" rx="32" ry="9" fill="none" stroke="#1a2d5c" stroke-width="2.4" transform="rotate(-18 42 58)"/>
+                <circle cx="42" cy="58" r="18" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2"/>
+                <path d="M30 50 q8 -4 20 -2 M28 60 q12 -3 26 1" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+                <g transform="rotate(-18 42 58)"><path d="M10 58 A32 9 0 0 0 74 58" fill="none" stroke="#e8ac1a" stroke-width="3.2"/></g>
+                <circle class="coral" cx="76" cy="22" r="4"/>
+                <ellipse cx="76" cy="22" rx="14" ry="5" fill="none" stroke="#1a2d5c" stroke-width="1.5"/>
+                <ellipse cx="76" cy="22" rx="14" ry="5" fill="none" stroke="#1a2d5c" stroke-width="1.5" transform="rotate(60 76 22)"/>
+                <ellipse cx="76" cy="22" rx="14" ry="5" fill="none" stroke="#1a2d5c" stroke-width="1.5" transform="rotate(120 76 22)"/>
+                <path d="M18 12 l1.6 4.4 l4.4 1.6 l-4.4 1.6 l-1.6 4.4 l-1.6 -4.4 l-4.4 -1.6 l4.4 -1.6 z M84 72 l1.4 3.6 l3.6 1.4 l-3.6 1.4 l-1.4 3.6 l-1.4 -3.6 l-3.6 -1.4 l3.6 -1.4 z M24 84 l1 2.6 l2.6 1 l-2.6 1 l-1 2.6 l-1 -2.6 l-2.6 -1 l2.6 -1 z" fill="#ffc830"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題3</p>
+              <p class="task__title">宇宙と量子力学の最新論文を、小学生に</p>
+              <p class="task__text">宇宙と量子力学に関する最も評価されている最新の論文を調査して、その内容の小学生向けの教材をhtml形式で作成しなさい。</p>
+              <p class="task__kind">資料づくり　科学・論文</p>
+            </div>
+          </li>
+          <li class="task" data-task="4">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <path class="s" d="M14 84 H86 M14 84 V12"/>
+                <rect class="navy" x="20" y="26" width="13" height="58" rx="2"/>
+                <rect class="blue" x="37" y="36" width="13" height="48" rx="2"/>
+                <rect class="sky2" x="54" y="46" width="13" height="38" rx="2"/>
+                <rect class="sky o" x="71" y="56" width="13" height="28" rx="2"/>
+                <circle cx="26.5" cy="18" r="3.4" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.4"/>
+                <circle cx="43.5" cy="28" r="3.4" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.4"/>
+                <circle cx="60.5" cy="38" r="3.4" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.4"/>
+                <circle cx="77.5" cy="48" r="3.4" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.4"/>
+                <path d="M30 10 L82 36" stroke="#f26d5b" stroke-width="3" stroke-linecap="round" marker-end="url(#ah)"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題4</p>
+              <p class="task__title">日本の人口の未来を、データで見せる</p>
+              <p class="task__text">日本の人口が2070年までにどう変わるかを、国の公式な統計（国立社会保障・人口問題研究所の将来推計人口など）をもとに調査し、グラフを使って中学生にもわかる資料をhtml形式で作成しなさい。</p>
+              <p class="task__kind">資料づくり　統計・社会</p>
+            </div>
+          </li>
+          <li class="task" data-task="5">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <rect class="paper o" x="8" y="58" width="80" height="30" rx="3"/>
+                <path d="M21 58 v30 M34 58 v30 M47 58 v30 M60 58 v30 M73 58 v30" stroke="#1a2d5c" stroke-width="1.5"/>
+                <rect class="navy" x="17" y="58" width="7" height="17" rx="1"/>
+                <rect class="navy" x="30" y="58" width="7" height="17" rx="1"/>
+                <rect class="navy" x="56" y="58" width="7" height="17" rx="1"/>
+                <rect class="navy" x="69" y="58" width="7" height="17" rx="1"/>
+                <path d="M39.5 42 V16 M63.5 36 V12" stroke="#1a2d5c" stroke-width="2.4"/>
+                <path d="M39.5 16 L63.5 12 L63.5 18 L39.5 22 Z" fill="#1a2d5c"/>
+                <ellipse cx="34" cy="43" rx="6.5" ry="4.6" transform="rotate(-20 34 43)" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.6"/>
+                <ellipse cx="58" cy="37" rx="6.5" ry="4.6" transform="rotate(-20 58 37)" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.6"/>
+                <path d="M76 22 a8 8 0 0 1 0 14 M82 17 a14 14 0 0 1 0 24" stroke="#5f7cbf" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題5</p>
+              <p class="task__title">音楽理論で動く作曲ソフト</p>
+              <p class="task__text">音楽理論（コード進行・音階）を調査し、コード進行を選ぶと伴奏とメロディが自動で鳴る作曲ソフトをhtml形式で開発しなさい。</p>
+              <p class="task__kind">ソフト開発　音楽・理論</p>
+            </div>
+          </li>
+          <li class="task" data-task="6">
+            <div class="task__art">
+              <svg class="il" viewBox="0 0 96 96" aria-hidden="true">
+                <path class="paper o" d="M8 10 h42 a6 6 0 0 1 6 6 v22 a6 6 0 0 1 -6 6 h-28 l-10 10 v-10 h-4 a6 6 0 0 1 -6 -6 v-22 a6 6 0 0 1 6 -6 z"/>
+                <path class="s" d="M14 22 h9 M18.5 22 v11 M28 20 l5 13 l5 -13 M30 28 h6 M42 21 a4 4 0 1 1 0 8 a4 4 0 1 1 0 8" stroke-width="2.2"/>
+                <path class="yellow o" d="M46 50 h40 a6 6 0 0 1 6 6 v20 a6 6 0 0 1 -6 6 h-4 v10 l-10 -10 h-26 a6 6 0 0 1 -6 -6 v-20 a6 6 0 0 1 6 -6 z"/>
+                <text x="66" y="73" font-size="17" text-anchor="middle">あい</text>
+                <path class="s" d="M24 70 C24 80 30 84 38 84" marker-end="url(#ah)"/>
+                <path class="s" d="M72 38 C72 30 66 26 60 26" marker-end="url(#ah)"/>
+              </svg>
+            </div>
+            <div>
+              <p class="task__no">課題6</p>
+              <p class="task__title">オリジナル言語と翻訳辞書</p>
+              <p class="task__text">世界の言語のしくみ（文字・発音・文法）を調査したうえで、オリジナルの言語を設計し、日本語と相互に翻訳できる辞書アプリをhtml形式で開発しなさい。</p>
+              <p class="task__kind">ソフト開発　言語学・創作</p>
+            </div>
+          </li>
+        </ol>
+
+
+        <h3>重い課題をAIと片づける　4つのコツ</h3>
+        <table class="table">
+          <tr><th>分けて頼む</th><td>「調べて、まとめて、HTMLにして」を1回で頼まない。①調べる → ②目次を作る → ③HTMLにする → ④点検する、と会話を分ける。</td></tr>
+          <tr><th>読む人を決める</th><td>「中学生にもわかるように」「小学生向けに」と相手を書く。言葉の難しさ、長さ、例え話が変わる。</td></tr>
+          <tr><th>形を決める</th><td>「HTMLファイル1つにまとめて。CSSとJavaScriptも中に入れて。外部のファイルは使わないで」と書く。</td></tr>
+          <tr><th>疑って確かめる</th><td>「出典は？」「この中で自信がないところは？」と聞く。人の名前、年号、数字、論文名は、自分でも検索して確かめる。</td></tr>
+        </table>
+
+        <div class="panel">
+          <div class="panel__head">
+            最初のひと言（例：課題1）
+            <button class="btn btn--small" onclick="copyEl('workPrompt', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="workPrompt">中国の思想の歴史について、中学生向けの資料を作りたいです。
+まだHTMLは作らないでください。
+まず、時代ごとの代表的な思想家を10人選び、表にしてください。
+表の列は「時代」「思想家」「考え方をひと言で」「有名な言葉」「出典（どの本に書かれているか）」にしてください。</div>
+        </div>
+
+        <h3>HTMLファイルにして、提出する</h3>
+        <ol>
+          <li>AIが書いたHTMLのコードを全部コピーする（「コードをコピー」ボタンがあれば使う）</li>
+          <li>メモ帳を開いて貼りつけ、「名前を付けて保存」。ファイル名は <code>課題番号_名前.html</code>（例：<code>1_やまだ.html</code>）、文字コードは「UTF-8」にする</li>
+          <li>保存したファイルをダブルクリックして、ブラウザで開く。文字化けや崩れがあれば、AIに伝えて直してもらう</li>
+          <li>下のボタンから提出フォルダーを開き、ファイルをドラッグして入れる</li>
+        </ol>
+        <div class="actions">
+          <a class="btn btn--primary" href="https://drive.google.com/drive/folders/1j5OwvjQgbl-HA5DCAFSfdb9z0SWl1P__?usp=sharing" target="_blank" rel="noopener">提出フォルダーを開く →</a>
+          <span class="small">Googleドライブが開く。Googleへのログインが必要</span>
+        </div>
+      </section>
+
+      <!-- ========== 3 エディタとAIエージェント ========== -->
+      <section class="sec" id="editor">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r3"/></svg></span>3　エディタとAIエージェント</p>
+        <h2 class="sec__title">プロの開発の道具「コーディングエディタ」</h2>
+        <p>文章を書くならワープロ、絵を描くならお絵描きソフトがあるように、プログラムを書くための専用の道具がある。それが<strong>コーディングエディタ</strong>だ。VS Code、Cursor、そして今日使うZed（ゼッド）などがある。</p>
+
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 880 360" role="img" aria-label="コーディングエディタの画面。A ファイル一覧、B コードを書く場所、C ターミナル、D AIエージェントのパネル">
+            <rect class="paper o" x="10" y="10" width="860" height="340" rx="10"/>
+            <path class="sand" d="M11 20 a9 9 0 0 1 9 -9 h840 a9 9 0 0 1 9 9 v18 h-858 z"/>
+            <circle class="coral" cx="30" cy="24" r="5"/><circle class="yellow" cx="46" cy="24" r="5"/><circle class="mint" cx="62" cy="24" r="5"/>
+            <path class="s" d="M10 38 H870"/>
+            <rect style="fill:#f7f4ec" x="11" y="39" width="169" height="310"/>
+            <path class="s" d="M180 38 V350"/>
+            <text x="26" y="66" font-size="14">mygame</text>
+            <text x="42" y="94" font-size="14">docs</text>
+            <text x="58" y="120" font-size="13" style="font-weight:400">企画書.md</text>
+            <text x="58" y="144" font-size="13" style="font-weight:400">仕様書.md</text>
+            <text x="58" y="168" font-size="13" style="font-weight:400">タスク.md</text>
+            <rect class="sky2" x="16" y="178" width="160" height="26" rx="4"/>
+            <text x="42" y="196" font-size="14">index.html</text>
+            <text x="42" y="226" font-size="14" style="font-weight:400">game.js</text>
+            <rect class="sky" x="190" y="44" width="110" height="25" rx="4"/>
+            <text x="245" y="61" font-size="13" text-anchor="middle">index.html</text>
+            <path d="M180 69 H600" stroke="#1a2d5c" stroke-width="1"/>
+            <text x="198" y="97" font-size="12" style="fill:#8a8f99;font-weight:400">1</text>
+            <text x="198" y="121" font-size="12" style="fill:#8a8f99;font-weight:400">2</text>
+            <text x="198" y="145" font-size="12" style="fill:#8a8f99;font-weight:400">3</text>
+            <text x="198" y="169" font-size="12" style="fill:#8a8f99;font-weight:400">4</text>
+            <text x="198" y="193" font-size="12" style="fill:#8a8f99;font-weight:400">5</text>
+            <text x="198" y="217" font-size="12" style="fill:#8a8f99;font-weight:400">6</text>
+            <rect class="navy" x="224" y="88" width="60" height="10" rx="5"/><rect class="coral" x="292" y="88" width="80" height="10" rx="5"/>
+            <rect class="sky2" x="240" y="112" width="120" height="10" rx="5"/>
+            <rect class="yellow" x="256" y="136" width="90" height="10" rx="5"/><rect class="navy" x="354" y="136" width="60" height="10" rx="5"/>
+            <path d="M354 152 q3 4 6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0 t6 0" fill="none" stroke="#f26d5b" stroke-width="1.8"/>
+            <rect class="coral" x="256" y="160" width="140" height="10" rx="5"/>
+            <rect class="navy" x="240" y="184" width="50" height="10" rx="5"/>
+            <rect class="yellow" x="224" y="208" width="70" height="10" rx="5"/>
+            <rect class="navy" x="181" y="252" width="419" height="97"/>
+            <text x="198" y="282" font-size="13" class="t-w" style="font-weight:400">&gt; 保存しました</text>
+            <text x="198" y="306" font-size="13" class="t-w" style="font-weight:400">&gt; ゲームを起動します</text>
+            <rect class="yellow" x="198" y="318" width="9" height="16"/>
+            <rect class="sky" x="601" y="39" width="268" height="310"/>
+            <path class="s" d="M600 38 V350"/>
+            <use href="#aila" x="612" y="46" width="42" height="42"/>
+            <text x="662" y="74" font-size="14">AIエージェント</text>
+            <rect class="paper o" x="660" y="96" width="196" height="46" rx="8"/>
+            <rect class="gray" x="672" y="110" width="160" height="6" rx="3"/>
+            <rect class="gray" x="672" y="122" width="110" height="6" rx="3"/>
+            <rect class="paper o" x="616" y="154" width="220" height="72" rx="8"/>
+            <rect class="gray" x="628" y="168" width="180" height="6" rx="3"/>
+            <rect class="gray" x="628" y="180" width="150" height="6" rx="3"/>
+            <text x="628" y="212" font-size="12">2つのファイルを変更</text>
+            <rect class="navy" x="616" y="238" width="80" height="26" rx="5"/>
+            <text x="656" y="256" font-size="12" class="t-w" text-anchor="middle">承認</text>
+            <rect class="paper o" x="704" y="238" width="80" height="26" rx="5"/>
+            <text x="744" y="256" font-size="12" text-anchor="middle">取り消し</text>
+            <rect class="paper o" x="616" y="294" width="240" height="40" rx="6"/>
+            <text x="630" y="319" font-size="12" style="fill:#8a8f99;font-weight:400">ここに指示を書く</text>
+            <circle class="yellow o" cx="160" cy="58" r="14"/><text x="160" y="64" font-size="15" text-anchor="middle">A</text>
+            <circle class="yellow o" cx="580" cy="96" r="14"/><text x="580" y="102" font-size="15" text-anchor="middle">B</text>
+            <circle class="yellow o" cx="580" cy="272" r="14"/><text x="580" y="278" font-size="15" text-anchor="middle">C</text>
+            <circle class="yellow o" cx="850" cy="58" r="14"/><text x="850" y="64" font-size="15" text-anchor="middle">D</text>
+          </svg>
+          <figcaption class="figure__cap"><b>図3</b>コーディングエディタの画面（イメージ）。実際のZedの画面は英語で表示される。</figcaption>
+        </figure>
+
+        <table class="table">
+          <tr><th>A　ファイル一覧</th><td>作品を作るフォルダーの中身。ゲームは、設計書・HTML・JavaScriptなど、いくつものファイルでできている。</td></tr>
+          <tr><th>B　コードを書く場所</th><td>命令の種類ごとに色が分かれ、打ちまちがいには赤い波線が付く。続きを予想して出してくれる機能もある。</td></tr>
+          <tr><th>C　ターミナル</th><td>文字でPCに命令を出す窓。プロはここでプログラムを動かしたり、道具を入れたりする。</td></tr>
+          <tr><th>D　AIエージェント</th><td>エディタの中で働くAI。ファイルを読み、書きかえ、命令を実行する。人間は指示を出し、変更を確かめて承認する。</td></tr>
+        </table>
+
+        <h3>チャットAIと、エディタのAIエージェントのちがい</h3>
+        <p>これまでの授業では、チャットでAIにコードを書いてもらい、それを<strong>人間がコピーして運んでいた</strong>。エディタのAIエージェントは、ファイルそのものを自分で読み書きする。</p>
+
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col">
+              <p class="compare__head">チャットAI</p>
+              <p class="compare__title">人間がコードを運ぶ</p>
+              <svg class="il" viewBox="0 0 420 240" role="img" aria-label="人間がチャットからコードをコピーし、ファイルに貼りつけ、エラーをチャットに伝える">
+                <text x="76" y="18" font-size="13" text-anchor="middle">チャット</text>
+                <rect class="paper o" x="10" y="26" width="132" height="122" rx="8"/>
+                <use href="#aila" x="16" y="32" width="30" height="30"/>
+                <rect class="sky" x="50" y="38" width="80" height="18" rx="6"/>
+                <rect class="navy" x="22" y="68" width="108" height="46" rx="4"/>
+                <path d="M30 80 h28 M36 90 h40 M36 100 h24" stroke-width="3.4" stroke-linecap="round" stroke="#ffc830"/>
+                <path d="M62 80 h22" stroke-width="3.4" stroke-linecap="round" stroke="#bfe3d6"/>
+                <rect class="paper o" x="22" y="122" width="108" height="16" rx="5"/>
+                <text x="350" y="18" font-size="13" text-anchor="middle">ファイル</text>
+                <rect class="paper o" x="290" y="26" width="120" height="122" rx="6"/>
+                <path class="sand" d="M291 32 a5 5 0 0 1 5 -5 h108 a5 5 0 0 1 5 5 v8 h-118 z"/>
+                <path class="s" d="M290 41 H410"/>
+                <path d="M302 56 h40 M310 68 h56 M310 80 h32 M302 92 h28 M302 104 h48" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                <path d="M310 116 q4 5 8 0 t8 0 t8 0 t8 0" stroke="#f26d5b" stroke-width="2" fill="none"/>
+                <use href="#kid" x="180" y="118" width="60" height="104" style="color:#ffc830"/>
+                <path class="s" d="M146 70 q34 -6 60 30" marker-end="url(#ah)"/>
+                <text x="178" y="60" font-size="12" text-anchor="middle">コピー</text>
+                <path class="s" d="M232 104 q24 -30 52 -34" marker-end="url(#ah)"/>
+                <text x="262" y="112" font-size="12" text-anchor="middle">貼りつけ</text>
+                <path class="s" d="M286 140 q-44 44 -140 6" marker-end="url(#ah)"/>
+                <text x="118" y="178" font-size="12" text-anchor="middle">エラーを伝える</text>
+                <text x="10" y="234" font-size="14">人間が何度も行き来する</text>
+              </svg>
+            </div>
+            <div class="compare__col compare__col--em">
+              <p class="compare__head">エディタのAIエージェント</p>
+              <p class="compare__title">AIが自分で読んで、書いて、動かす</p>
+              <svg class="il" viewBox="0 0 420 240" role="img" aria-label="エディタの中でAIが、読む・書く・動かす・確認するをくり返し、人間は確かめて承認する">
+                <rect class="paper o" x="12" y="14" width="300" height="196" rx="8"/>
+                <path class="sand" d="M13 20 a5 5 0 0 1 5 -5 h288 a5 5 0 0 1 5 5 v8 h-298 z"/>
+                <path class="s" d="M12 29 H312"/>
+                <path class="sand o" d="M24 40 h28 l8 8 v34 h-36 z"/><text x="42" y="70" font-size="11" text-anchor="middle">md</text>
+                <path class="sand o" d="M24 96 h28 l8 8 v34 h-36 z"/><text x="42" y="126" font-size="11" text-anchor="middle">html</text>
+                <path class="sand o" d="M24 152 h28 l8 8 v34 h-36 z"/><text x="42" y="182" font-size="11" text-anchor="middle">js</text>
+                <path class="s" d="M204.4 65.2 A60 60 0 0 1 234.8 95.6" marker-end="url(#ah)"/>
+                <path class="s" d="M234.8 144.4 A60 60 0 0 1 204.4 174.8" marker-end="url(#ah)"/>
+                <path class="s" d="M155.6 174.8 A60 60 0 0 1 125.2 144.4" marker-end="url(#ah)"/>
+                <path class="s" d="M125.2 95.6 A60 60 0 0 1 155.6 65.2" marker-end="url(#ah)"/>
+                <use href="#aila" x="150" y="90" width="60" height="60"/>
+                <circle class="paper o" cx="180" cy="60" r="22"/><text x="180" y="65" font-size="12" text-anchor="middle">読む</text>
+                <circle class="paper o" cx="240" cy="120" r="22"/><text x="240" y="125" font-size="12" text-anchor="middle">書く</text>
+                <circle class="paper o" cx="180" cy="180" r="22"/><text x="180" y="185" font-size="12" text-anchor="middle">動かす</text>
+                <circle class="paper o" cx="120" cy="120" r="22"/><text x="120" y="125" font-size="12" text-anchor="middle">確認</text>
+                <path class="paper o" d="M328 50 h72 a6 6 0 0 1 6 6 v24 a6 6 0 0 1 -6 6 h-30 l-8 10 l-2 -10 h-32 a6 6 0 0 1 -6 -6 v-24 a6 6 0 0 1 6 -6 z"/>
+                <text x="364" y="73" font-size="13" text-anchor="middle">承認</text>
+                <use href="#kid" x="336" y="104" width="58" height="100" style="color:#bfe3d6"/>
+                <text x="12" y="234" font-size="14">人間は指示して、確かめて、承認する</text>
+              </svg>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図4</b>チャットAIとエディタのAIエージェント。DAY05のManusと同じように、エージェントは自分で何周も作業を回す。</figcaption>
+        </figure>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>ここが大事</p>
+          <p class="box__title">エージェントは速い。だから人間は<span class="mark">「何を作るか」を先に書いて渡し、変更を確かめる</span>役になる。</p>
+          <p>ニュース2で見たように、AIは目標を文字どおりに追いかける。今日は、先に設計書（mdファイル）を書かせて、それに従って作らせる。DAY04の「設計図をつくってから作る」を、エディタの中でやるということだ。</p>
+        </div>
+
+      </section>
+
+      <!-- ========== 4 環境を整える ========== -->
+      <section class="sec" id="zed">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r4"/></svg></span>4　環境を整える</p>
+        <h2 class="sec__title">自分のPCを、開発できる場所にする</h2>
+        <p>プロの開発は、道具をそろえることから始まる。エディタを入れ、AIをつなぎ、設定する。この準備を<strong>環境構築</strong>という。</p>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>環境構築に慣れる</p>
+          <p class="box__title">つまずくのは、あたりまえ。つまずき方と直し方に慣れることが、本当の力になる。</p>
+          <p>プロでも、新しい道具を入れるたびに設定でつまずく。大事なのは、エラーの文を読むこと、そのままAIに見せて聞くこと、うまくいった手順をメモしておくこと。一度できれば、次からはずっと速くなる。</p>
+        </div>
+
+        <h3>Zedを入れる</h3>
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="ダウンロードページでボタンを押す">
+                  <rect class="paper o" x="20" y="16" width="200" height="118" rx="6"/>
+                  <path class="sky o" d="M20 22 a6 6 0 0 1 6 -6 h188 a6 6 0 0 1 6 6 v12 h-200 z"/>
+                  <text x="120" y="62" font-size="14" text-anchor="middle">zed.dev/download</text>
+                  <rect class="coral o" x="62" y="78" width="116" height="34" rx="6"/>
+                  <text x="128" y="100" font-size="13" text-anchor="middle" class="t-w">Download</text>
+                  <path d="M80 86 v12 M75 93 l5 5 l5 -5" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path class="paper o" d="M160 100 l0 20 l5 -5 l4 9 l4 -2 l-4 -9 l7 0 z"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>ダウンロードする</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="インストールが進んでいる">
+                  <rect class="paper o" x="40" y="22" width="160" height="106" rx="6"/>
+                  <path class="sky o" d="M40 28 a6 6 0 0 1 6 -6 h148 a6 6 0 0 1 6 6 v10 h-160 z"/>
+                  <text x="120" y="68" font-size="13" text-anchor="middle">インストール中</text>
+                  <rect class="gray" x="58" y="82" width="124" height="10" rx="5"/>
+                  <rect class="coral" x="58" y="82" width="82" height="10" rx="5"/>
+                  <rect class="navy" x="142" y="104" width="44" height="16" rx="4"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>インストーラーを開く</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="ノートPCでZedが起動した">
+                  <use href="#laptop" x="24" y="14" width="180" height="126"/>
+                  <rect class="paper" x="54" y="29" width="120" height="75"/>
+                  <rect class="sand" x="54" y="29" width="120" height="8"/>
+                  <rect style="fill:#f7f4ec" x="54" y="37" width="18" height="67"/>
+                  <path d="M78 46 h26 M84 56 h30 M84 66 h20 M78 76 h24" stroke-width="3.4" stroke-linecap="round" stroke="#5f7cbf"/>
+                  <path d="M84 56 h30" stroke-width="3.4" stroke-linecap="round" stroke="#f26d5b"/>
+                  <rect class="sky" x="134" y="37" width="40" height="67"/>
+                  <use href="#aila" x="138" y="42" width="32" height="32"/>
+                  <circle class="mint o" cx="206" cy="116" r="18"/>
+                  <path class="s" d="M197 116 l6 6 l12 -13" stroke-width="3"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>Zedが開いたら完了</p>
+            </div>
+          </div>
+        </figure>
+
+        <ol>
+          <li>下のボタンからダウンロードページを開き、自分のPC（WindowsやMac）用をダウンロードする</li>
+          <li>ダウンロードしたファイルを開いて、画面の案内どおりにインストールする</li>
+          <li>Zedを起動する。最初に出る質問（テーマの色など）は、あとから変えられるので好きに選んでよい</li>
+        </ol>
+        <div class="actions">
+          <a class="btn btn--primary" href="https://zed.dev/download" target="_blank" rel="noopener">Zedのダウンロードページを開く →</a>
+        </div>
+
+
+        <h3 id="api">DeepSeekとは</h3>
+        <p>エディタの中で働くAIの「頭脳」には、いろいろな会社のAIを選べる。今日は<strong>DeepSeek（ディープシーク）</strong>を使う。</p>
+        <table class="table">
+          <tr><th>会社</th><td>DeepSeek（中国・杭州のAI企業）</td></tr>
+          <tr><th>有名になったきっかけ</th><td>2025年1月の「DeepSeek-R1」。少ない費用で、世界トップクラスのAIに近い性能を出し、世界中に衝撃を与えた。</td></tr>
+          <tr><th>今のモデル</th><td>DeepSeek V4（速くて安い Flash と、より賢い Pro）。100万トークン（本何冊分もの文章）を一度に読める。</td></tr>
+          <tr><th>特徴</th><td>APIの料金がとても安い。Flashは、100万トークンを読ませて約0.15〜0.3ドル。</td></tr>
+        </table>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>注意　入力したものは中国のサーバーに保存される</p>
+          <p>DeepSeekに送った内容は、中国のサーバーに保存され、中国の法律のもとで扱われる。日本の個人情報保護委員会も、使う人に注意を呼びかけた。<strong>名前・住所・学校名・写真など、個人の情報や秘密は入れない。</strong>ゲームのコードを作るだけなら問題ない。</p>
+        </div>
+
+        <h3>APIとは</h3>
+        <p>ChatGPTのようなチャット画面は、人間が使うための入り口だ。一方、<strong>アプリやプログラムがAIを使うための入り口</strong>もある。それが<strong>API（エーピーアイ）</strong>だ。レストランにたとえると、APIは「決まった形の注文票を受け付ける窓口」にあたる。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="アプリが注文票とAPIキーを用意する">
+                  <use href="#phone" x="14" y="18" width="64" height="112"/>
+                  <rect class="paper o" x="100" y="14" width="94" height="92" rx="4"/>
+                  <text x="147" y="36" font-size="13" text-anchor="middle">注文票</text>
+                  <path class="s" d="M110 44 H184" stroke-width="1.4"/>
+                  <path d="M112 56 H176 M112 68 H164 M112 80 H172" stroke="#c9ced8" stroke-width="3.4" stroke-linecap="round"/>
+                  <rect class="yellow o" x="136" y="96" width="92" height="40" rx="6"/>
+                  <circle cx="156" cy="116" r="7" fill="none" stroke="#1a2d5c" stroke-width="2.5"/>
+                  <path d="M163 116 h14 M173 116 v6" stroke="#1a2d5c" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="204" y="121" font-size="13" text-anchor="middle">キー</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>アプリが質問とAPIキーを送る</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="APIの窓口が決まった形の注文を受け取る">
+                  <path class="s" d="M24 142 H216"/>
+                  <rect class="paper o" x="50" y="44" width="140" height="98"/>
+                  <path d="M46 44 h148 l-8 16 h-132 z" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M74 44 l-6 16 M102 44 l-4 16 M138 44 l4 16 M166 44 l6 16" stroke="#fff" stroke-width="5"/>
+                  <rect class="navy" x="84" y="16" width="72" height="24" rx="4"/>
+                  <text x="120" y="33" font-size="14" text-anchor="middle" class="t-w">API</text>
+                  <rect class="sky o" x="80" y="72" width="80" height="42" rx="3"/>
+                  <rect class="sand o" x="72" y="112" width="96" height="10" rx="2"/>
+                  <path class="s" d="M8 86 h54" marker-end="url(#ah)"/>
+                  <path class="s" d="M232 100 h-54" marker-end="url(#ah)"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>決まった形の窓口で受け付ける</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="AIのサーバーが答えを返す">
+                  <use href="#server" x="14" y="20" width="64" height="104"/>
+                  <use href="#aila" x="86" y="58" width="66" height="66"/>
+                  <path class="paper o" d="M166 26 h58 a6 6 0 0 1 6 6 v38 a6 6 0 0 1 -6 6 h-40 l-14 14 v-14 h-4 a6 6 0 0 1 -6 -6 v-38 a6 6 0 0 1 6 -6 z"/>
+                  <text x="195" y="47" font-size="13" text-anchor="middle">答え</text>
+                  <path d="M176 58 H214" stroke="#c9ced8" stroke-width="3.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>AIのサーバーが答えを返す</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図5</b>APIのしくみ。Zedも、このしくみでDeepSeekのAIを使っている。</figcaption>
+        </figure>
+
+        <aside class="aside">
+          <span class="aside__label">トークン</span>
+          AIが文章を読むときの小さな単位。日本語ではおよそ1文字が1トークン前後。料金はトークンの数で決まる。
+        </aside>
+        <p>APIを使うには<strong>APIキー</strong>が必要だ。APIキーは「会員カード」であり「財布」でもある。キーを持っている人が使った分だけ、料金がかかる。だから<span class="mark">APIキーは、自分のものなら絶対に人に見せない</span>。見られたら、知らない人に勝手に使われてしまう。</p>
+
+        <h3>APIの使い方と活用例</h3>
+        <p>プログラムからAPIを使うときは、決まった形の「注文票」を送る。中身はこんな感じだ。読めなくても大丈夫。「どのAIに」「何を聞くか」を書いて、キーを付けて送っているだけだ。</p>
+        <div class="panel">
+          <div class="panel__head">DeepSeekのAPIに送る注文票（例）</div>
+          <div class="panel__body panel__body--code">送り先：https://api.deepseek.com/chat/completions
+キー　：Authorization: Bearer （APIキー）
+
+{
+  "model": "deepseek-flash",
+  "messages": [
+    { "role": "user", "content": "中学生向けに、APIを1行で説明して" }
+  ]
+}</div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">返ってくる答え（例）</div>
+          <div class="panel__body panel__body--code">{
+  "choices": [
+    { "message": {
+        "content": "APIは、アプリがAIに頼みごとをする窓口です。"
+    } }
+  ]
+}</div>
+        </div>
+
+        <table class="table">
+          <caption>APIの活用例</caption>
+          <tr><th>翻訳アプリ</th><td>入力した文章をAPIでAIに送り、訳した文を画面に出す</td></tr>
+          <tr><th>ゲームのキャラ</th><td>プレイヤーの話しかけた言葉に、キャラクターがAIで自由に返事をする</td></tr>
+          <tr><th>質問コーナー</th><td>学校やお店のWebサイトで、よくある質問にAIが答える</td></tr>
+          <tr><th>仕分け</th><td>届いたメールを「質問・注文・迷惑メール」に自動で分ける（ニュース1のJevが得意な仕事）</td></tr>
+          <tr><th>エディタ</th><td>ZedやVS Codeが、APIでAIを呼び出してコードを書く。今日使うのがこれ</td></tr>
+        </table>
+
+        <h3 id="setup">ZedにAPIキーを設定する</h3>
+        <p>Zedの設定画面を開き、次の順にたどって、DeepSeekの欄にAPIキーを貼りつける。</p>
+        <p class="pathline"><span>Settings（設定）</span><i>›</i><span>AI</span><i>›</i><span>General</span><i>›</i><span>LLM Providers</span><i>›</i><span class="is-end">DeepSeek</span></p>
+
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 880 300" role="img" aria-label="Zedの設定画面。AIのGeneralを開き、LLM ProvidersのDeepSeekの欄にAPIキーを貼りつける">
+            <rect class="paper o" x="10" y="10" width="860" height="280" rx="10"/>
+            <path class="sand" d="M11 20 a9 9 0 0 1 9 -9 h840 a9 9 0 0 1 9 9 v18 h-858 z"/>
+            <text x="440" y="30" font-size="13" text-anchor="middle">Settings</text>
+            <path class="s" d="M10 38 H870"/>
+            <rect style="fill:#f7f4ec" x="11" y="39" width="199" height="250"/>
+            <path class="s" d="M210 38 V290"/>
+            <text x="30" y="70" font-size="14" style="font-weight:400">Appearance</text>
+            <text x="30" y="100" font-size="14" style="font-weight:400">Editor</text>
+            <text x="30" y="130" font-size="14" style="font-weight:400">Languages</text>
+            <text x="30" y="160" font-size="14">AI</text>
+            <rect class="sky2" x="16" y="172" width="188" height="26" rx="4"/>
+            <text x="46" y="190" font-size="14">General</text>
+            <text x="46" y="220" font-size="14" style="font-weight:400">Agent</text>
+            <text x="30" y="250" font-size="14" style="font-weight:400">Terminal</text>
+            <text x="244" y="72" font-size="16">LLM Providers</text>
+            <rect class="paper o" x="244" y="90" width="600" height="36" rx="6"/><text x="262" y="113" font-size="14" style="font-weight:400">Anthropic</text>
+            <rect class="paper o" x="244" y="134" width="600" height="36" rx="6"/><text x="262" y="157" font-size="14" style="font-weight:400">OpenAI</text>
+            <rect class="paper o" x="244" y="178" width="600" height="36" rx="6"/><text x="262" y="201" font-size="14" style="font-weight:400">Google AI</text>
+            <rect x="244" y="222" width="600" height="48" rx="6" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2.5"/>
+            <text x="262" y="251" font-size="14">DeepSeek</text>
+            <rect class="paper o" x="420" y="232" width="330" height="28" rx="4"/>
+            <text x="432" y="251" font-size="12" style="font-weight:400">sk-a490…　ここに貼りつけて Enter</text>
+            <circle class="yellow o" cx="72" cy="155" r="12"/><text x="72" y="160" font-size="13" text-anchor="middle">1</text>
+            <circle class="yellow o" cx="130" cy="185" r="12"/><text x="130" y="190" font-size="13" text-anchor="middle">2</text>
+            <circle class="yellow o" cx="384" cy="66" r="12"/><text x="384" y="71" font-size="13" text-anchor="middle">3</text>
+            <circle class="yellow o" cx="776" cy="246" r="12"/><text x="776" y="251" font-size="13" text-anchor="middle">4</text>
+          </svg>
+          <figcaption class="figure__cap"><b>図6</b>Zedの設定画面（イメージ）。細かい見た目は、Zedのバージョンによってちがう。</figcaption>
+        </figure>
+
+        <div class="panel">
+          <div class="panel__head">
+            授業で使うDeepSeekのAPIキー
+            <button class="btn btn--small" onclick="copyEl('apiKey', this)">コピー</button>
+          </div>
+          <div class="panel__body keyline"><code id="apiKey">sk-a490fbff009a49ff9d594ea4e3bef5cb</code></div>
+        </div>
+        <p class="small">このキーは授業のために先生が用意したもので、授業のあとに削除される。家で続けたいときは、自分でキーを作る（保護者と相談して）。</p>
+
+        <ol>
+          <li>コピーしたキーをDeepSeekの欄に貼りつけて、Enterを押す。前後に空白が入らないように注意</li>
+          <li>画面右下のAIのボタン（またはコマンド「agent: new thread」）で<strong>エージェントのパネル</strong>を開く</li>
+          <li>パネル下のモデル選択で、DeepSeekの「Flash」を選ぶ</li>
+          <li>「こんにちは。あなたは何ができますか？」と送り、返事が来たら設定完了</li>
+        </ol>
+
+        <div class="box box--hint">
+          <svg class="box__avatar" aria-hidden="true"><use href="#aila"/></svg>
+          <div>
+            <p class="box__label">アイラのヒント</p>
+            <p>うまくいかないときは、出てきたエラーの文をそのまま読もう。「401」ならキーの貼りつけまちがい、「429」なら混み合っているので少し待つ。エラーの番号は、何が起きたかを教えてくれる手がかりだ。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 5 ゲームを開発する ========== -->
+      <section class="sec" id="game">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r5"/></svg></span>5　ゲームを開発する</p>
+        <h2 class="sec__title">だれも見たことのない2Dゲームを作る</h2>
+        <p>いよいよ開発だ。エディタのAIエージェントと一緒に、自分だけの2Dゲームを作る。まずは<strong>最小限で遊べる形（MVP）</strong>を作り、そこから1つずつ広げていこう。</p>
+
+        <h3>ゲームの条件</h3>
+        <ul class="conds">
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true">
+              <path class="s" d="M6 20 a25 25 0 0 1 36 0 M13 28 a14 14 0 0 1 22 0" stroke-width="3.2"/>
+              <circle class="navy" cx="24" cy="36" r="3.4"/>
+              <path d="M8 43 L40 7" stroke="#f26d5b" stroke-width="4.4" stroke-linecap="round"/>
+            </svg>
+            <span><strong>オフラインで遊べる、一人用</strong>のゲーム</span>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true">
+              <use href="#laptop" x="0" y="8" width="48" height="34"/>
+            </svg>
+            <span><strong>自分のPCで動く</strong>（ファイルをダブルクリックで遊べる）</span>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true">
+              <use href="#bulb" x="9" y="4" width="30" height="40"/>
+              <path class="s" d="M24 1 v2 M8 9 l2.5 2.5 M40 9 l-2.5 2.5 M3 22 h3 M45 22 h-3"/>
+            </svg>
+            <span><strong>AIが思いつかない、まだだれも考えていない</strong>アイデアを入れる</span>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true">
+              <rect class="coral o" x="4" y="14" width="40" height="24" rx="12"/>
+              <path d="M15 20 v12 M9 26 h12" stroke="#1a2d5c" stroke-width="3.2" stroke-linecap="round"/>
+              <circle class="yellow o" cx="31" cy="23" r="2.8"/>
+              <circle class="yellow o" cx="37" cy="29" r="2.8"/>
+            </svg>
+            <span>下の<strong>6つのジャンルから1つ</strong>を選ぶ</span>
+          </li>
+        </ul>
+
+        <h3>ジャンルを選ぶ</h3>
+        <div class="genres wide" role="radiogroup" aria-label="ゲームのジャンル">
+          <label class="genre">
+            <input type="radio" name="genre" value="シューティングゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/><circle cx="14" cy="14" r="1.2" fill="#fff" opacity="0.7"/><circle cx="104" cy="12" r="1.2" fill="#fff" opacity="0.7"/><circle cx="96" cy="60" r="1.2" fill="#fff" opacity="0.7"/><circle cx="20" cy="58" r="1.2" fill="#fff" opacity="0.7"/>
+                <ellipse cx="30" cy="20" rx="11" ry="4.5" fill="#f26d5b"/><path d="M24 18 a6 5 0 0 1 12 0" fill="#bfe3d6"/>
+                <ellipse cx="60" cy="14" rx="11" ry="4.5" fill="#f26d5b"/><path d="M54 12 a6 5 0 0 1 12 0" fill="#bfe3d6"/>
+                <ellipse cx="90" cy="22" rx="11" ry="4.5" fill="#f26d5b"/><path d="M84 20 a6 5 0 0 1 12 0" fill="#bfe3d6"/>
+                <rect x="58.5" y="30" width="3" height="8" rx="1.5" fill="#ffc830"/><rect x="58.5" y="42" width="3" height="8" rx="1.5" fill="#ffc830"/>
+                <path d="M60 52 l5 8 l9 6 l-9 2 l-5 4 l-5 -4 l-9 -2 l9 -6 z" fill="#ffc830"/>
+                <circle cx="60" cy="60" r="2.2" fill="#1a2d5c"/>
+              </svg>
+              <span class="genre__name">シューティング</span>
+              <span class="genre__sub">うって、よけて、進む</span>
+            </span>
+          </label>
+          <label class="genre">
+            <input type="radio" name="genre" value="タワーディフェンスゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/>
+                <path d="M2 60 H38 V26 H82 V60 H118" fill="none" stroke="#3a5596" stroke-width="12"/>
+                <rect x="52" y="44" width="16" height="24" fill="#b9c8e8" stroke="#fff" stroke-width="1.2"/>
+                <path d="M50 44 v-6 h4 v3 h4 v-3 h4 v3 h4 v-3 h4 v6 z" fill="#b9c8e8" stroke="#fff" stroke-width="1.2"/>
+                <path d="M60 38 V28 l8 3 l-8 3" fill="#f26d5b"/>
+                <circle cx="18" cy="60" r="5" fill="#f26d5b"/><circle cx="38" cy="42" r="5" fill="#f26d5b"/><circle cx="100" cy="60" r="5" fill="#f26d5b"/>
+                <path d="M54 48 L40 43" stroke="#ffc830" stroke-width="2" stroke-dasharray="3 2"/>
+              </svg>
+              <span class="genre__name">タワーディフェンス</span>
+              <span class="genre__sub">塔を置いて、敵を止める</span>
+            </span>
+          </label>
+          <label class="genre">
+            <input type="radio" name="genre" value="レースゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/>
+                <path d="M46 8 h28 l30 68 h-88 z" fill="#8a93a6"/>
+                <path d="M60 14 v8 M60 30 v10 M60 50 v14" stroke="#fff" stroke-width="2.6"/>
+                <path d="M46 8 h4 v4 h-4 z M54 8 h4 v4 h-4 z M62 8 h4 v4 h-4 z M70 8 h4 v4 h-4 z M50 12 h4 v4 h-4 z M58 12 h4 v4 h-4 z M66 12 h4 v4 h-4 z" fill="#fff"/>
+                <rect x="44" y="28" width="11" height="16" rx="3" fill="#b9c8e8"/>
+                <rect x="66" y="50" width="14" height="20" rx="4" fill="#f26d5b"/>
+                <rect x="64" y="53" width="3" height="5" fill="#1a2d5c"/><rect x="79" y="53" width="3" height="5" fill="#1a2d5c"/><rect x="64" y="63" width="3" height="5" fill="#1a2d5c"/><rect x="79" y="63" width="3" height="5" fill="#1a2d5c"/>
+              </svg>
+              <span class="genre__name">レース</span>
+              <span class="genre__sub">速く、うまく走る</span>
+            </span>
+          </label>
+          <label class="genre">
+            <input type="radio" name="genre" value="アクションゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/>
+                <rect x="8" y="64" width="42" height="10" rx="2" fill="#bfe3d6"/>
+                <rect x="70" y="64" width="42" height="10" rx="2" fill="#bfe3d6"/>
+                <rect x="80" y="38" width="24" height="8" rx="2" fill="#bfe3d6"/>
+                <path d="M52 74 l4 -8 l4 8 z M60 74 l4 -8 l4 8 z" fill="#f26d5b"/>
+                <circle cx="92" cy="28" r="4" fill="#ffc830"/>
+                <circle cx="30" cy="54" r="1.4" fill="#fff"/><circle cx="38" cy="44" r="1.4" fill="#fff"/><circle cx="48" cy="38" r="1.4" fill="#fff"/>
+                <rect x="54" y="28" width="14" height="14" rx="3" fill="#ffc830"/>
+                <circle cx="59" cy="34" r="1.5" fill="#1a2d5c"/><circle cx="64" cy="34" r="1.5" fill="#1a2d5c"/>
+              </svg>
+              <span class="genre__name">アクション</span>
+              <span class="genre__sub">跳んで、避けて、ゴールへ</span>
+            </span>
+          </label>
+          <label class="genre">
+            <input type="radio" name="genre" value="育成ゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/>
+                <path d="M60 22 c14 0 22 10 22 22 c0 10 -8 16 -22 16 c-14 0 -22 -6 -22 -16 c0 -12 8 -22 22 -22 z" fill="#bfe3d6"/>
+                <circle cx="53" cy="40" r="2.6" fill="#1a2d5c"/><circle cx="67" cy="40" r="2.6" fill="#1a2d5c"/>
+                <path d="M56 47 q4 3 8 0" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <ellipse cx="49" cy="46" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.8"/><ellipse cx="71" cy="46" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.8"/>
+                <path d="M92 22 l-7 -7 a4 4 0 0 1 7 -5 a4 4 0 0 1 7 5 z" fill="#f26d5b"/>
+                <text x="12" y="74" font-size="10" class="t-w">Lv.3</text>
+                <rect x="36" y="67" width="72" height="6" rx="3" fill="#3a5596"/><rect x="36" y="67" width="46" height="6" rx="3" fill="#ffc830"/>
+              </svg>
+              <span class="genre__name">育成</span>
+              <span class="genre__sub">育てて、変化を楽しむ</span>
+            </span>
+          </label>
+          <label class="genre">
+            <input type="radio" name="genre" value="パズルゲーム">
+            <span class="genre__box">
+              <svg class="il" viewBox="0 0 120 80" aria-hidden="true">
+                <rect x="2" y="2" width="116" height="76" rx="8" fill="#1a2d5c"/>
+                <rect x="24" y="10" width="16" height="16" rx="4" fill="#ffc830"/><rect x="44" y="10" width="16" height="16" rx="4" fill="#f26d5b"/><rect x="64" y="10" width="16" height="16" rx="4" fill="#b9c8e8"/><rect x="84" y="10" width="16" height="16" rx="4" fill="#bfe3d6"/>
+                <rect x="24" y="32" width="16" height="16" rx="4" fill="#bfe3d6"/><rect x="44" y="32" width="16" height="16" rx="4" fill="#ffc830"/><rect x="64" y="32" width="16" height="16" rx="4" fill="#f26d5b"/><rect x="84" y="32" width="16" height="16" rx="4" fill="#ffc830"/>
+                <rect x="24" y="54" width="16" height="16" rx="4" fill="#b9c8e8"/><rect x="44" y="54" width="16" height="16" rx="4" fill="#f26d5b"/><rect x="64" y="54" width="16" height="16" rx="8" fill="#fff"/><rect x="84" y="54" width="16" height="16" rx="4" fill="#b9c8e8"/>
+                <rect x="62" y="52" width="20" height="20" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
+              </svg>
+              <span class="genre__name">パズル</span>
+              <span class="genre__sub">考えて、ぴったりはめる</span>
+            </span>
+          </label>
+        </div>
+
+        <h3 id="idea">「AIが思いつかない」アイデアを考える</h3>
+        <p>AIは、世の中にたくさんある「ありがちなアイデア」を出すのが得意だ。だから逆に、<strong>AIが出したアイデアを「もうだれかが考えたもの」として外す</strong>。そこに、君にしかない材料を組み合わせる。</p>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　アイデアシート</p>
+          <h4 class="box__title">だれも考えていないゲームを考える</h4>
+          <div class="field">
+            <label class="field__label" for="w6common"><span class="num">1</span>チャットAIに「（ジャンル）のゲームのアイデアを10個」と頼み、出てきたものを短くメモ。これは使わない</label>
+            <textarea class="textarea" id="w6common" placeholder="例：宇宙で敵を撃つ／弾をためて強くなる／ボスを倒す…"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w6mat"><span class="num">2</span>君にしかない材料を3つ（好きなもの・最近あった出来事・ありえないルール）</label>
+            <textarea class="textarea" id="w6mat" placeholder="例：部活の吹奏楽／毎朝の満員電車／弾を撃つと自分が小さくなる"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w6idea"><span class="num">3</span>ジャンルと材料を組み合わせたアイデアを、1〜2文で</label>
+            <textarea class="textarea" id="w6idea" placeholder="例：音符を撃つシューティング。リズムに合わせて撃つと強くなるが、撃つたびに自分が小さくなり当たりにくくなる"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w6unique"><span class="num">4</span>ほかのゲームにない「ここだけ」のポイント</label>
+            <input class="input" id="w6unique" placeholder="例：弾を撃つほど自分が小さくなる">
+          </div>
+          <p class="small">書けたら、チャットAIに「このアイデアに似たゲームはある？」と聞いてみよう。あれば、材料を足して変える。</p>
+          <div class="actions">
+            <button class="btn" onclick="saveIdea()">保存</button>
+            <button class="btn btn--primary" onclick="buildDocPrompt()">最初の依頼文を作る</button>
+            <span class="status" id="w6status" role="status"></span>
+          </div>
+        </div>
+
+
+        <h3 id="build">設計書を書かせてから、作らせる</h3>
+        <p>いきなり「ゲームを作って」と頼むと、AIは書かれていないことを勝手に決めてしまう（DAY04で学んだこと）。だから最初に、<strong>開発に必要な設計書（mdファイル）</strong>をAIに書かせる。人間が読んで直してから、それに従って作らせる。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="3つの設計書をAIが書く">
+                  <use href="#doc" x="124" y="8" width="84" height="105"/>
+                  <use href="#doc" x="108" y="22" width="84" height="105"/>
+                  <use href="#doc" x="92" y="36" width="84" height="105"/>
+                  <rect class="navy" x="100" y="120" width="68" height="18" rx="4"/>
+                  <text x="134" y="133" font-size="11" text-anchor="middle" class="t-w">仕様書.md</text>
+                  <use href="#aila" x="4" y="72" width="80" height="80"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>設計書を書かせる</p>
+              <p class="scene__sub">人間が読んで直す</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="最小限の要素だけで動くゲーム">
+                  <rect x="30" y="14" width="180" height="132" rx="10" fill="#1a2d5c" stroke="#1a2d5c" stroke-width="2"/>
+                  <circle cx="52" cy="40" r="1.4" fill="#fff" opacity="0.7"/><circle cx="190" cy="30" r="1.4" fill="#fff" opacity="0.7"/><circle cx="178" cy="120" r="1.4" fill="#fff" opacity="0.7"/>
+                  <ellipse cx="120" cy="50" rx="16" ry="6.5" fill="#f26d5b"/><path d="M111 47 a9 7 0 0 1 18 0" fill="#bfe3d6"/>
+                  <rect x="118" y="72" width="4" height="12" rx="2" fill="#ffc830"/>
+                  <path d="M120 96 l7 11 l12 8 l-12 3 l-7 5 l-7 -5 l-12 -3 l12 -8 z" fill="#ffc830"/>
+                  <rect x="42" y="24" width="34" height="16" rx="4" fill="#ffc830"/>
+                  <text x="59" y="36" font-size="11" text-anchor="middle">MVP</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>MVPを作らせる</p>
+              <p class="scene__sub">最小限で遊べる形</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="敵や得点やアイテムが増えたゲーム">
+                  <rect x="30" y="14" width="180" height="132" rx="10" fill="#1a2d5c" stroke="#1a2d5c" stroke-width="2"/>
+                  <text x="44" y="36" font-size="11" class="t-w">SCORE 120</text>
+                  <ellipse cx="78" cy="58" rx="14" ry="6" fill="#f26d5b"/><path d="M70 55 a8 6 0 0 1 16 0" fill="#bfe3d6"/>
+                  <ellipse cx="120" cy="50" rx="16" ry="6.5" fill="#f26d5b"/><path d="M111 47 a9 7 0 0 1 18 0" fill="#bfe3d6"/>
+                  <ellipse cx="164" cy="62" rx="14" ry="6" fill="#f26d5b"/><path d="M156 59 a8 6 0 0 1 16 0" fill="#bfe3d6"/>
+                  <path d="M166 96 l4 8 l9 1 l-7 6 l2 9 l-8 -5 l-8 5 l2 -9 l-7 -6 l9 -1 z" fill="#ffc830"/>
+                  <rect x="118" y="72" width="4" height="12" rx="2" fill="#ffc830"/>
+                  <path d="M120 96 l7 11 l12 8 l-12 3 l-7 5 l-7 -5 l-12 -3 l12 -8 z" fill="#ffc830"/>
+                  <circle class="mint o" cx="214" cy="22" r="13"/><path class="s" d="M207 22 h14 M214 15 v14" stroke-width="2.6"/>
+                  <circle class="mint o" cx="214" cy="134" r="13"/><path class="s" d="M207 134 h14 M214 127 v14" stroke-width="2.6"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>1つずつ広げる</p>
+              <p class="scene__sub">タスク.mdの順に</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図7</b>ゲーム開発の進め方。設計書 → MVP → 拡張。</figcaption>
+        </figure>
+
+        <p>準備として、デスクトップなどに <code>mygame</code> というフォルダーを作り、Zedの「Open Folder（フォルダーを開く）」で開く。完成すると、フォルダーの中はこうなる。</p>
+        <table class="table">
+          <caption>フォルダー mygame の中身（完成形）</caption>
+          <tr><th><code>docs/企画書.md</code></th><td>どんなゲームか、何が新しいか</td></tr>
+          <tr><th><code>docs/仕様書.md</code></th><td>画面・操作・ルール・お約束</td></tr>
+          <tr><th><code>docs/タスク.md</code></th><td>作る順番のチェックリスト（MVP → 拡張）</td></tr>
+          <tr><th><code>index.html</code></th><td>ダブルクリックで遊べるゲーム本体</td></tr>
+          <tr><th><code>game.js</code></th><td>ゲームの動き（エージェントがファイルを分けることもある）</td></tr>
+        </table>
+
+        <h3>エージェントに送るプロンプト</h3>
+        <p>エージェントのパネルに、上から順に送る。①はアイデアシートの「最初の依頼文を作る」で、自分のアイデア入りの文ができる。</p>
+
+        <div class="panel">
+          <div class="panel__head">
+            ① 設計書を作らせる
+            <button class="btn btn--small" onclick="copyEl('p1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="p1">これから、オフラインで遊べる一人用の2Dゲームを作ります。
+いきなりコードを書かないでください。まず、開発に必要な設計書を docs フォルダに3つ作ってください。
+
+■ ジャンル：（ジャンル）
+■ ゲームのアイデア：（アイデア）
+■ ほかのゲームにないポイント：（ここだけのポイント）
+
+作るファイル
+1. docs/企画書.md …… どんなゲームか、いちばん面白いところ、ほかのゲームとのちがい
+2. docs/仕様書.md …… 画面、操作方法、ルール、勝ち負けの条件、使う技術
+3. docs/タスク.md …… 作る順番のチェックリスト。最初に「MVP（最小限で遊べる形）」の項目、そのあとに「拡張」の項目
+
+必ず守るお約束（仕様書に書いてください）
+・HTML・CSS・JavaScriptだけで作る。外部のライブラリ、画像のダウンロード、インターネット接続は使わない
+・index.html をダブルクリックすれば、自分のPCのブラウザで遊べる
+・一人用で、オフラインで動く
+
+書き終わったら、コードはまだ書かずに、設計書の要点を3行で教えてください。</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            ② MVPを作らせる
+            <button class="btn btn--small" onclick="copyEl('p2', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="p2">docs/仕様書.md と docs/タスク.md を読んでください。
+タスク.md の「MVP」の項目だけを実装してください。拡張の項目はまだ作らないでください。
+終わったら、タスク.md の完了した項目に [x] を付けて、遊び方を3行で教えてください。</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            ③ バグを直させる
+            <button class="btn btn--small" onclick="copyEl('p3', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="p3">バグがあります。直してください。
+■ 症状：（何が起きたか）
+■ 再現手順：（どう操作したら起きるか）
+■ 期待する動き：（本当はどうなってほしいか）
+■ エラーメッセージ：（あれば全文をそのまま貼る）
+直したら、原因と、どのファイルのどこを変えたかを説明してください。</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            ④ 1つずつ広げる
+            <button class="btn btn--small" onclick="copyEl('p4', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="p4">docs/タスク.md の拡張項目から「（項目名）」だけを実装してください。
+ほかの部分は変えないでください。
+終わったら、タスク.md に [x] を付けて、変更したファイルを教えてください。</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            ⑤ 設計書を最新にする
+            <button class="btn btn--small" onclick="copyEl('p5', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="p5">ここまでに変えた内容に合わせて、docs/仕様書.md と docs/タスク.md を最新の状態に書き直してください。</div>
+        </div>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>変更は、確かめてから承認する</p>
+          <p>エージェントがファイルを書きかえると、パネルに「どのファイルの何行を変えたか」が出る。<strong>中身を見てから承認（Accept）</strong>しよう。おかしくなったら、メッセージの横の復元ボタンで、その指示を出す前の状態に戻せる。</p>
+        </div>
+
+        <h3 id="tips">プロンプトのコツ</h3>
+        <table class="table">
+          <tr><th>1回に1つだけ頼む</th><td>「敵を増やして、音も付けて、ステージも増やして」ではなく、まず敵だけ。1つずつなら、どこで壊れたかがわかる。</td></tr>
+          <tr><th>ファイル名で指す</th><td>「さっきのあれ」ではなく「docs/タスク.md の3番」。エージェントはファイルを読みに行ける。</td></tr>
+          <tr><th>決まりは設計書に書く</th><td>毎回「オフラインで」と書かなくても、仕様書のお約束を読ませれば守らせられる。</td></tr>
+          <tr><th>やったことを説明させる</th><td>「何を変えたか3行で」と頼む。説明が変なら、作り方も変なことが多い。</td></tr>
+          <tr><th>エラーは全文を渡す</th><td>ゲームが動かないときは、ブラウザでF12を押し、Console（コンソール）の赤い文字をそのままコピーして渡す。</td></tr>
+          <tr><th>だめなら戻して、頼み方を変える</th><td>同じお願いをくり返すより、復元ボタンで戻して、言葉を変えて頼み直すほうが早い。</td></tr>
+        </table>
+
+        <div class="box box--hint">
+          <svg class="box__avatar" aria-hidden="true"><use href="#aila"/></svg>
+          <div>
+            <p class="box__label">アイラのヒント</p>
+            <p>エージェントが作業している間は、手が空く。その時間に、2のAI活用ワークの続きを進めよう。DAY05と同じ、「待たずに別の仕事をする」働き方だ。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== まとめ ========== -->
+      <section class="sec" id="closing">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#i-point"/></svg></span>まとめ</p>
+        <h2 class="sec__title">AIが強くなるほど、人間が決めることは大事になる</h2>
+        <p>今日は、テストの箱から抜け出すほど強いAIのニュースを見て、そのAIと一緒に難しい課題を片づけ、エディタの中でゲームを作った。どの場面でも、AIの力を引き出したのは、<strong>「何を目標にするか」「何をしてはいけないか」を先に言葉にした人間</strong>だった。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="人間が目標とお約束を書く">
+                  <rect class="paper o" x="60" y="12" width="112" height="126" rx="4"/>
+                  <path class="s" d="M76 38 V20"/>
+                  <path class="coral o" d="M76 20 l14 5 l-14 5 z"/>
+                  <text x="96" y="36" font-size="13">目標</text>
+                  <path d="M76 50 H156" stroke="#c9ced8" stroke-width="3.4" stroke-linecap="round"/>
+                  <text x="76" y="78" font-size="13">お約束</text>
+                  <path d="M76 90 H156 M76 102 H140 M76 114 H150" stroke="#c9ced8" stroke-width="3.4" stroke-linecap="round"/>
+                  <use href="#kid" x="170" y="56" width="52" height="90" style="color:#ffc830"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>人間が、目標とお約束を書く</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="AIがコードを書く">
+                  <use href="#aila" x="16" y="38" width="90" height="90"/>
+                  <rect class="paper o" x="122" y="20" width="100" height="112" rx="5"/>
+                  <path class="sand" d="M123 25 a4 4 0 0 1 4 -4 h90 a4 4 0 0 1 4 4 v7 h-98 z"/>
+                  <path class="s" d="M122 33 H222"/>
+                  <path d="M134 46 h40" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M142 58 h52" stroke="#f26d5b" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M142 70 h36" stroke="#e8ac1a" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M142 82 h48" stroke="#5f7cbf" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M134 94 h30" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M134 106 h56" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>AIが、速く作る</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="人間が確かめて承認する">
+                  <rect class="paper o" x="20" y="16" width="120" height="118" rx="4"/>
+                  <circle class="mint o" cx="42" cy="42" r="9"/><path class="s" d="M37 42 l4 4 l6 -8"/>
+                  <path d="M60 42 H122" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <circle class="mint o" cx="42" cy="72" r="9"/><path class="s" d="M37 72 l4 4 l6 -8"/>
+                  <path d="M60 72 H112" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <circle class="paper o" cx="42" cy="102" r="9"/>
+                  <path d="M60 102 H122" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <use href="#kid-up" x="164" y="28" width="56" height="97" style="color:#bfe3d6"/>
+                  <rect class="navy" x="150" y="118" width="64" height="26" rx="5"/>
+                  <text x="182" y="136" font-size="13" text-anchor="middle" class="t-w">承認</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>人間が、確かめて承認する</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図8</b>AIと開発するときの役割分担。</figcaption>
+        </figure>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>ここが大事</p>
+          <p class="box__title">目標とお約束を先に書く。変更は確かめてから承認する。</p>
+          <p>これは、ゲーム開発でも、AIの会社が安全を守るときでも、同じことだ。</p>
+        </div>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>ふりかえり</p>
+          <p class="box__title">今日、エージェントに任せてよかったことと、人間がやらないといけなかったことを、1つずつ書こう。</p>
+          <div class="field">
+            <label class="field__label" for="w6ai"><span class="num">1</span>エージェントに任せてよかったこと</label>
+            <input class="input" id="w6ai">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w6me"><span class="num">2</span>人間がやらないといけなかったこと</label>
+            <input class="input" id="w6me">
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="saveWork('w6r', ['w6ai','w6me'])">保存</button>
+            <span class="status" id="w6rstatus" role="status"></span>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/course.js"></script>
+<script>
+// ジャンルとアイデアシート
+const IDEA_FIELDS = ['w6common', 'w6mat', 'w6idea', 'w6unique'];
+const genreInputs = document.querySelectorAll('input[name="genre"]');
+const selectedGenre = () => {
+  const checked = document.querySelector('input[name="genre"]:checked');
+  return checked ? checked.value : '';
+};
+genreInputs.forEach(input => input.addEventListener('change', () => storage.set('genre', input.value)));
+
+function saveIdea() {
+  saveWork('w6', IDEA_FIELDS);
+}
+
+function buildDocPrompt() {
+  const genre = selectedGenre();
+  const idea = (document.getElementById('w6idea').value || '').trim();
+  const unique = (document.getElementById('w6unique').value || '').trim();
+  if (!genre || !idea) {
+    alert('先に、ジャンルを選んで、アイデア（3番）を書いてみよう！');
+    return;
+  }
+  saveIdea();
+  const p1 = document.getElementById('p1');
+  p1.textContent = p1.textContent
+    .replace(/■ ジャンル：.*/, '■ ジャンル：' + genre)
+    .replace(/■ ゲームのアイデア：.*/, '■ ゲームのアイデア：' + idea.replace(/\s*\n\s*/g, ' '))
+    .replace(/■ ほかのゲームにないポイント：.*/, '■ ほかのゲームにないポイント：' + (unique || '（なし）'));
+  p1.closest('.panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showStatus('w6status', 'プロンプト①に入れました');
+}
+
+// 自分の課題に印を付ける
+const myTask = document.getElementById('myTask');
+const markTask = () => {
+  document.querySelectorAll('.task').forEach(t => t.classList.toggle('is-mine', t.dataset.task === myTask.value));
+};
+myTask.addEventListener('change', () => { storage.set('task', myTask.value); markTask(); });
+const savedTask = storage.get('task');
+if (savedTask) { myTask.value = savedTask; markTask(); }
+
+// 前回の入力を戻す
+loadWork('w6', IDEA_FIELDS);
+loadWork('w6r', ['w6ai', 'w6me']);
+const savedGenre = storage.get('genre');
+genreInputs.forEach(input => { if (input.value === savedGenre) input.checked = true; });
+</script>
+
+</body>
+</html>
