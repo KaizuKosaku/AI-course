@@ -15,7 +15,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LESSONS = ["ai01", "ai02", "ai03", "ai04", "ai05", "ai06", "ai-sp"]
+LESSONS = ["ai01", "ai02", "ai03", "ai04", "ai05", "ai06", "ai07", "ai-sp"]
 
 
 def kit_block():

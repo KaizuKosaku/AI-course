@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIコース DAY 07（教師用） ｜ Akky先生のプログラミング教室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body data-store="ai_course_d7_">
+
+<!-- ========== 共通の絵（シンボル） ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+<!--KIT-->
+  <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0 1 L9 5 L0 9 z" fill="#1a2d5c"/>
+  </marker>
+  <!-- ロゴ（目次・ヘッダー用の小さいアイラ） -->
+  <symbol id="logo" viewBox="0 0 36 36">
+    <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" fill="#1A2D5C"/>
+    <circle cx="13" cy="16" r="2.2" fill="#FFC830"/>
+    <circle cx="23" cy="16" r="2.2" fill="#FFC830"/>
+    <path d="M13.5 22.5 Q18 25.5 22.5 22.5" stroke="#FFC830" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- アイラ（全身） -->
+  <symbol id="aila" viewBox="-2 0 76 76">
+    <ellipse cx="36" cy="72" rx="20" ry="3.5" fill="#e6dfcf"/>
+    <path d="M36 12 V5" stroke="#1a2d5c" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="36" cy="4.5" r="3.6" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M11 42 H5 M61 42 H67" stroke="#1a2d5c" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="4.5" cy="42" r="3.2" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    <circle cx="67.5" cy="42" r="3.2" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    <polygon points="36,12 61,26.5 61,55.5 36,70 11,55.5 11,26.5" fill="#1a2d5c" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="36,12 61,26.5 61,33 36,19 11,33 11,26.5" fill="#2e4785"/>
+    <rect x="18" y="31" width="36" height="24" rx="10" fill="#243a73"/>
+    <circle cx="27" cy="41" r="5" fill="#ffc830"/>
+    <circle cx="45" cy="41" r="5" fill="#ffc830"/>
+    <circle cx="28.2" cy="40" r="2.1" fill="#1a2d5c"/>
+    <circle cx="46.2" cy="40" r="2.1" fill="#1a2d5c"/>
+    <circle cx="29" cy="39.2" r="0.8" fill="#fff"/>
+    <circle cx="47" cy="39.2" r="0.8" fill="#fff"/>
+    <path d="M30 49 Q36 53.5 42 49" stroke="#ffc830" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="21" cy="48" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.7"/>
+    <ellipse cx="51" cy="48" rx="2.6" ry="1.6" fill="#f26d5b" opacity="0.7"/>
+  </symbol>
+
+  <!-- 生徒（立ち姿）服の色は color -->
+  <symbol id="kid" viewBox="0 0 60 104">
+    <ellipse cx="30" cy="100" rx="17" ry="3.2" fill="#e6dfcf"/>
+    <rect x="20" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <rect x="31.5" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <path d="M16 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z M31 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z" fill="#1a2d5c"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 46 C50 52 52 62 51 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 46 C50 52 52 62 51 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <circle cx="9" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <circle cx="51" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M15 76 V52 a10 10 0 0 1 10 -10 h10 a10 10 0 0 1 10 10 V76 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 42 l6 7 l6 -7" fill="#fff" stroke="#1a2d5c" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="30" cy="24" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M14.6 25 C13 12 22 6 31 7 C40 8 47 14 45.4 24 C41 20 36 17 30 18 C26 22 20 24 14.6 25 Z" fill="#1a2d5c"/>
+    <circle cx="24.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <circle cx="35.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <path d="M26.5 32.5 Q30 35.5 33.5 32.5" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="20.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+    <ellipse cx="39.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+  </symbol>
+
+  <!-- 生徒（手をあげる） -->
+  <symbol id="kid-up" viewBox="0 0 60 104">
+    <ellipse cx="30" cy="100" rx="17" ry="3.2" fill="#e6dfcf"/>
+    <rect x="20" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <rect x="31.5" y="72" width="8.5" height="24" rx="3.5" fill="#1a2d5c"/>
+    <path d="M16 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z M31 99 h13 v-4 a3 3 0 0 0 -3 -3 h-7 a3 3 0 0 0 -3 3 z" fill="#1a2d5c"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M17 46 C10 52 8 62 9 70" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 47 C50 40 53 30 52 20" stroke="#1a2d5c" stroke-width="10.5" fill="none" stroke-linecap="round"/>
+    <path d="M43 47 C50 40 53 30 52 20" stroke="currentColor" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <circle cx="9" cy="72" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <circle cx="52" cy="17" r="4.2" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="1.8"/>
+    <path d="M15 76 V52 a10 10 0 0 1 10 -10 h10 a10 10 0 0 1 10 10 V76 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 42 l6 7 l6 -7" fill="#fff" stroke="#1a2d5c" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="30" cy="24" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M14.6 25 C13 12 22 6 31 7 C40 8 47 14 45.4 24 C41 20 36 17 30 18 C26 22 20 24 14.6 25 Z" fill="#1a2d5c"/>
+    <circle cx="24.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <circle cx="35.5" cy="27" r="1.9" fill="#1a2d5c"/>
+    <path d="M25.5 32 Q30 37 34.5 32 Z" fill="#1a2d5c"/>
+    <ellipse cx="20.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+    <ellipse cx="39.5" cy="31" rx="2.4" ry="1.4" fill="#f26d5b" opacity="0.55"/>
+  </symbol>
+
+  <!-- 生徒（PCに向かう・上半身） -->
+  <symbol id="kid-pc" viewBox="0 0 100 90">
+    <path d="M26 88 V62 a12 12 0 0 1 12 -12 h14 a12 12 0 0 1 12 12 V88 z" fill="currentColor" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="45" cy="30" r="15" fill="#f7dcc3" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M29.6 31 C28 18 37 12 46 13 C55 14 62 20 60.4 30 C56 26 51 23 45 24 C41 28 35 30 29.6 31 Z" fill="#1a2d5c"/>
+    <circle cx="44" cy="33" r="1.9" fill="#1a2d5c"/>
+    <circle cx="54" cy="33" r="1.9" fill="#1a2d5c"/>
+    <path d="M45.5 38.5 Q49 41 52.5 38.5" stroke="#1a2d5c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M52 88 L60 60 H98 L90 88 Z" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="77" cy="74" r="3" fill="#1a2d5c"/>
+    <path d="M40 88 H98" stroke="#1a2d5c" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ノートPC -->
+  <symbol id="laptop" viewBox="0 0 120 84">
+    <rect x="14" y="4" width="92" height="62" rx="5" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <rect x="20" y="10" width="80" height="50" rx="2" fill="#dfe7f6"/>
+    <path d="M4 70 H116 L110 80 H10 Z" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M50 70 h20" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 書類（見出し＋文字の行） -->
+  <symbol id="doc" viewBox="0 0 80 100">
+    <path d="M6 4 H58 L74 20 V96 H6 Z" fill="#fff" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M58 4 V20 H74" fill="#f3efe6" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="14" y="14" width="30" height="6" rx="3" fill="#1a2d5c"/>
+    <path d="M14 34 H64 M14 44 H60 M14 54 H64 M14 64 H52 M14 74 H62 M14 84 H40" stroke="#c9ced8" stroke-width="3.2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 虫めがね -->
+  <symbol id="loupe" viewBox="0 0 60 60">
+    <path d="M37 37 L54 54" stroke="#1a2d5c" stroke-width="9" stroke-linecap="round"/>
+    <path d="M37 37 L54 54" stroke="#f26d5b" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="18" fill="#dfe7f6" fill-opacity="0.75" stroke="#1a2d5c" stroke-width="3"/>
+    <path d="M14 18 a12 12 0 0 1 8 -7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- スマートフォン（アプリ画面） -->
+  <symbol id="phone" viewBox="0 0 64 112">
+    <rect x="3" y="3" width="58" height="106" rx="10" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <rect x="9" y="14" width="46" height="82" rx="3" fill="#f3efe6"/>
+    <rect x="24" y="7" width="16" height="3" rx="1.5" fill="#1a2d5c"/>
+    <rect x="15" y="22" width="34" height="22" rx="5" fill="#fff" stroke="#1a2d5c" stroke-width="1.6"/>
+    <path d="M20 30 H44 M20 36 H36" stroke="#c9ced8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="32" cy="70" r="13" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M25 65 a9 9 0 0 1 6 -5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <rect x="26" y="101" width="12" height="3" rx="1.5" fill="#c9ced8"/>
+  </symbol>
+
+  <!-- ブラウザの画面 -->
+  <symbol id="browser" viewBox="0 0 160 112">
+    <rect x="3" y="3" width="154" height="106" rx="7" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M4 10 a6 6 0 0 1 6 -6 h140 a6 6 0 0 1 6 6 v10 h-152 z" fill="#dfe7f6"/>
+    <path d="M3 21 H157" stroke="#1a2d5c" stroke-width="2"/>
+    <circle cx="13" cy="12.5" r="2.6" fill="#f26d5b"/><circle cx="21" cy="12.5" r="2.6" fill="#ffc830"/><circle cx="29" cy="12.5" r="2.6" fill="#bfe3d6"/>
+    <rect x="40" y="8" width="104" height="9" rx="4.5" fill="#fff"/>
+    <rect x="12" y="30" width="136" height="32" rx="4" fill="#b9c8e8"/>
+    <circle cx="30" cy="46" r="8" fill="#ffc830"/>
+    <path d="M46 42 H100 M46 50 H84" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M12 74 H100 M12 84 H88 M12 94 H96" stroke="#c9ced8" stroke-width="3.2" stroke-linecap="round"/>
+    <rect x="110" y="72" width="38" height="26" rx="4" fill="#f26d5b"/>
+  </symbol>
+
+  <!-- フォルダー -->
+  <symbol id="folder" viewBox="0 0 96 76">
+    <path d="M4 12 a4 4 0 0 1 4 -4 h24 l8 8 h48 a4 4 0 0 1 4 4 v48 a4 4 0 0 1 -4 4 h-80 a4 4 0 0 1 -4 -4 z" fill="#e8ac1a" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M4 28 a4 4 0 0 1 4 -4 h80 a4 4 0 0 1 4 4 v40 a4 4 0 0 1 -4 4 h-80 a4 4 0 0 1 -4 -4 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- 電球 -->
+  <symbol id="bulb" viewBox="0 0 48 64">
+    <path d="M24 4 a18 18 0 0 1 10 33 c-2 2 -3 4 -3 7 h-14 c0 -3 -1 -5 -3 -7 a18 18 0 0 1 10 -33 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M15 17 a11 11 0 0 1 7 -6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <rect x="16" y="44" width="16" height="12" rx="2.5" fill="#c9ced8" stroke="#1a2d5c" stroke-width="2"/>
+    <path d="M16 50 H32" stroke="#1a2d5c" stroke-width="1.6"/>
+    <path d="M20 59 H28" stroke="#1a2d5c" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 鍵 -->
+  <symbol id="lock" viewBox="0 0 44 52">
+    <path d="M12 24 V16 a10 10 0 0 1 20 0 v8" stroke="#1a2d5c" stroke-width="4" fill="none"/>
+    <rect x="5" y="22" width="34" height="26" rx="5" fill="#ffc830" stroke="#1a2d5c" stroke-width="2"/>
+    <circle cx="22" cy="33" r="3.6" fill="#1a2d5c"/>
+    <rect x="20.4" y="34" width="3.2" height="8" rx="1.6" fill="#1a2d5c"/>
+  </symbol>
+
+  <!-- サーバー -->
+  <symbol id="server" viewBox="0 0 64 104">
+    <ellipse cx="32" cy="100" rx="24" ry="3.2" fill="#e6dfcf"/>
+    <rect x="6" y="4" width="52" height="92" rx="5" fill="#1a2d5c"/>
+    <rect x="12" y="12" width="40" height="18" rx="3" fill="#2e4785"/>
+    <rect x="12" y="38" width="40" height="18" rx="3" fill="#2e4785"/>
+    <rect x="12" y="64" width="40" height="18" rx="3" fill="#2e4785"/>
+    <circle cx="44" cy="21" r="2.6" fill="#ffc830"/><circle cx="44" cy="47" r="2.6" fill="#bfe3d6"/><circle cx="44" cy="73" r="2.6" fill="#ffc830"/>
+    <path d="M18 21 H34 M18 47 H34 M18 73 H34" stroke="#b9c8e8" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- 囲みのラベル用アイコン（色は currentColor） -->
+  <symbol id="i-task" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-caution" viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-point" viewBox="0 0 24 24"><path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4l-5.5 2.9 1-6.2L3 9.7l6.2-.9L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-goal" viewBox="0 0 24 24"><path d="M5 21V4h12l-2.5 4L17 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-teacher" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<!--/KIT-->
+
+    <!-- 節の見出しのアイコン -->
+    <symbol id="r1" viewBox="0 0 48 48">
+      <rect x="6" y="8" width="36" height="32" rx="2" fill="#fff" stroke="#1a2d5c" stroke-width="2"/>
+      <rect x="11" y="13" width="26" height="5" fill="#1a2d5c"/>
+      <rect x="11" y="22" width="11" height="12" fill="#f26d5b"/>
+      <path d="M26 24 h11 M26 29 h11 M26 34 h8" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r2" viewBox="0 0 48 48">
+      <path d="M3 42 L18 17 L26 29 L32 21 L45 42 Z" fill="#b9c8e8" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M18 17 V5" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+      <path d="M18 5 l9 3 l-9 3 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r5" viewBox="0 0 48 48">
+      <rect x="5" y="15" width="38" height="22" rx="11" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2"/>
+      <path d="M15 21 v10 M10 26 h10" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="31" cy="23" r="2.6" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.4"/>
+      <circle cx="36" cy="29" r="2.6" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="r6" viewBox="0 0 48 48">
+      <path d="M5 10 l13 -4 l12 4 l13 -4 v32 l-13 4 l-12 -4 l-13 4 z" fill="#fff" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M18 6 v32 M30 10 v32" stroke="#1a2d5c" stroke-width="1.4" opacity="0.45"/>
+      <path d="M10 35 q7 -1 10 -9 t13 -10" fill="none" stroke="#f26d5b" stroke-width="2.4" stroke-dasharray="3 3" stroke-linecap="round"/>
+      <circle cx="35" cy="14" r="3.6" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="r7" viewBox="0 0 48 48">
+      <path d="M7 19 h7 l19 -9 v28 l-19 -9 h-7 z" fill="#ffc830" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M14 29 l3 10 h5 l-2 -9" fill="#fff" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M38 17 q4 7 0 14 M42 12 q7 12 0 24" fill="none" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r8" viewBox="0 0 48 48">
+      <use href="#bulb" x="11" y="6" width="26" height="36"/>
+      <path d="M24 1 v3 M8 8 l2.5 2.5 M40 8 l-2.5 2.5 M3 21 h3 M45 21 h-3" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r9" viewBox="0 0 48 48">
+      <path d="M39 22 a15 15 0 0 0 -27 -8" fill="none" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9 26 a15 15 0 0 0 27 8" fill="none" stroke="#f26d5b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M9 7 l3 7.5 l7.5 -2" fill="none" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M39 41 l-3 -7.5 l-7.5 2" fill="none" stroke="#f26d5b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r10" viewBox="0 0 48 48">
+      <use href="#doc" x="4" y="5" width="28" height="35"/>
+      <path d="M26 32 h16 m-5 -5 l5 5 l-5 5" fill="none" stroke="#f26d5b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r11" viewBox="0 0 48 48">
+      <use href="#folder" x="2" y="10" width="44" height="35"/>
+      <rect x="15" y="4" width="18" height="22" rx="1.5" fill="#fff" stroke="#1a2d5c" stroke-width="1.8"/>
+      <path d="M19 10 h10 M19 15 h10 M19 20 h6" stroke="#1a2d5c" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="r12" viewBox="0 0 48 48">
+      <path d="M17 15 v-6 h14 v6" fill="none" stroke="#1a2d5c" stroke-width="2.4" stroke-linejoin="round"/>
+      <rect x="5" y="15" width="38" height="25" rx="3" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2"/>
+      <path d="M5 25 h38" stroke="#1a2d5c" stroke-width="2"/>
+      <rect x="20" y="21.5" width="8" height="7" rx="1.5" fill="#ffc830" stroke="#1a2d5c" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="r13" viewBox="0 0 48 48">
+      <use href="#doc" x="5" y="3" width="30" height="38"/>
+      <path d="M29 41 l12 -16 l4.5 3.4 l-12 16 l-5.5 1 z" fill="#f26d5b" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="r14" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="19" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2"/>
+      <path d="M13 17 c5 -4 11 -2 11 3 c0 4 -6 4 -5 9 c1 4 -6 5 -8 1 c-2 -4 -3 -9 2 -13 z M28 30 c4 -2 9 0 9 4 c0 4 -5 6 -8 4 c-3 -2 -4 -6 -1 -8 z" fill="#bfe3d6"/>
+      <path d="M5 24 h38 M24 5 c-9 9 -9 29 0 38 M24 5 c9 9 9 29 0 38" stroke="#1a2d5c" stroke-width="1.2" fill="none" opacity="0.45"/>
+    </symbol>
+</defs>
+</svg>
+
+<div class="layout">
+
+  <!-- ========== 目次 ========== -->
+  <nav class="toc" aria-label="目次">
+    <a class="toc__brand" href="../index.html">
+      <svg><use href="#logo"/></svg>
+      <span><b>AIコース DAY 07</b><span>Akky先生の教室</span></span>
+    </a>
+    <details id="tocDetails">
+      <summary>目次</summary>
+      <ol>
+        <li><a href="#cover">今日のめあて</a></li>
+        <li><a href="#setup">0　準備：AIに任せる</a></li>
+        <li><a href="#news">1　AIの今</a></li>
+        <li><a href="#project">2　本物を作る5カ月</a></li>
+        <li><a href="#ceiling">3　何でも作れる</a></li>
+        <li class="toc__sub"><a href="#sample">先生の見本 HIMORI</a></li>
+        <li><a href="#tech">4　使える技術</a></li>
+        <li><a href="#director">5　君は監督</a></li>
+        <li><a href="#files">6　AIに渡す前提ファイル</a></li>
+        <li class="toc__group">7　理想を描く</li>
+        <li class="toc__sub"><a href="#plan">企画とアイデア</a></li>
+        <li class="toc__sub"><a href="#words">頭の中を言葉にする</a></li>
+        <li class="toc__sub"><a href="#legend">伝説版とMVP</a></li>
+        <li><a href="#design">8　設計：AIが書き、君が直す</a></li>
+        <li><a href="#cycle">9　最初の1サイクル</a></li>
+        <li><a href="#handoff">10　引き継ぎと提出</a></li>
+      </ol>
+    </details>
+  </nav>
+
+  <main class="main">
+    <div class="article">
+
+      <!--T-->
+      <p class="t-banner">教師用ページ<span>生徒用ページと同じ内容です。</span></p>
+      <!--/T-->
+
+      <!-- ========== 表紙 ========== -->
+      <header class="cover" id="cover">
+        <p class="cover__series">AIコース　DAY 07</p>
+        <h1>君は監督。理想を描いて、世界に公開しよう</h1>
+        <p class="cover__lead">
+          今日から5カ月、1つの作品を作り続ける。ゲームでも、アプリでも、サービスでもいい。自分のアイデアで作ったものを、<strong>本物のURLで世界に公開する</strong>。そのために、AIの「監督」としての考え方と、AIへの伝え方を身につけよう。
+        </p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒が、作りたいゲームの画面を思い浮かべている">
+                  <use href="#kid" x="10" y="54" width="56" height="97" style="color:#f26d5b"/>
+                  <circle class="paper o" cx="74" cy="60" r="4.5"/>
+                  <circle class="paper o" cx="88" cy="46" r="7.5"/>
+                  <rect class="paper o" x="100" y="10" width="132" height="100" rx="16"/>
+                  <rect x="110" y="20" width="112" height="80" rx="6" fill="#1a2d5c"/>
+                  <circle cx="122" cy="32" r="1.4" fill="#fff" opacity="0.7"/><circle cx="208" cy="28" r="1.4" fill="#fff" opacity="0.7"/><circle cx="170" cy="40" r="1.4" fill="#fff" opacity="0.7"/>
+                  <rect x="116" y="82" width="42" height="9" rx="2" fill="#bfe3d6"/>
+                  <rect x="170" y="68" width="44" height="9" rx="2" fill="#bfe3d6"/>
+                  <rect x="130" y="66" width="14" height="14" rx="3" fill="#ffc830"/>
+                  <circle cx="135" cy="72" r="1.5" fill="#1a2d5c"/><circle cx="140" cy="72" r="1.5" fill="#1a2d5c"/>
+                  <path d="M192 34 l3.4 6.8 l7.6 1.1 l-5.5 5.3 l1.3 7.5 l-6.8 -3.6 l-6.8 3.6 l1.3 -7.5 l-5.5 -5.3 l7.6 -1.1 z" fill="#ffc830"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>理想を描く</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒が指示を出し、AIがコードを書いている">
+                  <use href="#kid-up" x="8" y="52" width="54" height="94" style="color:#bfe3d6"/>
+                  <use href="#aila" x="66" y="70" width="70" height="70"/>
+                  <rect class="paper o" x="140" y="20" width="92" height="112" rx="5"/>
+                  <path class="sand" d="M141 25 a4 4 0 0 1 4 -4 h82 a4 4 0 0 1 4 4 v7 h-90 z"/>
+                  <path class="s" d="M140 33 H232"/>
+                  <path d="M150 46 h40" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M158 58 h50" stroke="#f26d5b" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M158 70 h34" stroke="#e8ac1a" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M158 82 h46" stroke="#5f7cbf" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M150 94 h28" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M150 106 h52" stroke="#c9ced8" stroke-width="4" stroke-linecap="round"/>
+                  <rect class="paper o" x="64" y="18" width="74" height="30" rx="8"/>
+                  <text x="101" y="38" font-size="13" text-anchor="middle">こうしたい</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>AIの監督をする</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="作品が地球をこえて、世界中のスマホに届く">
+                  <circle cx="120" cy="82" r="46" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2"/>
+                  <path class="mint" d="M94 60 c10 -9 25 -6 26 3 c1 9 -11 10 -8 20 c3 9 -12 11 -16 2 c-4 -9 -10 -16 -2 -25 z M128 96 c8 -5 19 -2 20 7 c1 9 -9 14 -16 10 c-7 -4 -9 -12 -4 -17 z M132 50 c7 -2 15 0 15 6 c0 5 -8 6 -12 3 c-4 -3 -6 -7 -3 -9 z"/>
+                  <path d="M74 82 h92 M120 36 c-25 23 -25 69 0 92 M120 36 c25 23 25 69 0 92" stroke="#1a2d5c" stroke-width="1.2" fill="none" opacity="0.45"/>
+                  <circle cx="120" cy="82" r="46" fill="none" stroke="#1a2d5c" stroke-width="2"/>
+                  <path d="M48 70 l22 4 M170 62 l22 -10 M166 112 l14 8" stroke="#f26d5b" stroke-width="2.2" stroke-dasharray="4 4" stroke-linecap="round"/>
+                  <use href="#phone" x="8" y="48" width="38" height="66"/>
+                  <use href="#phone" x="196" y="16" width="36" height="63"/>
+                  <use href="#phone" x="180" y="100" width="30" height="52"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>世界に公開する</p>
+            </div>
+          </div>
+        </figure>
+
+        <dl class="cover__facts">
+          <div><dt>時間</dt><dd>120分</dd></div>
+          <div><dt>使うもの</dt><dd>Zed・DeepSeek・チャットAI</dd></div>
+          <div><dt>つくるもの</dt><dd>企画書・仕様書・タスクと、最初の提出</dd></div>
+        </dl>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-goal"/></svg>今日のめあて</p>
+          <ol>
+            <li>5カ月の開発の流れと、自分の作品が世界に公開されるしくみを説明できる</li>
+            <li>やり方ではなく理想をAIに伝え、AIの提案から自分で選んで決められる</li>
+            <li>企画書・仕様書・タスクをAIと作り、最初の1サイクル（作る→確かめる→セーブ→提出）を回せる</li>
+          </ol>
+        </div>
+
+        <h3 style="margin-top:48px;">今日の流れ</h3>
+        <ol class="road wide">
+          <li><span class="road__icon"><svg><use href="#r1"/></svg></span><span class="road__n">0〜1</span><span class="road__t">準備とAIの今</span><span class="road__s">準備をAIに任せ、その間にニュースを読む</span></li>
+          <li><span class="road__icon"><svg><use href="#r2"/></svg></span><span class="road__n">2〜4</span><span class="road__t">何でも作れる</span><span class="road__s">5カ月の流れ、天井、使える技術</span></li>
+          <li><span class="road__icon"><svg><use href="#r7"/></svg></span><span class="road__n">5〜6</span><span class="road__t">監督になる</span><span class="road__s">考え方と、AIに渡す前提ファイル</span></li>
+          <li><span class="road__icon"><svg><use href="#r8"/></svg></span><span class="road__n">7〜8</span><span class="road__t">理想を描く</span><span class="road__s">企画書・仕様書・タスク</span></li>
+          <li><span class="road__icon"><svg><use href="#r9"/></svg></span><span class="road__n">9〜10</span><span class="road__t">最初の1サイクル</span><span class="road__s">作る→確かめる→セーブ→提出</span></li>
+        </ol>
+      </header>
+
+      <!-- ========== 0 準備 ========== -->
+      <section class="sec" id="setup">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r11"/></svg></span>0　準備</p>
+        <h2 class="sec__title">開発の準備を、AIに任せる</h2>
+        <p>今日から、自分のPCで作品を作る。そのための準備（道具を入れる、作品の保管庫を取ってくる、設定をする）を、<strong>エディタのAIに任せる</strong>。AIが働いている間に、君は1のニュースを読もう。DAY05の「待たずに、別の仕事をする」働き方だ。</p>
+
+        <h3 id="key">ステップ1　自分のキーを表示して、Zedに入れる</h3>
+        <p>自分の名前を入れると、2つのキーが表示される。<b>今日のキー</b>は、エディタのAI（DeepSeek）を使うためのもので、授業ごとに新しくなる（授業のあとに削除される）。<b>AIの合言葉</b>は、君の作品の中でAIを使うためのもので、ステップ2でAIに伝える。</p>
+
+        <div class="box box--task" id="keyBox" data-key-mode="names" data-key-data="eyJ5b3RhIjp7InNhbHQiOiI5RkZ0OWY1Vzd5dWY2eTFaUThwTjhBPT0iLCJpdiI6Ik5KM01JaEl4YTFZZHR6ZkEiLCJkYXRhIjoiR2ZEcjJTd3BOdVJUTXZ2dmpySG9odVgxdHEzcmYvazdkN0g2L3p0OStmZ0lvNkczdnl4bWdPQ3Z3SWxMWmhPNXVRQVFWeHQrRERkMnZVeHp3OEtIeElFOFNCbE4wWkwwQmFzUk1VRUdTOWMxcXNBbU9jREhoMTdrUFNudS9jcUo4VHd2VWtEWTRqOUdUZW1ZYkMwdUcvQzI0cUpuTkRnZyJ9LCJha2lyYSI6eyJzYWx0IjoiZUJVUDh1OU9jTGwxdEJ2NXVvTUdZdz09IiwiaXYiOiJIRCt0NXZMQjNGd3d2WmIwIiwiZGF0YSI6InhNNzZXdm9qcmloWTJRTlhzRVlRODh5QmRINTEvZlhvQ3pmaS9wYUZPYVNQWndxM1hRN2FQVFl3WjNFZDdTSDZRU09vWXZxclY1b1l6aStjV0I3MnhtcmtVOWR1WXd1aUZNcEVTdGM2WVJ6RVY4TnRaRFZsd3RTck5ZRUxSd0VNeTVzamdzRnRNN1BWVDdzdXpkL0tJWWpxdlFRUldtLzgifSwiaGFydXRvIjp7InNhbHQiOiI4K0pOQTdQK1RPa2h1MVBYNGRJZC9RPT0iLCJpdiI6IlNJQWFheGFObnc3ZThpVUMiLCJkYXRhIjoiM0ZiYnFKNGxnT2E2aGhrWjlsWThVQ0E2cFZNN0loTUJhWXNjNW9SMyswU040S0dyMWhiZHR6UkdNSXhZOEZlWVJldmxZTXU4cDdMODdMRG1nbkxyMGtiOEhXeFZ2YUVYbG9Wa0tseXFmMmVTOEdUZ3Qwd3JmWC9pOWhmMW80eHU3emhvSXFtSjhnMTJHN0YrRHljR1RGT2s5SUU2M3hxTSJ9LCJyeW9zdWtlIjp7InNhbHQiOiJjU2JKWDBueE92elJpeXNWbmJSK1lBPT0iLCJpdiI6IndFd2ZxQUJ1c2FjWmkxQWoiLCJkYXRhIjoiem5XWVNNejFGOWZLM1NFNSt1QXY4NUN4RmN3UVZ4Uzlxc0RaK3Q1amtIWjMwSUV1RWUwMm9wdzR2b1VITnN6ZUJzMzF1TnZrZHAxQ2V1WUpXR2VyM1ZEUFkzMG9RckVPSVdVbDB6bHVUR2xsOFBNUDY4eDBCOUVjazJtUENXR3lGRUlkekVlTXdVcnc1MUYwYitEWXcwN1E0ZnZ0anFKcCJ9LCJyaW5hIjp7InNhbHQiOiJVSXJlOHVtMS9ZRVYvZnd2YnRTVlZnPT0iLCJpdiI6IjdDYTAzY0p3UlZiY09BcksiLCJkYXRhIjoiTDBpZFBDRkVUeGdTWlNFVzJvRENMUmdKd3hpRU44NDl2ejgzUDFvM3hCdVN1dzVXRExpMnFhakIwZlpTK2pGdnFXbENBQ0J5RXBmNHBWekI1RTNhRWZ3bTF4dTRyMVdzaVRGYnVJUzZvRitLRUFBRk1DYVRRZnFJYWpxbzZiM3ZybGVnbGpFN0ZBRHNXeDd3L2s3QzM5eFdsNzdKbThGeSJ9LCJyaW8iOnsic2FsdCI6IlREUUV3WW5QUWs1ZjNac1U2OTBHWFE9PSIsIml2IjoidjBZcG8zUEpFVWthTWExTyIsImRhdGEiOiJNL3ZaRWd3NnkyaytvNXVPZHJhWEhSL2dVSkRERUc0VVpnVVJUbGpSMkpKbjlBNVNCWmYzbWE3S0tFMWVKL1VXcUxycDRweU1lNnVkVm94eVVzVkxEa2JIMFl6MUJ1TThYdjZ3WXFJTENqa0VSVnFPOHJiRDNoYW1jU05rcUUzT2dhRDd5UlRtRThDc1RtQitobTFiTjh4SXJEd2J5bHZvIn0sInNvZ28iOnsic2FsdCI6IkVMRmNPWEhpd3pvN21ZQmM2NVpnckE9PSIsIml2IjoiT3VDY2tYYjFmQW1LZi8rSSIsImRhdGEiOiJGUHg4enpGb1Y0RlZtV2podHFiOTJWb3BmbmVkbkc4S2xibUpGQlZkc1VRNStUbjluNVlaYVlRNlhjS285K3FyQnJNKzQ1L2pEYjVINHNqbURwRWNLU0lCRGdyc2txd01OTUgyNThhLy9ZT3lWMURQQXcybDBldjV4ZENKVFk0b1VHKzVCdG03TCtTQWhsemRRYVVvVm1jT1dBWG5TbTFQIn0sImtvc2FrdSI6eyJzYWx0IjoiTS9KK05EcHVJb1hPeSs3VEIzWHMwQT09IiwiaXYiOiJzR09BWEp0QVQxNjU5eEY5IiwiZGF0YSI6Ilp5Mit4Y3pqUFdPNVloSU41V1ArVUVwa0kyMU9pWVhORERJNkJSeVZxTWJIc1RQV2RFK29FTGtXUFVCL0UzWEQxNXZ3dEVRN0twZys1TDFicVViV0JuNDZldzlmWlNnQ3RTNVg4Sjdlc1lmSUg4OXI3M1VKdUp0MWlzWEgvN1RnWGg1Umh2NXJESmxtOGxZZ2ZPOUVxeG1yT1NuTGd2MDQifX0=" data-key-plain="">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　自分のキー</p>
+          <div id="keyLock">
+            <div class="field">
+              <label class="field__label" for="keyName"><span class="num">1</span>自分の名前をローマ字で入れる（例：yota）</label>
+              <input class="input" id="keyName" autocomplete="off" autocapitalize="off" spellcheck="false" style="max-width:280px;">
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" onclick="showKey()">キーを表示</button>
+              <span class="status" id="keystatus" role="status"></span>
+            </div>
+          </div>
+          <div id="keyPanels" hidden>
+            <div class="panel">
+              <div class="panel__head">
+                今日のキー（Zedに入れる）
+                <button class="btn btn--small" onclick="copyEl('apiKey', this)">コピー</button>
+              </div>
+              <div class="panel__body keyline"><code id="apiKey"></code></div>
+            </div>
+            <div class="panel" id="aiTokenPanel">
+              <div class="panel__head">
+                <span>AIの合言葉（<span id="keyOwner"></span>）　ステップ2でAIに伝える</span>
+                <button class="btn btn--small" onclick="copyEl('aiToken', this)">コピー</button>
+              </div>
+              <div class="panel__body keyline"><code id="aiToken"></code></div>
+            </div>
+          </div>
+          <p class="pathline"><span>Settings（設定）</span><i>›</i><span>AI</span><i>›</i><span>General</span><i>›</i><span>LLM Providers</span><i>›</i><span class="is-end">DeepSeek</span></p>
+          <ol>
+            <li>今日のキーをコピーして、DeepSeekの欄に貼りつけて Enter（前の授業のキーが入っていたら、入れ替える）</li>
+            <li>エージェントのパネルで、モデルにDeepSeekの「Flash」を選ぶ</li>
+            <li>「こんにちは」と送って、返事が来たら完了</li>
+          </ol>
+          <p class="small">2つのキーは君のためのもの。人に教えたり、作品やファイルに書いたりしない。</p>
+        </div>
+
+        <h3>ステップ2　AIに、準備の依頼書を渡す</h3>
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　準備をAIに任せる</p>
+          <ol>
+            <li>デスクトップに <code>じゅんび</code> というフォルダーを作る</li>
+            <li>下のボタンで依頼書（セットアップ.md）をダウンロードし、<code>じゅんび</code> フォルダーに入れる</li>
+            <li>Zedの「Open Folder」で <code>じゅんび</code> フォルダーを開く</li>
+            <li>エージェントのパネルに、下のプロンプトを送る</li>
+            <li>AIに名前と合言葉を聞かれたら、自分の名前と、ステップ1で表示したAIの合言葉（コピーして貼る）を答える</li>
+          </ol>
+          <div class="actions">
+            <a class="btn btn--primary" href="files/セットアップ.md" download>依頼書（セットアップ.md）をダウンロード</a>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            準備を任せる
+            <button class="btn btn--small" onclick="copyEl('ps1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="ps1">セットアップ.md を読んで、書いてある手順のとおりに、このPCを作品を作れる状態にしてください。
+1つの手順が終わるごとに、何をしたかを短く教えてください。</div>
+        </div>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>人がやること</p>
+          <ul>
+            <li>「このアプリがデバイスに変更を加えることを許可しますか」と出たら、「はい」を押す</li>
+            <li><strong>GitHubにログインする小さな画面が出たら、先生を呼ぶ</strong>（先生が作品の保管庫の鍵を入れる）</li>
+            <li>AIがコマンドを実行してよいか聞いてきたら、内容を見て許可する</li>
+          </ul>
+        </div>
+
+        <div class="box box--hint">
+          <svg class="box__avatar" aria-hidden="true"><use href="#aila"/></svg>
+          <div>
+            <p class="box__label">アイラのヒント</p>
+            <p>準備には10分くらいかかる。AIが働いている間に、1のニュースを読もう。ときどきAIの画面を見て、質問されていたら答えてあげて。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 1 AIの今 ========== -->
+      <section class="sec" id="news">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r1"/></svg></span>1　AIの今</p>
+        <h2 class="sec__title">AIが見つけた穴と、AIを作る会社の本音</h2>
+        <p>DAY06では、テストの箱から抜け出したAIや、強すぎて公開されないAIの話をした。この1か月で、AIの力はさらに目に見える形になった。3つのニュースで見てみよう。</p>
+
+        <h3>ニュース1　AIが見つけた、10年以上眠っていた穴</h3>
+        <p class="news__date">2026年10月</p>
+        <p><strong>PHP（ピーエイチピー）</strong>は、Webサイトのサーバーで動くプログラミング言語だ。サーバーの言語がわかっているWebサイトの、およそ7割で使われているといわれる。</p>
+        <p>10月、そのPHPに2つの重大な穴が見つかった。悪用されると、他人がWebサイトのサーバーを乗っ取り、パスワードなどを盗めるおそれがあった。穴は10年以上だれにも気づかれていなかったが、それを見つけたのは<strong>AI</strong>だった（OpenAIの技術が発見を手伝った）。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="AIが、古いプログラムを虫めがねで調べている">
+                  <use href="#doc" x="128" y="10" width="80" height="100"/>
+                  <use href="#doc" x="112" y="24" width="80" height="100"/>
+                  <use href="#loupe" x="150" y="74" width="66" height="66"/>
+                  <use href="#aila" x="10" y="64" width="82" height="82"/>
+                  <rect class="navy" x="16" y="18" width="80" height="24" rx="5"/>
+                  <text x="56" y="35" font-size="13" text-anchor="middle" class="t-w">古いコード</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>AIが、古いコードを調べる</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="サーバーの中に、2つの穴が見つかる">
+                  <use href="#server" x="98" y="18" width="70" height="114"/>
+                  <circle class="coral o" cx="122" cy="58" r="11"/>
+                  <text x="122" y="63" font-size="14" text-anchor="middle" class="t-w">!</text>
+                  <circle class="coral o" cx="144" cy="98" r="11"/>
+                  <text x="144" y="103" font-size="14" text-anchor="middle" class="t-w">!</text>
+                  <use href="#aila" x="172" y="80" width="62" height="62"/>
+                  <path class="s" d="M180 76 l-8 -8 M194 70 l-3 -11 M209 74 l6 -9"/>
+                  <rect class="paper o" x="4" y="20" width="88" height="40" rx="6"/>
+                  <text x="48" y="36" font-size="12" text-anchor="middle">10年以上</text>
+                  <text x="48" y="52" font-size="12" text-anchor="middle">だれも気づかず</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>2つの重大な穴を見つける</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="世界中のWebサイトが一時停止して、修正している">
+                  <use href="#browser" x="8" y="12" width="120" height="84"/>
+                  <rect class="navy" x="18" y="42" width="100" height="26" rx="4"/>
+                  <text x="68" y="60" font-size="13" text-anchor="middle" class="t-w">一時停止中</text>
+                  <use href="#browser" x="112" y="62" width="120" height="84"/>
+                  <rect class="navy" x="122" y="92" width="100" height="26" rx="4"/>
+                  <text x="172" y="110" font-size="13" text-anchor="middle" class="t-w">修正中</text>
+                  <use href="#lock" x="176" y="8" width="40" height="47"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>世界中で、サイトを止めて直す</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図1</b>AIが見つけた穴と、その後。10月21日に修正版が出た。</figcaption>
+        </figure>
+
+        <p>10月21日に修正版が出ると、世界中の政府や会社が、直すためにWebサイトを一時的に止めた。アメリカの国家安全保障局（NSA）やヨーロッパのサイバーセキュリティの機関も警戒を呼びかけ、この騒ぎは<strong>「ブラック・オクトーバー（黒い10月）」</strong>と呼ばれている。OpenAIは「私たちの知るかぎり、攻撃者より先にAIが見つけた」と発表した。報道の時点では、大きな被害は確認されていない。</p>
+
+        <h3>ニュース2　Googleの最強のAIは、まず「守る側」に渡された</h3>
+        <div class="news">
+          <div>
+            <p class="news__date">2026年9月30日</p>
+            <p>Googleは新しいAI「<strong>Gemini 4 Argon（アルゴン）</strong>」を発表し、「これまででもっとも強力なモデル」と呼んだ。最初に使えたのは、Googleのセキュリティの取り組みに参加する、一部の「守る側」の企業だけ。重要なソフトの穴を自分で見つけ、確かめ、直せるように訓練されているという。その後、有料プランの利用者にも順に広げられた。</p>
+            <p>DAY06のClaude Mythosと同じ流れだ。いちばん強いAIを、まず穴をふさぐ側に渡す。AIの力は、穴を見つけて攻めることにも、穴をふさいで守ることにも使えるからだ。</p>
+          </div>
+          <div class="news__art">
+            <svg class="il" viewBox="0 0 220 180" role="img" aria-label="AIが盾を持ち、虫めがねで穴を探して直している">
+              <path d="M64 22 l46 -14 l46 14 v52 c0 38 -26 64 -46 74 c-20 -10 -46 -36 -46 -74 z" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2.4" stroke-linejoin="round"/>
+              <path d="M110 8 v140" stroke="#1a2d5c" stroke-width="1.4" opacity="0.4"/>
+              <use href="#aila" x="72" y="34" width="76" height="76"/>
+              <use href="#loupe" x="150" y="96" width="62" height="62"/>
+              <path class="s" d="M20 120 l18 18 M38 120 l-18 18" stroke="#f26d5b" stroke-width="3"/>
+              <circle class="mint o" cx="30" cy="70" r="13"/>
+              <path class="s" d="M23 70 l5 5 l9 -10" stroke-width="2.6"/>
+            </svg>
+          </div>
+        </div>
+
+        <h3>ニュース3　AIを作る会社が、自分で書いた「リスク」</h3>
+        <p class="news__date">2026年10月26日</p>
+        <p>Claudeを作るAnthropicが、株式を公開するための書類（S-1）を公開した。会社の売上は、この3年で信じられないほど伸びている。世界中の人と会社が、AIを使い始めているということだ。</p>
+        <ul class="stats wide">
+          <li><p class="stats__num">4,100万ドル</p><p class="stats__label">2023年の売上</p></li>
+          <li><p class="stats__num">3億8,600万ドル</p><p class="stats__label">2024年の売上</p></li>
+          <li><p class="stats__num">45億8,500万ドル</p><p class="stats__label">2025年の売上</p></li>
+          <li><p class="stats__num">162億8,600万ドル</p><p class="stats__label">2026年の、半年分の売上</p></li>
+        </ul>
+        <p>ところが、この書類のおよそ3分の1は「リスク」の説明だと報道されている。会社は、自分たちのAIについてこう書いた。</p>
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>書類に書かれた一文</p>
+          <p class="box__title">「私たちのAIモデルは、意図しない、ずれた、または勝手な（自律的な）ふるまいをするかもしれない」</p>
+          <p class="small">原文：Our AI models may behave in unintended, misaligned, or autonomous ways.</p>
+        </div>
+        <p>AIを作っている会社自身が、<strong>「自分のAIは、思いどおりに動かないかもしれない」と公式の書類に書いている</strong>。だからこそ、AIを使う人には、出てきたものを確かめ、決める役目がある。今日から君が担うのは、まさにその役目だ。</p>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>考えてみよう</p>
+          <p class="box__title">AIがここまで強くなった今、自分の作品を世界に公開する人には、何が求められるだろう？</p>
+          <p>ヒント：穴（ニュース1）、守る側と攻める側（ニュース2）、思いどおりに動かないかもしれないAI（ニュース3）。</p>
+        </div>
+
+      </section>
+
+      <!-- ========== 2 本物を作る5カ月 ========== -->
+      <section class="sec" id="project">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r6"/></svg></span>2　本物を作る5カ月</p>
+        <h2 class="sec__title">今日から5カ月、本物を作って世界に公開する</h2>
+        <p>これまでの6回で、AIを知り、問いを立て、言葉でアプリを作り、設計書を書き、AIに任せ、エディタの中のAIと開発した。今日からは、それを全部使って、<strong>1つの作品を5カ月かけて作り続ける</strong>。ゲームでも、アプリでも、サービスでも、道具でもいい。作るものは君が決める。</p>
+
+        <h3>君の住所は、もうある</h3>
+        <p>作品は、Webで世界に公開する。君の作品には、もう専用のURLが用意されている。スマホでも、家族のPCでも、地球の反対側からでも開ける住所だ。</p>
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 640 210" role="img" aria-label="ブラウザのアドレス欄に、自分の名前が入ったURLが表示され、スマホでも同じ作品が開けている">
+            <rect class="paper o" x="8" y="10" width="452" height="190" rx="10"/>
+            <path class="sky" d="M9 20 a9 9 0 0 1 9 -9 h432 a9 9 0 0 1 9 9 v23 h-450 z"/>
+            <path class="s" d="M8 43 H460"/>
+            <circle class="coral" cx="26" cy="27" r="5"/><circle class="yellow" cx="42" cy="27" r="5"/><circle class="mint" cx="58" cy="27" r="5"/>
+            <rect x="76" y="16" width="372" height="22" rx="11" fill="#fff" stroke="#1a2d5c" stroke-width="1.5"/>
+            <use href="#lock" x="86" y="19" width="13" height="16"/>
+            <text x="106" y="32" font-size="14">https://<tspan fill="#c4392b">（君の名前）</tspan>.kaizuacademy.com</text>
+            <rect x="28" y="58" width="412" height="124" rx="6" fill="#1a2d5c"/>
+            <circle cx="60" cy="78" r="1.6" fill="#fff" opacity="0.7"/><circle cx="380" cy="74" r="1.6" fill="#fff" opacity="0.7"/><circle cx="300" cy="96" r="1.6" fill="#fff" opacity="0.7"/><circle cx="120" cy="110" r="1.6" fill="#fff" opacity="0.7"/>
+            <rect x="44" y="156" width="110" height="12" rx="3" fill="#bfe3d6"/>
+            <rect x="300" y="140" width="120" height="12" rx="3" fill="#bfe3d6"/>
+            <rect x="80" y="134" width="20" height="20" rx="4" fill="#ffc830"/>
+            <circle cx="87" cy="142" r="2" fill="#1a2d5c"/><circle cx="94" cy="142" r="2" fill="#1a2d5c"/>
+            <text x="234" y="118" font-size="24" text-anchor="middle" class="t-w">君の作品</text>
+            <path d="M368 106 l4 8 l9 1.3 l-6.5 6.3 l1.5 9 l-8 -4.3 l-8 4.3 l1.5 -9 l-6.5 -6.3 l9 -1.3 z" fill="#ffc830"/>
+            <path d="M466 104 h22" stroke="#f26d5b" stroke-width="2.4" stroke-dasharray="4 4" stroke-linecap="round"/>
+            <use href="#phone" x="494" y="24" width="72" height="126"/>
+            <use href="#phone" x="566" y="70" width="64" height="112"/>
+          </svg>
+          <figcaption class="figure__cap"><b>図2</b>君の作品の住所。（君の名前）のところに、君の名前（下の名前）が入る。</figcaption>
+        </figure>
+
+        <h3>なぜ今、それができるのか</h3>
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 640 190" role="img" aria-label="生徒の理想を、AIがコードにし、Cloudflareが世界中のスマホに届ける">
+            <use href="#kid-pc" x="4" y="40" width="120" height="108" style="color:#ffc830"/>
+            <rect class="paper o" x="38" y="8" width="78" height="30" rx="8"/>
+            <text x="77" y="28" font-size="13" text-anchor="middle">理想</text>
+            <path class="s" d="M132 100 h30" marker-end="url(#ah)" stroke-width="2.4"/>
+            <use href="#aila" x="166" y="54" width="86" height="86"/>
+            <use href="#doc" x="246" y="40" width="64" height="80"/>
+            <path d="M260 66 h30" stroke="#f26d5b" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M260 78 h22" stroke="#e8ac1a" stroke-width="3.4" stroke-linecap="round"/>
+            <path class="s" d="M318 100 h30" marker-end="url(#ah)" stroke-width="2.4"/>
+            <use href="#server" x="356" y="34" width="62" height="102"/>
+            <path class="s" d="M426 100 h30" marker-end="url(#ah)" stroke-width="2.4"/>
+            <use href="#r14" x="462" y="44" width="92" height="92"/>
+            <use href="#phone" x="560" y="20" width="40" height="70"/>
+            <use href="#phone" x="590" y="86" width="40" height="70"/>
+            <text x="64" y="176" font-size="14" text-anchor="middle">君の理想</text>
+            <text x="244" y="176" font-size="14" text-anchor="middle">AI（DeepSeek）が作る</text>
+            <text x="387" y="176" font-size="14" text-anchor="middle">Cloudflare</text>
+            <text x="546" y="176" font-size="14" text-anchor="middle">世界中に届く</text>
+          </svg>
+          <figcaption class="figure__cap"><b>図3</b>作品が世界に届くまで。コードを書くのはAI、世界中に配るのはCloudflareのサーバー。</figcaption>
+        </figure>
+        <p>3つの力がそろったからだ。<strong>AIが、君の言葉からコードを書く</strong>。<strong>Cloudflare</strong>（世界中にサーバーを持つ会社）が、それを世界中に届ける。そして今のブラウザは、3D・音・カメラ・リアルタイムの通信まで、ほとんど何でも動かせる。</p>
+
+        <h3>5カ月の地図</h3>
+        <ol class="road wide" style="--cols:5">
+          <li><span class="road__icon"><svg><use href="#laptop"/></svg></span><span class="road__n">第1回（DAY06）</span><span class="road__t">道具を手に入れる</span><span class="road__s">Zed・DeepSeek・設計書から作る</span></li>
+          <li><span class="road__icon"><svg><use href="#bulb"/></svg></span><span class="road__n">第2回（今日）</span><span class="road__t">理想を描き、世界に出す</span><span class="road__s">企画書・仕様書・最初の提出</span></li>
+          <li><span class="road__icon"><svg><use href="#r5"/></svg></span><span class="road__n">第3回</span><span class="road__t">一番の面白さを作る</span><span class="road__s">一番難しいところから</span></li>
+          <li><span class="road__icon"><svg><use href="#phone"/></svg></span><span class="road__n">第4回</span><span class="road__t">天井を足し、遊んでもらう</span><span class="road__s">テストプレイで直す</span></li>
+          <li><span class="road__icon"><svg><use href="#r14"/></svg></span><span class="road__n">第5回</span><span class="road__t">磨いて、守って、届ける</span><span class="road__s">仕上げ・安全チェック・発表</span></li>
+        </ol>
+
+        <h3>目標は、自分で選ぶ</h3>
+        <p>5カ月の目標は3段階。どこを目指すかは君が決める。途中で上を目指してもいい。</p>
+        <ol class="goals3 wide">
+          <li><p class="goals3__level">銅</p><p class="goals3__title">一番の面白さが動いて、公開されている</p><p class="goals3__text">最小限で遊べる形（MVP）を世界に出す</p></li>
+          <li><p class="goals3__level">銀</p><p class="goals3__title">天井の要素を1つ入れて、公開されている</p><p class="goals3__text">AI・リアルタイム・毎日変わる世界など</p></li>
+          <li><p class="goals3__level">金</p><p class="goals3__title">天井の要素を2つ以上、またはだれもやっていない挑戦</p><p class="goals3__text">見本のない技術にも挑む</p></li>
+        </ol>
+
+        <h3>作品が公開されるまで</h3>
+        <ol class="road wide" style="--cols:4">
+          <li><span class="road__icon"><svg><use href="#kid-pc"/></svg></span><span class="road__n">1</span><span class="road__t">自分のPCで作る</span><span class="road__s">手元のブラウザで動かして確かめる</span></li>
+          <li><span class="road__icon"><svg><use href="#folder"/></svg></span><span class="road__n">2</span><span class="road__t">「提出して」</span><span class="road__s">AIがGitHubに送る</span></li>
+          <li><span class="road__icon"><svg><use href="#browser"/></svg></span><span class="road__n">3</span><span class="road__t">先生が確認して公開</span><span class="road__s">君のURLで世界に出る</span></li>
+          <li><span class="road__icon"><svg><use href="#phone"/></svg></span><span class="road__n">4</span><span class="road__t">スマホでも確かめる</span><span class="road__s">家族や友達の端末でも開ける</span></li>
+        </ol>
+        <p style="margin-top:28px;">提出は、AIに「提出して」と言うだけ。作品は<strong>GitHub</strong>（世界中の開発者が作品を保管している場所）に送られる。このPCには、君のリポジトリ（作品の保管庫）にだけ送れる鍵が入っている。公開の前には、必ず先生が中身を確認する。</p>
+      </section>
+
+      <!-- ========== 3 何でも作れる ========== -->
+      <section class="sec" id="ceiling">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r2"/></svg></span>3　何でも作れる</p>
+        <h2 class="sec__title">このレベルのものが、本当に作れる</h2>
+        <p>君が使う道具は、エディタのAI（DeepSeek）と、Cloudflareと、ブラウザだけ。追加のお金はかからない。では、これでどこまで作れるのだろう。</p>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>予想しよう</p>
+          <p class="box__title">下の12個のうち、時間さえあれば同じような体験を作れるのは、いくつだと思う？</p>
+          <div class="field">
+            <label class="field__label" for="w7guess"><span class="num">1</span>予想（0〜12）</label>
+            <input class="input" id="w7guess" inputmode="numeric" placeholder="例：3" style="max-width:160px;">
+          </div>
+          <div class="actions">
+            <button class="btn btn--primary" id="revealBtn" onclick="toggleCeiling()">答えを見る</button>
+            <span class="status" id="w7qstatus" role="status"></span>
+          </div>
+        </div>
+
+        <ul class="people wide" id="ceilingCards">
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/マインクラフト.jpg" alt="Minecraftのゲーム画面。植物が茂る洞窟" loading="lazy"></div>
+            <p class="person__name">Minecraft</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--warn">○ 規模を小さくすれば作れる</span></p>
+            <p class="person__text js-a" hidden>ブロックの世界を、数十人で同時に建築する。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/ポケモンGO.jpg" alt="横浜の公園に集まったポケモンGOのプレイヤーたち" loading="lazy"></div>
+            <p class="person__name">ポケモンGO</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--warn">○ 規模を小さくすれば作れる</span></p>
+            <p class="person__text js-a" hidden>GPSと地図で、学校のまわりを冒険する。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/太鼓の達人.jpg" alt="ゲームセンターの太鼓の達人の機械" loading="lazy"></div>
+            <p class="person__name">太鼓の達人</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>音楽に合わせてたたくリズムゲーム。キーボードやタッチで。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/Kahoot.jpg" alt="タブレットでKahoot!のクイズに答える生徒" loading="lazy"></div>
+            <p class="person__name">Kahoot!</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>先生の画面と全員のスマホがつながる、クイズ大会。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/AmongUs.jpg" alt="Among Usのキャラクターの着せかえ画面" loading="lazy"></div>
+            <p class="person__name">Among Us</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--warn">○ 規模を小さくすれば作れる</span></p>
+            <p class="person__text js-a" hidden>2Dの人狼ゲームを、クラス全員で同時にプレイする。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/ChatGPT.jpg" style="object-fit:contain;background:#fff;" alt="ChatGPTの画面" loading="lazy"></div>
+            <p class="person__name">ChatGPT</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>AIに相談できる画面。DeepSeekを中で使う。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/CharacterAI.jpg" style="object-fit:contain;background:#fff;" alt="Character.AIで、キャラクターと会話している画面" loading="lazy"></div>
+            <p class="person__name">Character.AI</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>自分で作ったキャラと会話する。性格も記憶も設計できる。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/Scratch.jpg" style="object-fit:contain;background:#fff;" alt="Scratchのプログラミング画面" loading="lazy"></div>
+            <p class="person__name">Scratch</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--warn">○ 規模を小さくすれば作れる</span></p>
+            <p class="person__text js-a" hidden>ブロックでプログラムを組み、作品をみんなで共有する。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/Googleドキュメント.jpg" style="object-fit:contain;background:#fff;" alt="Googleドキュメントで、複数の人が同時に編集している画面" loading="lazy"></div>
+            <p class="person__name">Googleドキュメント</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--warn">○ 規模を小さくすれば作れる</span></p>
+            <p class="person__text js-a" hidden>みんなで同じ文書を、同時に書ける。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/lichess.jpg" alt="オンラインチェスのサイトlichessの画面" loading="lazy"></div>
+            <p class="person__name">lichess（オンラインチェス）</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>対戦相手探し、レーティング、観戦まで。将棋でもいい。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/Wordle.png" style="object-fit:contain;background:#fff;" alt="Wordleの結果画面。色のついた文字のマス" loading="lazy"></div>
+            <p class="person__name">Wordle</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>毎日1問の言葉当てパズル。結果をシェアできる。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/2048.png" alt="2048のゲーム画面。数字のタイル" loading="lazy"></div>
+            <p class="person__name">2048</p>
+            <p class="person__meta js-q">作れる？</p>
+            <p class="person__meta js-a" hidden><span class="judge judge--ok">◎ ほぼ同じ体験を作れる</span></p>
+            <p class="person__text js-a" hidden>数字のタイルを合体させるパズル。</p>
+          </li>
+        </ul>
+
+        <p class="js-a" hidden><strong>答え：12個すべて。</strong>◎はほぼ同じ体験を、○は人数や規模を小さくすれば同じ体験を作れる。何百万人が同時に使う規模でなければ、有名なサービスと同じ種類のものが、君の道具で作れる。</p>
+
+        <h3 id="sample">先生の見本：同じ道具で、ここまで作れた</h3>
+        <p>先生も、君たちと同じ道具（エディタのAIとCloudflare）で、ゲームを1つ作ってみた。ブロックでできた島を冒険する3Dのゲーム「<strong>HIMORI 灯守の群島</strong>」だ。画像や音のファイルは1つも使っていない。ブロックの絵も、アイコンも、効果音も、すべてプログラムで作っている。</p>
+        <ul class="people wide">
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/HIMORI_アイコン.png" alt="HIMORIのブロックとアイテムのアイコン一覧" loading="lazy" style="image-rendering:pixelated;"></div>
+            <p class="person__name">ブロックとアイテム</p>
+            <p class="person__text">全部、プログラムで描いた絵。素材のファイルは使っていない。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/HIMORI_地図.png" alt="HIMORIの島の地図。草地と川と海" loading="lazy" style="image-rendering:pixelated;"></div>
+            <p class="person__name">自動で生まれる島</p>
+            <p class="person__text">川・森・雪山・砂漠・洞窟のある島を、プログラムが毎回作る。</p>
+          </li>
+          <li class="person">
+            <p class="person__name">遊べること</p>
+            <p class="person__text">昼と夜／ブロックを掘る・置く／道具のクラフト／昼に跳ねまわる生き物と、夜に現れる影／消えた祠に灯をともす冒険／効果音と光の演出</p>
+          </li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn--primary" href="https://kosaku.kaizuacademy.com/" target="_blank" rel="noopener">HIMORIで遊んでみる →</a>
+        </div>
+        <p class="small">PCで遊ぶゲーム（キーボードとマウスを使う）。君の作品も、同じように <code>https://（君の名前）.kaizuacademy.com</code> で公開される。</p>
+
+        <h3>作れない、5つの壁</h3>
+        <p>もちろん、作れないものもある。壁は5つだけだ。</p>
+        <ul class="people wide">
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/フォートナイト.jpg" alt="イベント会場で、大きな画面にフォートナイトが映っている" loading="lazy"></div>
+            <p class="person__name">フォートナイト</p>
+            <p class="person__meta"><span class="judge judge--ng">× 作れない</span></p>
+            <p class="person__text">何百万人が同時に遊ぶ、大作の3D。規模が桁ちがい。</p>
+          </li>
+          <li class="person">
+            <div class="person__art person__art--photo"><img src="../写真/原神.jpg" alt="原神のイベントブース" loading="lazy"></div>
+            <p class="person__name">原神</p>
+            <p class="person__meta"><span class="judge judge--ng">× 作れない</span></p>
+            <p class="person__text">何百人のチームが何年もかけて作る、広大な3Dの世界。</p>
+          </li>
+          <li class="person">
+            <p class="person__name">ほかの壁</p>
+            <p class="person__text">お金のやりとり（決済）／YouTubeやNetflixのような大きな動画配信／Googleのような、Web全体の検索／本格的な画像・音楽・動画を作るAI</p>
+          </li>
+        </ul>
+
+        <details class="deep">
+          <summary>写真の出典</summary>
+          <div class="deep__body">
+            <p class="small">写真・画面は Wikimedia Commons の自由なライセンスのもの。サービス名・ロゴは各社の商標。</p>
+            <table class="table small">
+          <tr><th>Minecraft</th><td>Xbox México ／ <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Minecraft_-_Lush_caves.jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>ポケモンGO</th><td>kkairri ／ <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Pok%C3%A9mon_Go_players_gathering_at_Mr.Mime_spawn_point_in_Pok%C3%A9mon_GO_PARK_(Yokohama,_2017).jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>太鼓の達人</th><td>Fumikas Sagisavas ／ <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Taiko_no_Tatsujin_arcade_(Chinese_language_version).jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>Kahoot!</th><td>Alpeque ／ <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Kahoot!.jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>Among Us</th><td>Innersloth ／ <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Among_Us_skins_cosmetics.jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>ChatGPT</th><td>S. Perquin ／ パブリックドメイン ／ <a href="https://commons.wikimedia.org/wiki/File:Screenshot_ChatGPT_Nederlands_(2025).jpg">Wikimedia Commons</a>（上部を切り抜き）</td></tr>
+          <tr><th>Character.AI</th><td>Character.ai ／ パブリックドメイン ／ <a href="https://commons.wikimedia.org/wiki/File:A_user_conversing_with_a_Character.ai_simulation_of_Wikipedia.png">Wikimedia Commons</a></td></tr>
+          <tr><th>Scratch</th><td>Scratch is by MIT and other contributors ／ <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Scratch_3.0_editor.png">Wikimedia Commons</a></td></tr>
+          <tr><th>Googleドキュメント</th><td>Subhashish Panigrahi ／ <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Sample_of_collaborative_editing_using_google_doc.png">Wikimedia Commons</a></td></tr>
+          <tr><th>lichess</th><td>lichess.org ／ <a href="https://www.gnu.org/licenses/agpl.html">AGPL</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Lichess_homepage.png">Wikimedia Commons</a></td></tr>
+          <tr><th>Wordle</th><td>Josh Wardle（ゲーム）、Berrely（作図） ／ パブリックドメイン ／ <a href="https://commons.wikimedia.org/wiki/File:Wordle_196_example.svg">Wikimedia Commons</a></td></tr>
+          <tr><th>2048</th><td>Gabriele Cirulli ／ <a href="https://opensource.org/licenses/MIT">MIT</a> ／ <a href="https://commons.wikimedia.org/wiki/File:2048_Screenshot.png">Wikimedia Commons</a></td></tr>
+          <tr><th>フォートナイト</th><td>Official GDC ／ <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Fortnite_Battle_Royale_at_GDC_2018.jpg">Wikimedia Commons</a></td></tr>
+          <tr><th>原神</th><td>Svetlov Artem ／ <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a> ／ <a href="https://commons.wikimedia.org/wiki/File:Genshin_Impact_booth_Moscow_Aviapark_2022-02.jpg">Wikimedia Commons</a></td></tr>
+        </table>
+          </div>
+        </details>
+
+        <h3>正直に言うと</h3>
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 640 230" role="img" aria-label="高い山の頂上が天井、中腹の旗が今回の10時間でたどりつく場所">
+            <path class="sky o" d="M300 214 L470 70 L630 214 Z"/>
+            <path class="sky2 o" d="M120 214 L330 24 L540 214 Z"/>
+            <path class="paper o" d="M330 24 L352.3 44 L341 40 L330 48 L319 40 L307.7 44 Z"/>
+            <path class="s" d="M330 24 V4"/>
+            <path class="coral o" d="M330 4 l20 7 l-20 7 z"/>
+            <path class="s" d="M262 120 V96"/>
+            <path class="yellow o" d="M262 96 l18 6 l-18 6 z"/>
+            <path d="M150 196 C 200 170, 230 150, 262 120" fill="none" stroke="#1a2d5c" stroke-width="2" stroke-dasharray="5 5"/>
+            <path d="M262 120 C 290 90, 312 60, 330 30" fill="none" stroke="#1a2d5c" stroke-width="1.6" stroke-dasharray="2 6" opacity="0.6"/>
+            <path class="s" d="M4 214 H636"/>
+            <use href="#kid-up" x="104" y="130" width="46" height="80" style="color:#f26d5b"/>
+            <use href="#aila" x="146" y="168" width="42" height="42"/>
+            <rect class="navy" x="364" y="10" width="196" height="28" rx="5"/>
+            <text x="462" y="29" font-size="14" text-anchor="middle" class="t-w">時間が無限にあれば（天井）</text>
+            <rect class="paper o" x="50" y="80" width="180" height="28" rx="5"/>
+            <text x="140" y="99" font-size="14" text-anchor="middle">今回の10時間で行く場所</text>
+          </svg>
+          <figcaption class="figure__cap"><b>図4</b>天井と、今回たどりつく場所。</figcaption>
+        </figure>
+        <p>上の12個は「時間が無限にあれば」の話だ。10時間で全部は作れない。でも、<strong>その中の一番の面白さは、本物の品質で作れる</strong>。目指すのは天井、作るのはその一部。この考え方は、7でもう一度使う。</p>
+
+        <h3>「みたいな」はOK、そっくりはNG</h3>
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col compare__good">
+              <p class="compare__head">○ 仕組みを借りる</p>
+              <p class="compare__title">「Kahoot!みたいに、全員のスマホがつながるクイズ」</p>
+              <p class="small">仕組みはだれのものでもない。中身・名前・キャラ・見た目を自分で作れば、それは君の作品だ。</p>
+            </div>
+            <div class="compare__col compare__bad">
+              <p class="compare__head">× そのまま使う</p>
+              <p class="compare__title">名前・キャラクター・画像・音楽をそのまま使う</p>
+              <p class="small">ほかの人の作品をそのまま使うと、著作権の問題になり、公開できない。</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図5</b>借りていいのは仕組みだけ。</figcaption>
+        </figure>
+      </section>
+
+      <!-- ========== 4 使える技術 ========== -->
+      <section class="sec" id="tech">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r12"/></svg></span>4　使える技術</p>
+        <h2 class="sec__title">君の道具で、何がどこまでできるか</h2>
+        <p>AIはほとんど何でも作れる。でも、君が知らないものは、君からは頼めない。「手の動きで操作できる」と知らなければ、手で操作するゲームは生まれない。だから企画を立てる前に、<strong>今回の道具で何がどこまでできるか</strong>を知っておこう。</p>
+
+        <h3>5つの段階</h3>
+        <table class="table">
+          <caption>今回の道具でできること（追加のお金はかからない）</caption>
+          <tr><th>1　画面だけ</th><td><b>例：</b>アクションゲーム、3Dの迷路、作曲ツール、診断、お絵描きソフト<br><b>どこまで：</b>1人で使うゲームや道具なら、ほぼ何でも作れる。大作ゲームのような重い3Dは、PCやスマホが追いつかない</td></tr>
+          <tr><th>2　端末の機能</th><td><b>例：</b>カメラに手をかざして操作、声で命令、スマホを傾けて遊ぶ、文章を読み上げる<br><b>どこまで：</b>Chrome・Edgeで動く。スマホでカメラやマイクを使うときは、公開したあとのURLで確かめる</td></tr>
+          <tr><th>3　記録を残す</th><td><b>例：</b>ランキング、みんなの投稿、みんなで作る図鑑、投票<br><b>どこまで：</b>クラスや学校の人数なら十分。画像や音のファイルを保存するには、先生の準備が必要</td></tr>
+          <tr><th>4　AIを入れる</th><td><b>例：</b>しゃべるキャラ、答えの採点、毎回ちがうステージや問題、投稿のチェック<br><b>どこまで：</b>AIが返すのは文字だけ（画像や音楽は作れない）。返事まで数秒かかる。1日に使える回数に上限がある</td></tr>
+          <tr><th>5　みんなで同時に</th><td><b>例：</b>オンライン対戦、共同お絵描き、クラスのクイズ大会、チャット<br><b>どこまで：</b>1つの部屋に数十人くらいまでが目安。ぶつかり合う速いアクションの対戦は、少しずれが出る。使うには先生の確認が必要</td></tr>
+        </table>
+        <p>このほか、<b>決まった時刻に自動で動く</b>しくみ（毎朝イベントが起きる、など）や、<b>登録のいらない無料の外部API・公開データ</b>（百科事典、地図、天気など）も使える。登録が必要なサービスを使いたいときは、先生に相談しよう。</p>
+
+        <h3>作品をすごくする部品の例</h3>
+        <p>下の12個は、作品に入れると見違える部品の例だ。名前（太字）は、そのままAIに頼むときの言葉として使える。</p>
+        <ul class="tiles wide">
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><circle class="yellow o" cx="24" cy="24" r="6"/><circle class="coral" cx="9" cy="12" r="3"/><circle class="coral" cx="40" cy="10" r="2.5"/><circle class="sky2" cx="42" cy="34" r="3"/><circle class="yellow" cx="8" cy="36" r="2.5"/><circle class="mint" cx="25" cy="5" r="2.5"/><circle class="coral" cx="27" cy="43" r="2.5"/><path class="s" d="M15 17 l-3 -3 M33 16 l3 -3 M33 31 l4 3 M15 31 l-4 3"/></svg>
+            <p class="tiles__type">見た目</p><p class="tiles__name">パーティクル</p><p class="tiles__text">小さな粒が飛び散る演出。爆発・キラキラ・煙。<br><b>どこまで：</b>数千粒でも軽く動く</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#ffc830" opacity="0.18"/><circle cx="24" cy="24" r="14" fill="#ffc830" opacity="0.32"/><path class="yellow o" d="M24 12 l3.5 7.5 l8 1 l-6 5.5 l1.6 8 l-7.1 -4 l-7.1 4 l1.6 -8 l-6 -5.5 l8 -1 z"/></svg>
+            <p class="tiles__type">見た目</p><p class="tiles__name">光の効果（ブルーム）</p><p class="tiles__text">明るいものが、ぼわっと光って見える。<br><b>どこまで：</b>3D（Three.js）の中で使う</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path class="sky o" d="M24 6 l16 9 l-16 9 l-16 -9 z"/><path class="sky2 o" d="M8 15 l16 9 v18 l-16 -9 z"/><path class="navy" d="M40 15 l-16 9 v18 l16 -9 z"/></svg>
+            <p class="tiles__type">見た目</p><p class="tiles__name">3D（Three.js）</p><p class="tiles__text">立体の世界を、ぐるっと見回せる。<br><b>どこまで：</b>部屋や小さな島くらいの広さなら軽い</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><rect class="paper o" x="12" y="10" width="28" height="28" rx="3"/><rect class="coral o" x="20" y="18" width="12" height="12" rx="2"/><path class="s" d="M4 14 v20 M8 10 v28 M44 16 v16"/></svg>
+            <p class="tiles__type">手触り</p><p class="tiles__name">画面の揺れ・ヒットストップ</p><p class="tiles__text">当たった瞬間に一瞬止まって、画面が揺れる。<br><b>どこまで：</b>数行で入るのに、効果がとても大きい</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path class="s" d="M3 44 H45"/><rect class="sky2 o" x="6" y="30" width="14" height="14" rx="2"/><rect class="yellow o" x="20" y="30" width="14" height="14" rx="2"/><rect class="coral o" x="16" y="9" width="14" height="14" rx="2" transform="rotate(22 23 16)"/><path class="s" d="M36 12 q4 4 2 10"/></svg>
+            <p class="tiles__type">手触り</p><p class="tiles__name">物理演算</p><p class="tiles__text">物が落ちる・転がる・崩れる。<br><b>どこまで：</b>積み木・ボール・落ち物パズルなら、本物みたいに動く</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path d="M16 44 v-12 l-6 -10 M16 32 l2 -22 M18 32 l8 -24 M20 32 l12 -20 M22 34 l14 -10" fill="none" stroke="#b9c8e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle class="coral o" cx="10" cy="22" r="2.6"/><circle class="coral o" cx="18" cy="10" r="2.6"/><circle class="coral o" cx="26" cy="8" r="2.6"/><circle class="coral o" cx="32" cy="12" r="2.6"/><circle class="coral o" cx="36" cy="24" r="2.6"/><circle class="yellow o" cx="17" cy="33" r="3"/></svg>
+            <p class="tiles__type">入力</p><p class="tiles__name">手の動きの認識</p><p class="tiles__text">カメラに手をかざして操作する。<br><b>どこまで：</b>指先など手の21か所の位置がわかる。カメラの許可が必要</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><rect class="coral o" x="17" y="4" width="14" height="24" rx="7"/><path class="s" d="M11 22 a13 13 0 0 0 26 0 M24 35 v7 M17 43 h14"/></svg>
+            <p class="tiles__type">入力</p><p class="tiles__name">声で操作</p><p class="tiles__text">話した言葉を文字にして、命令にする。<br><b>どこまで：</b>Chrome・Edgeで使える。うるさい場所では聞きまちがえる</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><use href="#phone" x="12" y="6" width="22" height="38" transform="rotate(-18 23 25)"/><path class="s" d="M38 10 a18 18 0 0 1 4 18"/><path class="s" d="M42 28 l-4 -1 M42 28 l2 -4"/></svg>
+            <p class="tiles__type">入力</p><p class="tiles__name">傾きセンサー</p><p class="tiles__text">スマホを傾けて、ボールを転がす。<br><b>どこまで：</b>スマホだけ。iPhoneは最初に許可のボタンが必要</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path class="sky2 o" d="M6 18 h8 l10 -9 v30 l-10 -9 h-8 z"/><path class="s" d="M30 18 q4 6 0 12 M35 13 q8 11 0 22 M40 8 q11 16 0 32"/></svg>
+            <p class="tiles__type">音</p><p class="tiles__name">効果音の自動生成</p><p class="tiles__text">ジャンプ音・爆発音を、プログラムで作る。<br><b>どこまで：</b>素材の著作権を気にしなくていい</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><use href="#aila" x="0" y="14" width="30" height="30"/><path class="paper o" d="M26 4 h18 a3 3 0 0 1 3 3 v12 a3 3 0 0 1 -3 3 h-12 l-5 4 v-4 a3 3 0 0 1 -3 -3 v-12 a3 3 0 0 1 3 -3 z"/><path d="M30 10 h12 M30 15 h8" stroke="#1a2d5c" stroke-width="2" stroke-linecap="round"/></svg>
+            <p class="tiles__type">AI</p><p class="tiles__name">AIキャラと会話</p><p class="tiles__text">性格を決めたキャラが、返事をする。<br><b>どこまで：</b>返事は文字。読み上げと組み合わせると、しゃべるキャラになる</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path class="s" d="M24 24 L8 10 M24 24 L40 10 M24 24 L24 42"/><circle class="navy" cx="24" cy="24" r="6"/><circle class="coral o" cx="8" cy="10" r="5"/><circle class="yellow o" cx="40" cy="10" r="5"/><circle class="mint o" cx="24" cy="42" r="5"/></svg>
+            <p class="tiles__type">つながる</p><p class="tiles__name">リアルタイム同時接続</p><p class="tiles__text">何人もが、同じ画面で同時に遊ぶ。<br><b>どこまで：</b>使うには先生の確認が必要</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><rect class="paper o" x="4" y="12" width="30" height="30" rx="3"/><rect class="coral" x="5" y="13" width="28" height="7"/><path class="s" d="M4 20 H34 M12 8 v8 M26 8 v8"/><text x="19" y="37" font-size="13" text-anchor="middle">7</text><circle class="yellow o" cx="38" cy="12" r="6"/><path class="s" d="M38 2 v2 M46 12 h2 M44 5 l1.5 -1.5"/></svg>
+            <p class="tiles__type">世界</p><p class="tiles__name">毎日変わる世界</p><p class="tiles__text">決まった時刻に、自動でイベントが起きる。<br><b>どこまで：</b>使うには先生の確認が必要</p>
+          </li>
+        </ul>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>今回の道具では、できないこと</p>
+          <ul>
+            <li>画像・音楽・動画を作るAI（キャラや背景の絵は、無料の画像生成サービスで先に作り、素材として使う。公開してよいかは、そのサービスの規約で確かめる）</li>
+            <li>お金のやりとり、本格的な会員登録（名前やメールアドレスなどの個人情報は集めない）</li>
+            <li>YouTubeのような動画配信、お金がかかる外部のサービス（登録が必要な無料のサービスは、先生に相談）</li>
+          </ul>
+        </div>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　使ってみたい技術</p>
+          <p>上の表と部品の中から、自分の作品に使ってみたいものを3つまで書こう。7の企画で使う。</p>
+          <div class="field">
+            <label class="field__label" for="w7t1"><span class="num">1</span>使ってみたい技術と、それで何をしたいか</label>
+            <input class="input" id="w7t1" placeholder="例：手の動きの認識。手を振ると魔法が出る">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7t2"><span class="num">2</span></label>
+            <input class="input" id="w7t2">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7t3"><span class="num">3</span></label>
+            <input class="input" id="w7t3">
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="saveWork('w7t', ['w7t1','w7t2','w7t3'])">保存</button>
+            <span class="status" id="w7tstatus" role="status"></span>
+          </div>
+        </div>
+
+        <div class="box box--hint">
+          <svg class="box__avatar" aria-hidden="true"><use href="#aila"/></svg>
+          <div>
+            <p class="box__label">アイラのヒント</p>
+            <p>「ヒットストップ」「パーティクル」のような言葉を知っていると、AIへの頼み方が一気に上手になる。知っている言葉の数が、君の頼める範囲だ。</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========== 5 君は監督 ========== -->
+      <section class="sec" id="director">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r7"/></svg></span>5　君は監督</p>
+        <h2 class="sec__title">作るのはAI、決めるのは君</h2>
+        <p>ここからが今日いちばん大事な話だ。5カ月の開発で、君はプログラマーではない。<span class="mark">監督</span>だ。君のチームには、何でも作れる天才（AI）がいる。君の仕事は、何を作るかを決め、天才に伝え、出てきたものを確かめて、決めることだ。</p>
+
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 640 220" role="img" aria-label="監督の生徒がメガホンを持ち、3人のAIがPC・設計書・サーバーで作業している">
+            <path class="s" d="M4 204 H636"/>
+            <path d="M20 150 l40 54 M80 150 l-40 54" stroke="#1a2d5c" stroke-width="4" stroke-linecap="round"/>
+            <rect class="coral o" x="12" y="138" width="76" height="14" rx="3"/>
+            <rect class="coral o" x="16" y="96" width="68" height="34" rx="3"/>
+            <path class="s" d="M20 130 v8 M80 130 v8" stroke-width="3"/>
+            <use href="#kid-up" x="78" y="96" width="62" height="108" style="color:#ffc830"/>
+            <path d="M136 104 l22 -12 v28 z" fill="#fff" stroke="#1a2d5c" stroke-width="2" stroke-linejoin="round"/>
+            <path class="s" d="M166 94 q5 12 0 24"/>
+            <rect class="paper o" x="150" y="28" width="132" height="44" rx="10"/>
+            <text x="216" y="48" font-size="14" text-anchor="middle">こんな瞬間を</text>
+            <text x="216" y="65" font-size="14" text-anchor="middle">作りたい！</text>
+            <use href="#aila" x="300" y="118" width="80" height="80"/>
+            <use href="#laptop" x="296" y="62" width="88" height="62"/>
+            <use href="#aila" x="410" y="118" width="80" height="80"/>
+            <use href="#doc" x="420" y="40" width="60" height="75"/>
+            <use href="#aila" x="520" y="118" width="80" height="80"/>
+            <use href="#server" x="534" y="22" width="52" height="86"/>
+          </svg>
+          <figcaption class="figure__cap"><b>図6</b>監督と、天才のチーム。</figcaption>
+        </figure>
+
+        <h3>指示は、天井になる</h3>
+        <p>AIにやり方を細かく指示すると、AIはその通りに作る。そのとき作品の上限は、<strong>君が知っているやり方の範囲</strong>で止まってしまう。AIはもっとたくさんの作り方を知っているのに、指示がそれを使わせない。</p>
+
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col compare__bad">
+              <p class="compare__head">やり方を指示する</p>
+              <p class="compare__title">「Canvasで、敵が左から右に動くシューティング。弾はスペースキー」</p>
+              <svg class="il" viewBox="0 0 420 150" role="img" aria-label="低い天井の部屋に、AIが窮屈そうに入っている">
+                <rect x="20" y="40" width="380" height="100" fill="#f3efe6" stroke="#1a2d5c" stroke-width="2"/>
+                <rect class="navy" x="14" y="30" width="392" height="14" rx="2"/>
+                <use href="#aila" x="174" y="62" width="76" height="76"/>
+                <path d="M182 56 l-6 -6 M212 52 v-6 M242 56 l6 -6" stroke="#f26d5b" stroke-width="2.4" stroke-linecap="round"/>
+                <text x="210" y="20" font-size="14" text-anchor="middle">君の知っている範囲が、天井になる</text>
+              </svg>
+            </div>
+            <div class="compare__col compare__col--em">
+              <p class="compare__head">理想を伝える</p>
+              <p class="compare__title">「友達が『あと1回だけ』をやめられなくなる、手に汗をにぎるゲームにしたい。どんな形がありえるか、5つ提案して」</p>
+              <svg class="il" viewBox="0 0 420 150" role="img" aria-label="天井のない空に、AIがたくさんの案を広げている">
+                <rect x="20" y="10" width="380" height="130" rx="6" fill="#dfe7f6"/>
+                <circle cx="70" cy="34" r="12" fill="#fff" opacity="0.8"/><circle cx="86" cy="30" r="14" fill="#fff" opacity="0.8"/><circle cx="340" cy="40" r="12" fill="#fff" opacity="0.8"/><circle cx="356" cy="36" r="14" fill="#fff" opacity="0.8"/>
+                <use href="#aila" x="174" y="62" width="76" height="76"/>
+                <circle class="yellow o" cx="110" cy="80" r="14"/><circle class="coral o" cx="150" cy="40" r="14"/><circle class="mint o" cx="270" cy="40" r="14"/><circle class="sky2 o" cx="312" cy="82" r="14"/><circle class="paper o" cx="212" cy="26" r="14"/>
+                <text x="110" y="85" font-size="13" text-anchor="middle">1</text><text x="150" y="45" font-size="13" text-anchor="middle">2</text><text x="212" y="31" font-size="13" text-anchor="middle">3</text><text x="270" y="45" font-size="13" text-anchor="middle">4</text><text x="312" y="87" font-size="13" text-anchor="middle">5</text>
+              </svg>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図7</b>やり方を指示すると、作品は君の知識の中に閉じこめられる。理想を伝えると、AIの知識全部が使える。</figcaption>
+        </figure>
+
+        <p>だから、伝えるのは<span class="mark">やり方ではなく、理想</span>。「誰に、どんな瞬間を体験してほしいか」を伝え、作り方はAIに提案させる。君は、出てきた案を見て選ぶ。</p>
+
+        <h3>理想は、ぼんやりではなく鮮明に</h3>
+        <table class="table">
+          <tr><th>ぼんやり</th><td>「かっこいいゲームを作って」。AIは、どこにでもある平均的なものを返す。</td></tr>
+          <tr><th>鮮明</th><td>「負けた瞬間に悔しくて、指が勝手にリトライを押してしまう」。やり方は何も決めていないのに、目指す体験ははっきりしている。</td></tr>
+        </table>
+        <p>やり方は自由に、体験は鮮明に。これが理想の伝え方だ。</p>
+
+        <h3>AIは天才。でも、人間とは違う</h3>
+        <p>君のチームの天才には、人間の仲間とちがう4つの性質がある。知っていれば、うまく付き合える。</p>
+        <ul class="tiles wide">
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><use href="#aila" x="0" y="12" width="34" height="34"/><circle class="paper o" cx="38" cy="12" r="9"/><text x="38" y="17" font-size="13" text-anchor="middle">?</text></svg>
+            <p class="tiles__type">ちがい1</p><p class="tiles__name">記憶がない</p><p class="tiles__text">会話が変わると、前のことを覚えていない。<b>だから：</b>決めたことはファイルに書いて残す。</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><path d="M3 34 l7 -18 l6 12 l6 -20 l6 24 l7 -14 l5 8 l5 -10" fill="none" stroke="#1a2d5c" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M3 42 H45" stroke="#c9ced8" stroke-width="2"/></svg>
+            <p class="tiles__type">ちがい2</p><p class="tiles__name">得意と苦手が読めない</p><p class="tiles__text">すごいことができるのに、簡単なことで失敗する。<b>だから：</b>必ず自分で確かめる。</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><use href="#aila" x="0" y="12" width="34" height="34"/><path class="paper o" d="M24 3 h20 a3 3 0 0 1 3 3 v10 a3 3 0 0 1 -3 3 h-12 l-5 4 v-4 a3 3 0 0 1 -3 -3 v-10 a3 3 0 0 1 3 -3 z"/><path class="s" d="M29 11 l3 3 l6 -6" stroke="#1e7a3c"/></svg>
+            <p class="tiles__type">ちがい3</p><p class="tiles__name">君に合わせる</p><p class="tiles__text">君の意見に賛成しがちで、「できました」と言いがち。<b>だから：</b>弱点や反対意見を聞く。</p>
+          </li>
+          <li>
+            <svg class="il" viewBox="0 0 48 48" aria-hidden="true"><use href="#doc" x="16" y="2" width="28" height="35"/><use href="#doc" x="10" y="7" width="28" height="35"/><use href="#doc" x="4" y="12" width="28" height="35"/></svg>
+            <p class="tiles__type">ちがい4</p><p class="tiles__name">何度でもやり直せる</p><p class="tiles__text">何回作り直しても、いやがらない。<b>だから：</b>3つの案を作らせて、選んでいい。</p>
+          </li>
+        </ul>
+
+        <h3>監督の約束</h3>
+        <table class="table">
+          <tr><th>1</th><td><b>君は監督。</b>作るのはAI、決めるのは君。</td></tr>
+          <tr><th>2</th><td><b>やり方じゃなく、理想を伝える。</b>方法を指示すると、作品の天井がそこで決まる。</td></tr>
+          <tr><th>3</th><td><b>「できました」は、君が確かめるまで完成じゃない。</b></td></tr>
+          <tr><th>4</th><td><b>1回に1つ。</b>まとめて頼むと、どこで壊れたか分からなくなる。</td></tr>
+          <tr><th>5</th><td><b>壊れても大丈夫。</b>セーブがある。3回だめなら、セーブに戻って頼み方を変える。</td></tr>
+          <tr><th>6</th><td><b>記憶はファイルが持つ。</b>企画書・タスク・開発日誌が、AIと君の共通の記憶。</td></tr>
+          <tr><th>7</th><td><b>ありきたりは、先にAIに出させて捨てる。</b></td></tr>
+          <tr><th>8</th><td><b>一番の面白さを1つ、磨き切る。</b>全部80点より、1つの120点。</td></tr>
+          <tr><th>9</th><td><b>鍵・個人情報・人の作品は守る。</b>公開する人の責任。</td></tr>
+        </table>
+
+      </section>
+
+      <!-- ========== 6 前提ファイル ========== -->
+      <section class="sec" id="files">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r11"/></svg></span>6　AIに渡す前提ファイル</p>
+        <h2 class="sec__title">この教室の決まりを、AIに渡しておく</h2>
+        <p>エディタのAIは、この教室のことを何も知らない。作品をどこで公開するのか、何を使ってよいのか、何をしてはいけないのか。毎回それを説明するのは大変なので、<strong>技術と安全の決まりだけをファイルにして</strong>、作品のフォルダーに置いておく。AIは作業の前に、それを読む。</p>
+        <p>このファイルには、何を作るか、どう作るかは書いていない。それを決めて伝えるのは、監督である君だ。</p>
+
+        <table class="table">
+          <caption>前提ファイル（4つ）</caption>
+          <tr><th><code>AGENTS.md</code></th><td>AIが守ること。技術の前提と安全のルール（安全と費用を守るための決まりで、君の理想を小さくするためのものではない）。作品フォルダーの一番上に置く</td></tr>
+          <tr><th><code>docs/環境と公開.md</code></th><td>開発の環境、使える技術、手元での動かし方、提出のしかた</td></tr>
+          <tr><th><code>docs/安全チェック.md</code></th><td>公開する前に確かめる13の項目</td></tr>
+          <tr><th><code>docs/ライブラリ.md</code></th><td>ライブラリ・無料の外部API・素材の選び方</td></tr>
+        </table>
+
+        <p>この4つは、授業の最初の準備（0）で、AIが作品のフォルダーに置いてくれている。Zedで作品のフォルダーを開き、左のファイル一覧に <code>AGENTS.md</code> と <code>docs</code> があるか確かめてから、AIに読ませよう。</p>
+        <p class="small">見つからないとき：<a href="files/ai07-前提ファイル.zip" download>前提ファイル（zip）</a>をダウンロードして、作品のフォルダーの中に展開する。</p>
+
+        <div class="panel">
+          <div class="panel__head">
+            前提ファイルを読ませる
+            <button class="btn btn--small" onclick="copyEl('pf1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pf1">AGENTS.md と、docs フォルダーの3つのファイルを読んでください。
+読み終わったら、このプロジェクトで守る決まりを、私にわかる言葉で5行にまとめてください。
+まだ何も作らないでください。</div>
+        </div>
+
+      </section>
+
+      <!-- ========== 7 理想を描く ========== -->
+      <section class="sec" id="vision">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r8"/></svg></span>7　理想を描く</p>
+        <h2 class="sec__title">誰に、どんな瞬間を届けたいか</h2>
+        <p>いよいよ、5カ月かけて作るものを決める。DAY06のゲームを育ててもいいし、まったく新しいものを始めてもいい。ジャンルは自由だ。</p>
+
+        <h3 id="plan">作る前に決めることが、作品を決める</h3>
+        <p>AIがいれば、作るのは速い。1つの機能なら数分でできてしまう。だから作品の良し悪しを決めるのは、「どれだけ作れたか」ではなくなった。<strong>「何を、誰のために作るか」</strong>だ。これを作る前に決めることを、企画という。</p>
+
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col compare__bad">
+              <p class="compare__head">企画がないまま作る</p>
+              <p class="compare__title">作りながら考える</p>
+              <p class="small">AIは頼まれれば何でも作るので、機能はどんどん増える。でも、どれも中途半端で、だれのための何なのかがわからない作品になる。</p>
+            </div>
+            <div class="compare__col compare__col--em">
+              <p class="compare__head">企画を決めてから作る</p>
+              <p class="compare__title">決めたゴールに向かって作る</p>
+              <p class="small">迷ったときに、作品の目的に戻れる。何を足して、何を足さないかを、自分で決められる。</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図8</b>企画は、5カ月の開発のコンパスになる。</figcaption>
+        </figure>
+
+        <h3 id="idea">ステップ1　アイデアを出して、選ぶ</h3>
+        <p>アイデアは、ひらめくのを待つものではない。<strong>材料を集めて、組み合わせて、たくさん出してから選ぶ</strong>ものだ。出し方には型がある。</p>
+        <table class="table">
+          <caption>アイデアの4つの出し方</caption>
+          <tr><th>「困った」「好き」「くやしい」から</th><td>毎日の困りごと、夢中になっていること、くやしかった出来事。君にしかない材料は、ここにある。<br>例：英単語をすぐ忘れる／虫が好き／ゲームで弟に勝ちすぎて泣かせた</td></tr>
+          <tr><th>2つをかけ合わせる</th><td>関係なさそうなものを組み合わせる。<br>例：図鑑 × 対戦、天気 × ペットを育てる、作曲 × パズル</td></tr>
+          <tr><th>仕組みを借りて、中身を変える</th><td>好きなゲームやサービスの仕組みはそのままに、テーマや相手を変える。<br>例：Kahoot!の仕組み × 地元の歴史クイズ</td></tr>
+          <tr><th>ルールを1つ足す・ひっくり返す</th><td>よくあるものに、ありえないルールを1つ入れる。<br>例：撃つたびに自分が小さくなるシューティング（DAY06）</td></tr>
+        </table>
+
+        <p>そして、AIが得意な「よくあるアイデア」は先に出させて捨てる。君のアイデアは、その外側から探す。</p>
+        <div class="panel">
+          <div class="panel__head">
+            アイデアを広げる
+            <button class="btn btn--small" onclick="copyEl('pv0', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pv0">私の材料は「（好きなこと・困っていること・くやしかったこと）」です。
+まず、この材料から世の中によくあるアイデアを5個、1行ずつ出してください。これは「使わないアイデア」です。
+次に、それとは違うアイデアを10個出してください。出し方は次の4つを使ってください。
+・困った／好き／くやしいから考える
+・関係なさそうな2つをかけ合わせる
+・有名なゲームやサービスの仕組みを借りて、中身を変える
+・よくあるものに、ありえないルールを1つ足す
+まだ何も作らないでください。</div>
+        </div>
+
+        <p>出たアイデアから1つ選ぶときは、次の4つで確かめよう。AIの案をそのまま使わず、自分の材料を足して変えてもいい。</p>
+        <ul class="checklist">
+          <li><label><input type="checkbox"><span>使ってくれる人の顔が、1人思いうかぶ</span></label></li>
+          <li><label><input type="checkbox"><span>1文で説明できる</span></label></li>
+          <li><label><input type="checkbox"><span>自分にしかない材料（好き・経験・ルール）が入っている</span></label></li>
+          <li><label><input type="checkbox"><span>一番の面白さが、はっきりしている</span></label></li>
+        </ul>
+
+        <h3>ステップ2　理想の6つの要素</h3>
+        <p>選んだアイデアを、理想として書く。ポイントは、<strong>やり方を書かず、体験を書く</strong>こと。</p>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　理想シート</p>
+          <div class="field">
+            <label class="field__label" for="w7who"><span class="num">1</span>誰のために作る？（具体的な1人。「みんな」はだめ）</label>
+            <input class="input" id="w7who" placeholder="例：ゲームが苦手な、小学3年生の弟">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7moment"><span class="num">2</span>その人に、どんな瞬間を体験してほしい？（やり方ではなく、気持ちや場面で）</label>
+            <textarea class="textarea" id="w7moment" placeholder="例：はじめは無理だと思っていた曲を、最後にたたききって、思わず声を出す"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7why"><span class="num">3</span>なぜ、それを作りたい？</label>
+            <textarea class="textarea" id="w7why" placeholder="例：弟がゲームで負けるとすぐにやめてしまうので、できた！の気持ちを味わってほしい"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7sign"><span class="num">4</span>何が起きたら「成功」とわかる？</label>
+            <input class="input" id="w7sign" placeholder="例：弟が説明なしで遊び始めて、自分から「もう1回」と言う">
+          </div>
+          <p class="small"><span class="num">5</span>守る条件（費用・安全・公開）は前提ファイルに書いてある。<span class="num">6</span>「作り方は任せる」は依頼文に自動で入る。</p>
+          <div class="actions">
+            <button class="btn" onclick="saveVision()">保存</button>
+            <span class="status" id="w7vstatus" role="status"></span>
+          </div>
+        </div>
+
+        <h3 id="words">ステップ3　頭の中を、言葉にする</h3>
+        <p>「思っていたのと違うものができた」。AIと作ると、よく起きることだ。原因の多くはAIではない。<strong>頭の中の絵が、言葉で伝わりきっていない</strong>ことにある。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="生徒の頭の中に、色や動きまではっきりしたゲームの場面がある">
+                  <use href="#kid" x="6" y="58" width="54" height="94" style="color:#bfe3d6"/>
+                  <circle class="paper o" cx="66" cy="62" r="4.5"/>
+                  <circle class="paper o" cx="80" cy="48" r="7"/>
+                  <rect class="paper o" x="92" y="8" width="142" height="108" rx="16"/>
+                  <rect x="102" y="18" width="122" height="88" rx="6" fill="#1a2d5c"/>
+                  <rect x="102" y="18" width="122" height="22" rx="6" fill="#f26d5b" opacity="0.55"/>
+                  <path class="yellow o" d="M206 24 l2.4 4.8 l5.3 0.8 l-3.9 3.7 l0.9 5.3 l-4.7 -2.5 l-4.7 2.5 l0.9 -5.3 l-3.9 -3.7 l5.3 -0.8 z"/>
+                  <rect x="102" y="54" width="122" height="22" fill="#2e4785"/>
+                  <circle cx="122" cy="65" r="9" fill="none" stroke="#fff" stroke-width="2"/>
+                  <circle cx="150" cy="65" r="7" fill="#f26d5b"/>
+                  <circle cx="174" cy="65" r="7" fill="#5f7cbf"/>
+                  <circle cx="198" cy="65" r="7" fill="#f26d5b"/>
+                  <path d="M122 50 v-5 M111 54 l-4 -4 M133 54 l4 -4" stroke="#ffc830" stroke-width="2.2" stroke-linecap="round"/>
+                  <text x="136" y="96" font-size="11" text-anchor="middle" class="t-w">ぴったり！</text>
+                  <path d="M168 92 h46" stroke="#bfe3d6" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>頭の中の絵は、くっきり</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="言葉にすると「かっこいいゲーム」だけになり、絵の多くがこぼれ落ちている">
+                  <use href="#kid" x="6" y="58" width="54" height="94" style="color:#bfe3d6"/>
+                  <rect class="paper o" x="64" y="20" width="124" height="34" rx="8"/>
+                  <text x="126" y="42" font-size="13" text-anchor="middle">かっこいいゲーム</text>
+                  <rect x="128" y="84" width="24" height="16" rx="3" fill="#d9dde5" stroke="#8a93a6" stroke-width="1.6" stroke-dasharray="3 3" transform="rotate(-12 140 92)"/>
+                  <circle cx="176" cy="96" r="9" fill="#d9dde5" stroke="#8a93a6" stroke-width="1.6" stroke-dasharray="3 3"/>
+                  <rect x="196" y="114" width="28" height="14" rx="3" fill="#d9dde5" stroke="#8a93a6" stroke-width="1.6" stroke-dasharray="3 3" transform="rotate(10 210 121)"/>
+                  <path d="M150 126 l4 8 l8 1 l-6 6 l1.5 8 l-7.5 -4 l-7.5 4 l1.5 -8 l-6 -6 l8 -1 z" fill="#d9dde5" stroke="#8a93a6" stroke-width="1.6" stroke-dasharray="3 3"/>
+                  <text x="100" y="132" font-size="16" text-anchor="middle" fill="#8a93a6">?</text>
+                  <text x="214" y="96" font-size="16" text-anchor="middle" fill="#8a93a6">?</text>
+                  <path d="M150 64 q6 8 0 14 M186 66 q-6 8 0 14" stroke="#8a93a6" stroke-width="1.6" fill="none" stroke-dasharray="3 3"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>言葉にすると、一部しか運べない</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 160" role="img" aria-label="AIが、足りないところをどこにでもある形で埋めた、平凡なゲーム画面を作っている">
+                  <use href="#aila" x="4" y="72" width="70" height="70"/>
+                  <rect class="paper o" x="86" y="16" width="146" height="112" rx="6"/>
+                  <rect x="96" y="26" width="126" height="92" rx="4" fill="#d9dde5"/>
+                  <rect x="106" y="98" width="106" height="8" rx="2" fill="#b4bac6"/>
+                  <rect x="128" y="80" width="14" height="14" rx="2" fill="#8a93a6"/>
+                  <circle cx="188" cy="64" r="8" fill="#b4bac6"/>
+                  <text x="159" y="48" font-size="13" text-anchor="middle" fill="#4a5160">よくある形</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>足りないところは、AIが「よくある形」で埋める</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図9</b>「思っていたのと違う」が起きるしくみ。</figcaption>
+        </figure>
+
+        <p>AIは、君が書かなかったところを、いちばんよくある形で勝手に埋める。伝わっていない部分が多いほど、作品はどこかで見たような、平凡なものになる。これを防ぐ方法が5つある。</p>
+
+        <table class="table">
+          <caption>頭の中を言葉にする5つの方法</caption>
+          <tr><th>1　1つの場面を実況する</th><td>いちばん大事な瞬間の5秒間を、スポーツの実況のように、時間の順に書く。最初に何が見えて、何をして、何が起きて、どう感じるか。</td></tr>
+          <tr><th>2　五感と数字で書く</th><td>色・音・動き・大きさ・速さ・数を書く。「速い」ではなく「1秒で画面のはしからはしまで」。「気持ちいい音」ではなく「ドンという低い音」。</td></tr>
+          <tr><th>3　知っている体験にたとえる</th><td>「〇〇のボタンを押したときみたいな手ざわり」「運動会のリレーで追いつく瞬間のような気持ち」。たとえると、一気に伝わる。</td></tr>
+          <tr><th>4　「こうじゃない」も書く</th><td>してほしくないことを書く。「怖すぎない」「待たせない」「説明を読ませない」。AIがよくある形で埋めるのを防げる。</td></tr>
+          <tr><th>5　紙に描いてから、言葉にする</th><td>その場面を紙に3コマで描き、描いたものを言葉で説明する。エディタのAI（DeepSeek）は絵を見られないので、言葉にするのは君の仕事だ。</td></tr>
+        </table>
+
+        <figure class="figure wide">
+          <div class="compare">
+            <div class="compare__col compare__bad">
+              <p class="compare__head">ぼんやり</p>
+              <p class="compare__title">「リズムゲームで、たたくと気持ちいいようにして」</p>
+              <p class="small">「気持ちいい」が何なのかは、AIにはわからない。よくある効果がつくだけになる。</p>
+            </div>
+            <div class="compare__col compare__col--em">
+              <p class="compare__head">鮮明</p>
+              <p class="compare__title">1つの場面を実況する</p>
+              <p>曲に合わせて、画面の右から太鼓が流れてくる。ぴったりでたたくと、太鼓がパンッと白く光って弾け、画面が一瞬だけ小さく揺れる。ドンという低い音。外すと太鼓が灰色になって、ゆっくり下に落ちていく。10回続けてぴったりだと、背景が夕焼けから夜空に変わる。怖い音や、失敗で長く止まる演出はしない。</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図10</b>同じ「気持ちいい」でも、実況すると、作るものがはっきり決まる。</figcaption>
+        </figure>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　実況シート</p>
+          <p>理想シートの2の「瞬間」を、5秒間の実況にしよう。全部の欄を埋めなくていい。書けるところから、具体的に。</p>
+          <div class="field">
+            <label class="field__label" for="w7scene"><span class="num">1</span>どの場面？（いつ、どこで、何をしているところか）</label>
+            <input class="input" id="w7scene" placeholder="例：曲の最後の10秒、いちばんむずかしいところをたたいている">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7see"><span class="num">2</span>見えるもの・動き（色、大きさ、速さ、数）</label>
+            <textarea class="textarea" id="w7see" placeholder="例：右から太鼓が1秒に3個流れてくる。ぴったりだと白く光って弾ける"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7hear"><span class="num">3</span>聞こえる音</label>
+            <input class="input" id="w7hear" placeholder="例：たたくとドンという低い音。外すとポスッという軽い音">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7do"><span class="num">4</span>自分がすること（どこを、どう操作するか）</label>
+            <input class="input" id="w7do" placeholder="例：スペースキーか、画面のどこかをタップ">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7feel"><span class="num">5</span>そのときの気持ち</label>
+            <input class="input" id="w7feel" placeholder="例：手に汗をにぎって、最後の1個で「よしっ」と声が出る">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7not"><span class="num">6</span>こうじゃない（してほしくないこと）</label>
+            <input class="input" id="w7not" placeholder="例：怖い音は出さない。失敗しても長く止めない">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7like"><span class="num">7</span>たとえるなら</label>
+            <input class="input" id="w7like" placeholder="例：運動会のリレーで、最後に追いついた瞬間みたい">
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="saveVision()">保存</button>
+            <button class="btn btn--primary" onclick="buildVisionPrompt()">理想シートと合わせて依頼文にする</button>
+            <span class="status" id="w7sstatus" role="status"></span>
+          </div>
+        </div>
+
+        <h3>ステップ4　AIに質問させ、言い直させる</h3>
+        <p>理想を伝えたら、すぐには作らせない。まず<strong>AIに質問させる</strong>。自分では言葉にできていなかったことが、質問に答えるうちに形になっていく。</p>
+        <div class="panel">
+          <div class="panel__head">
+            理想を伝えて、質問させる
+            <button class="btn btn--small" onclick="copyEl('pv1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pv1">これから5カ月かけて、1つの作品を作って公開します。作り始める前に、企画を一緒に考えてください。
+
+■ 誰のために：（理想シートの1）
+■ どんな瞬間を体験してほしいか：（理想シートの2）
+■ なぜ作りたいか：（理想シートの3）
+■ 成功したとわかるサイン：（理想シートの4）
+
+【その瞬間の実況】
+■ 場面：（実況シートの1）
+■ 見えるもの・動き：（実況シートの2）
+■ 聞こえる音：（実況シートの3）
+■ 自分がすること：（実況シートの4）
+■ そのときの気持ち：（実況シートの5）
+■ こうじゃない：（実況シートの6）
+■ たとえるなら：（実況シートの7）
+
+作り方は任せます。もっと良い理想があれば、理想そのものにも提案してください。
+企画書を書く前に、わからないことを私に5つ質問してください。まだ何も作らないでください。</div>
+        </div>
+
+        <p>質問に答えたら、次は<strong>AIに言い直させる</strong>。AIが頭の中に描いた絵を、言葉で見せてもらうのだ。君の絵とずれていたら、そこを直して伝える。</p>
+        <div class="panel">
+          <div class="panel__head">
+            言い直させて、ずれを見つける
+            <button class="btn btn--small" onclick="copyEl('pv1b', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pv1b">作り始める前に、私の言いたいことを、あなたの言葉で説明してください。
+とくに「その瞬間」の画面のようすを、目に浮かぶように描写してください。
+色・動き・音・速さも入れてください。ずれているところは、私が直します。</div>
+        </div>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>ここが大事</p>
+          <p class="box__title">ずれは、作る前に見つけるほど安い。</p>
+          <p>作ってから直すと、作る前の何倍も時間がかかる。言い直しを読んで「ちがう」と感じたら、どこがどうちがうのかを、また5つの方法で言葉にする。それでも残ったずれは、小さく作って、見て、言葉を足して直す。</p>
+        </div>
+
+        <h3 id="legend">ステップ5　目指す場所は大きく、作る一歩は小さく</h3>
+        <p>DAY06では「まずMVP（最小限で遊べる形）を作り、1つずつ広げる」と学んだ。今回はそこに、<strong>最初に「伝説版」を描く</strong>ことを足す。2つは矛盾しない。役割がちがうのだ。</p>
+        <table class="table">
+          <tr><th>伝説版</th><td><b>目指す場所（地図）。</b>この作品が最高に育ったらどうなるか。作る前に描くだけで、全部は作らない。</td></tr>
+          <tr><th>MVP</th><td><b>最初の一歩。</b>一番の面白さだけが、本物の手ざわりで動く、いちばん小さな形。ここから作る。</td></tr>
+        </table>
+
+        <figure class="figure wide">
+          <svg class="il" viewBox="0 0 640 240" role="img" aria-label="MVPから始まり、次、いつか、と道が続き、その先に伝説版の旗が立っている">
+            <path class="s" d="M4 222 H636"/>
+            <path d="M120 190 C 190 176, 220 160, 270 148" fill="none" stroke="#1a2d5c" stroke-width="3" stroke-linecap="round"/>
+            <path d="M270 148 C 330 132, 370 116, 420 104 C 470 92, 520 74, 560 56" fill="none" stroke="#1a2d5c" stroke-width="2.4" stroke-dasharray="6 6" stroke-linecap="round"/>
+            <use href="#kid-up" x="14" y="128" width="50" height="88" style="color:#ffc830"/>
+            <use href="#aila" x="58" y="174" width="42" height="42"/>
+            <circle class="navy" cx="120" cy="190" r="26"/>
+            <text x="120" y="195" font-size="14" text-anchor="middle" class="t-w">MVP</text>
+            <circle class="sky2 o" cx="270" cy="148" r="22"/>
+            <text x="270" y="153" font-size="14" text-anchor="middle">次</text>
+            <circle cx="420" cy="104" r="27" fill="#dfe7f6" stroke="#1a2d5c" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="420" y="109" font-size="13" text-anchor="middle">いつか</text>
+            <path class="s" d="M572 56 V12"/>
+            <path class="coral o" d="M572 12 l24 8 l-24 8 z"/>
+            <path class="yellow o" d="M560 40 l4 8 l9 1.3 l-6.5 6.3 l1.5 9 l-8 -4.3 l-8 4.3 l1.5 -9 l-6.5 -6.3 l9 -1.3 z"/>
+            <text x="120" y="236" font-size="13" text-anchor="middle">一番の面白さだけ</text>
+            <text x="270" y="194" font-size="13" text-anchor="middle">第4回まで</text>
+            <text x="270" y="210" font-size="13" text-anchor="middle">（銀を目指す）</text>
+            <text x="420" y="150" font-size="13" text-anchor="middle">時間があれば</text>
+            <text x="520" y="96" font-size="14" text-anchor="middle">伝説版</text>
+            <text x="520" y="114" font-size="13" text-anchor="middle">（目指す方向）</text>
+            <text x="192" y="132" font-size="13" text-anchor="middle">第3回で完成（銅）</text>
+            <path d="M160 136 l-18 32" stroke="#1a2d5c" stroke-width="1.4"/>
+          </svg>
+          <figcaption class="figure__cap"><b>図11</b>伝説版で方向を決め、MVPから一歩ずつ進む。</figcaption>
+        </figure>
+
+        <p>伝説版を先に描く理由は2つある。1つは、どっちに育てるかがぶれないこと。もう1つは、AIに伝えておくと、あとで作り直しにならない土台を作ってくれることだ（「あとで対戦にしたい」は最初に言う）。そして、MVPから作る理由は、早く本物を触って、ずれを直せることだ。</p>
+        <p>MVPは「全部を少しずつ」ではない。<strong>一番の面白さだけを、小さく、でも本物の手ざわりで</strong>作る。リズムゲームなら、曲は1つ、太鼓は1種類でいい。でも、たたいた瞬間の気持ちよさだけは、実況シートに書いたとおり本物にする。</p>
+
+        <div class="panel">
+          <div class="panel__head">
+            伝説版とMVPを提案させる
+            <button class="btn btn--small" onclick="copyEl('pv2', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pv2">質問への答えと、言い直しへの私の修正をふまえて、この作品をプロのチームが本気で作ったらどうなるかを、
+「普通版」「すごい版」「伝説版」の3段階で、使った人が何を体験するかで説明してください。
+
+そのうえで、次の3つを提案してください。
+・MVP：一番の面白さだけが、本物の手ざわりで動く、いちばん小さな形（第3回で完成させる）
+・次：MVPのあとに足すもの（第4回まで）
+・いつか：伝説版に向かって、時間があれば足すもの
+また、「一番の面白さ」の候補を3つ、遊んだ人が思わず声を出す「驚きの瞬間」の候補を3つ出してください。
+
+作りは、伝説版に向かって育てられる土台にしてください。
+私が選んだら、docs/企画書.md にまとめてもらいます。まだ何も作らないでください。</div>
+        </div>
+
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>ここが大事</p>
+          <p class="box__title">一番の面白さは、1つに決める。全部80点より、1つの120点。</p>
+          <p>AIの候補から選ぶのは君だ。選んだら「◯番にする。理由は〜」と伝えて、企画書にまとめさせよう。</p>
+        </div>
+
+        <h3>天井の要素は、0〜2個まで</h3>
+        <p>4で見た技術や、下の8つの方向から、作品に入れたい「天井の要素」を選ぶ。入れなくてもいい。欲張って全部入れると、10時間では全部が中途半端になる。</p>
+        <table class="table">
+          <tr><th>AIが遊びを操る</th><td>遊んだ人の行動を見て、AIが次のステージや事件を作る</td></tr>
+          <tr><th>毎日変わる世界</th><td>見ていない間も世界が進み、毎朝新しいことが起きる</td></tr>
+          <tr><th>作品どうしがつながる</th><td>クラスの共通のポイントやアイテムを、ほかの人の作品と行き来させる</td></tr>
+          <tr><th>体で操作する</th><td>手の動き・声・スマホの傾きで操作する</td></tr>
+          <tr><th>AIが見守るサービス</th><td>投稿をAIがチェックしてから公開する、安心な場所</td></tr>
+          <tr><th>知識を持ったAI</th><td>自分たちで調べた資料をもとに答える案内役</td></tr>
+          <tr><th>作品を作る道具</th><td>ほかの人が何かを作れるエディタや、オリジナル言語</td></tr>
+          <tr><th>みんなで同時に</th><td>何人もが、同じ画面でリアルタイムに遊ぶ・作る</td></tr>
+        </table>
+
+        <div class="panel">
+          <div class="panel__head">
+            企画書にまとめさせる
+            <button class="btn btn--small" onclick="copyEl('pv3', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pv3">一番の面白さは「（選んだもの）」、驚きの瞬間は「（選んだもの）」にします。
+入れたい天井の要素は「（0〜2個）」です。理由は（自分の言葉で）です。
+
+ここまでの話を、docs/企画書.md にまとめてください。
+入れる項目：誰のために／どんな瞬間を体験してほしいか／その瞬間の実況（見えるもの・聞こえる音・すること・気持ち・こうじゃない・たとえ）／なぜ作るか／成功のサイン／普通版・すごい版・伝説版／MVP・次・いつか／一番の面白さ／驚きの瞬間／天井の要素
+私が書いた言葉は、できるだけそのまま残してください。
+書き終わったら、私が読んで直すので、要点を3行で教えてください。</div>
+        </div>
+
+      </section>
+
+      <!-- ========== 8 設計 ========== -->
+      <section class="sec" id="design">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r13"/></svg></span>8　設計</p>
+        <h2 class="sec__title">AIが書き、君が直す</h2>
+        <p>企画書ができたら、DAY06と同じように設計書を作る。今回は5カ月続くので、4つのファイルを作らせる。書くのはAI、<strong>読んで赤を入れるのは君</strong>だ。</p>
+
+        <table class="table">
+          <caption>君の作品のドキュメント</caption>
+          <tr><th><code>docs/企画書.md</code></th><td>理想（7で作った）。君の許可なく変えさせない</td></tr>
+          <tr><th><code>docs/仕様書.md</code></th><td>画面・データ・機能の一覧</td></tr>
+          <tr><th><code>docs/タスク.md</code></th><td>1回30分で終わる大きさの作業。確かめ方つき</td></tr>
+          <tr><th><code>docs/決めたこと.md</code></th><td>決めたこと、その理由、選ばなかった案</td></tr>
+          <tr><th><code>docs/開発日誌.md</code></th><td>毎回やったことと、次にやること</td></tr>
+        </table>
+
+        <div class="panel">
+          <div class="panel__head">
+            設計書を作らせる
+            <button class="btn btn--small" onclick="copyEl('pd1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pd1">docs/企画書.md を読んで、次の4つのファイルを作ってください。まだコードは書かないでください。
+
+1. docs/仕様書.md …… 画面、データ、機能の一覧。機能は「MVP（最初に作る）」「次」「いつか」に分ける
+2. docs/タスク.md …… 1回30分で終わる大きさの作業のチェックリスト。
+   各項目に「確かめ方」（何をしたら完成とわかるか）と「優先（MVP・次・いつか）」を付ける。
+   確かめ方は、企画書の「その瞬間の実況」と比べられるように書く
+   一番の面白さに関わる、一番むずかしいところを最初に置く
+3. docs/決めたこと.md …… ここまでに決めたことと、その理由、選ばなかった案
+4. docs/開発日誌.md …… 今日の日付で「企画と設計をした」と書く
+
+伝説版に向かって育てられる作りにしてください。
+書き終わったら、私が読んで直すので、タスクの最初の3つを教えてください。</div>
+        </div>
+
+        <p>タスクは、次のような形になっていればいい。</p>
+        <div class="panel">
+          <div class="panel__head">docs/タスク.md の例</div>
+          <div class="panel__body panel__body--code">- [ ] 曲に合わせて流れてくる太鼓を、タイミングよくたたくと判定が出る
+  - 確かめ方：10回たたいて、早い・ぴったり・遅いの判定が毎回出る
+  - 優先：MVP
+- [ ] たたいた瞬間に、太鼓が光って画面が少し揺れる
+  - 確かめ方：ぴったりのときだけ、光と揺れが起きる
+  - 優先：MVP</div>
+        </div>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>読んで、直す</p>
+          <p>AIの書いた設計書を、そのまま信じない。企画書とずれていないか、タスクに確かめ方が付いているか、一番の面白さが最初にあるかを読む。ちがうところは「ここを〜に直して」と伝える。</p>
+        </div>
+
+      </section>
+
+      <!-- ========== 9 最初の1サイクル ========== -->
+      <section class="sec" id="cycle">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r9"/></svg></span>9　最初の1サイクル</p>
+        <h2 class="sec__title">開発の型：1回に1つ</h2>
+        <p>ここから5カ月、毎回くり返す型がある。タスクを1つ選んで、6つのステップを回す。6まで行ったら、また1に戻る。</p>
+
+        <ol class="road wide" style="--cols:6">
+          <li><span class="road__icon"><svg><use href="#doc"/></svg></span><span class="road__n">1</span><span class="road__t">選ぶ</span><span class="road__s">タスクを1つ</span></li>
+          <li><span class="road__icon"><svg><use href="#aila"/></svg></span><span class="road__n">2</span><span class="road__t">相談する</span><span class="road__s">計画を出させて読む</span></li>
+          <li><span class="road__icon"><svg><use href="#laptop"/></svg></span><span class="road__n">3</span><span class="road__t">作らせる</span><span class="road__s">変わったファイルを見る</span></li>
+          <li><span class="road__icon"><svg><use href="#loupe"/></svg></span><span class="road__n">4</span><span class="road__t">確かめる</span><span class="road__s">手元で動かす</span></li>
+          <li><span class="road__icon"><svg><use href="#r2"/></svg></span><span class="road__n">5</span><span class="road__t">セーブする</span><span class="road__s">タスクに印</span></li>
+          <li><span class="road__icon"><svg><use href="#bulb"/></svg></span><span class="road__n">6</span><span class="road__t">提案させる</span><span class="road__s">次の一手を広げる</span></li>
+        </ol>
+
+        <div class="panel">
+          <div class="panel__head">
+            2　計画を出させる
+            <button class="btn btn--small" onclick="copyEl('pc1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pc1">docs/タスク.md の「（タスクの名前）」だけを進めたいです。
+まだコードは書かずに、どう作るかの計画を、変えるファイルと一緒に教えてください。</div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">
+            3　作らせる
+            <button class="btn btn--small" onclick="copyEl('pc2', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pc2">その計画で作ってください。ほかの部分は変えないでください。
+終わったら、手元で動かして確かめた方法と結果を教えてください。
+仮のデータやダミーで済ませた部分、できなかった部分があれば、正直に教えてください。</div>
+        </div>
+
+        <h3>4　手元で動かして、確かめる</h3>
+        <p>AIに「手元で動かして」と言うと、作品が君のPCの中で動き出す。ブラウザで次の住所を開いて、タスクの「確かめ方」の通りに触ってみよう。</p>
+        <div class="keyline" style="margin:12px 0 20px;"><code>http://localhost:8787</code><span class="small">（localhost＝このPCの中、という意味）</span></div>
+
+        <div class="box box--caution">
+          <p class="box__label"><svg><use href="#i-caution"/></svg>「できました」を信じない</p>
+          <p>AIは、できていないのに「できました」と言うことがある。<strong>君が自分で触って確かめるまで、完成ではない</strong>。確かめ方の通りに動いたら、次へ進む。</p>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            5　セーブする
+            <button class="btn btn--small" onclick="copyEl('pc4', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pc4">動きました。ここまでをセーブしてください。
+docs/タスク.md の、終わった項目に [x] を付けてください。</div>
+        </div>
+        <div class="panel">
+          <div class="panel__head">
+            6　提案させる
+            <button class="btn btn--small" onclick="copyEl('pc5', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pc5">今の作品に、私が思いつかないような改善を3つ提案してください。1つは大胆なものにしてください。
+まだ作らないでください。</div>
+        </div>
+        <p>提案の中から、良いと思ったものを1つ選んで、タスクに足してもらおう。全部は採用しなくていい。選ぶのは君だ。</p>
+
+        <h3>困ったとき</h3>
+        <table class="table">
+          <tr><th>1　正しく伝える</th><td>下のプロンプトで、何が起きているかを伝える。エラーは、ブラウザでF12を押し、Console（コンソール）の赤い文字をそのままコピーして渡す</td></tr>
+          <tr><th>2　原因を考えさせる</th><td>「考えられる原因を3つと、それぞれの確かめ方を教えて」</td></tr>
+          <tr><th>3　3回だめなら戻す</th><td>同じバグで3回直らなければ、「さっきのセーブに戻して」と頼み、頼み方を変えてやり直す</td></tr>
+        </table>
+        <div class="panel">
+          <div class="panel__head">
+            バグを伝える
+            <button class="btn btn--small" onclick="copyEl('pc3', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="pc3">うまく動きません。直してください。
+■ 何をしたか：（操作）
+■ どうなるはずだったか：（期待）
+■ 実際にどうなったか：（症状）
+■ エラーの文：（あれば全文をそのまま貼る）
+直したら、原因と、どのファイルのどこを変えたかを説明してください。</div>
+        </div>
+
+      </section>
+
+      <!-- ========== 10 引き継ぎと提出 ========== -->
+      <section class="sec" id="handoff">
+        <p class="sec__label"><span class="sec__icon"><svg><use href="#r10"/></svg></span>10　引き継ぎと提出</p>
+        <h2 class="sec__title">記憶は、ファイルが持つ</h2>
+        <p>次の授業は1か月後だ。そのとき、AIは今日のことを何も覚えていない。たぶん、君もかなり忘れている。だから授業の最後に、<strong>次の自分とAIへの引き継ぎ</strong>を書いておく。</p>
+
+        <figure class="figure wide">
+          <div class="scene" style="margin:0;">
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="授業の最後に、AIが開発日誌を書く">
+                  <use href="#aila" x="12" y="50" width="86" height="86"/>
+                  <use href="#doc" x="120" y="14" width="96" height="120"/>
+                  <rect class="navy" x="132" y="96" width="74" height="20" rx="4"/>
+                  <text x="169" y="110" font-size="11" text-anchor="middle" class="t-w">開発日誌.md</text>
+                  <path d="M98 64 l20 -14 l5 4 l-20 14 l-7 2 z" fill="#f26d5b" stroke="#1a2d5c" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">1</span>今日のことを書き残す</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="1か月後、AIは何も覚えていない">
+                  <rect class="paper o" x="20" y="16" width="70" height="66" rx="4"/>
+                  <rect class="coral" x="21" y="17" width="68" height="16"/>
+                  <path class="s" d="M20 33 H90"/>
+                  <text x="55" y="66" font-size="22" text-anchor="middle">1か月</text>
+                  <use href="#aila" x="120" y="54" width="86" height="86"/>
+                  <circle class="paper o" cx="200" cy="42" r="18"/>
+                  <text x="200" y="50" font-size="22" text-anchor="middle">?</text>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">2</span>1か月後、AIは覚えていない</p>
+            </div>
+            <div class="scene__step">
+              <div class="scene__art">
+                <svg class="il" viewBox="0 0 240 150" role="img" aria-label="開発日誌を読んで、AIと生徒が続きから始める">
+                  <use href="#kid" x="14" y="44" width="54" height="94" style="color:#bfe3d6"/>
+                  <use href="#doc" x="78" y="24" width="72" height="90"/>
+                  <use href="#aila" x="150" y="56" width="80" height="80"/>
+                  <circle class="mint o" cx="216" cy="40" r="13"/>
+                  <path class="s" d="M209 40 l5 5 l9 -10" stroke-width="2.6"/>
+                </svg>
+              </div>
+              <p class="scene__cap"><span class="n">3</span>読んで、続きから始める</p>
+            </div>
+          </div>
+          <figcaption class="figure__cap"><b>図12</b>開発日誌が、AIと君の共通の記憶になる。</figcaption>
+        </figure>
+
+        <div class="panel">
+          <div class="panel__head">
+            開発日誌を書かせる
+            <button class="btn btn--small" onclick="copyEl('ph1', this)">コピー</button>
+          </div>
+          <div class="panel__body panel__body--prompt" id="ph1">今日の引き継ぎを docs/開発日誌.md に書いてください。
+次の授業では、あなた（AI）も私も、今日のことを何も覚えていない前提で書いてください。
+入れること：今日やったこと／決めたこと／次にやること（タスクの名前）／困っていること</div>
+        </div>
+
+        <h3>提出する</h3>
+        <p>開発日誌を読んで、合っていたら、AIにこう言う。</p>
+        <div class="keyline" style="margin:12px 0 20px;"><code>提出して</code><span class="small">AIがセーブして、君の作品をGitHubに送る</span></div>
+        <p>送れたら、先生が中身を確認して、君のURLに公開する。次の授業の最初は、AIにこう言えば続きから始められる。</p>
+        <div class="keyline" style="margin:12px 0 20px;"><code>開発日誌・タスク・決めたことを読んで、今の状況と、今日やることの候補を3つ教えて</code></div>
+
+        <h3>まとめ</h3>
+        <div class="box box--point">
+          <p class="box__label"><svg><use href="#i-point"/></svg>ここが大事</p>
+          <p class="box__title">君は監督。やり方ではなく理想を伝え、AIの提案から選び、確かめて決める。</p>
+          <p>AIを作る会社自身が「思いどおりに動かないかもしれない」と書くほど、AIは強く、そして予測しにくい。だからこそ、何を作るかを決め、出てきたものを確かめる人が必要だ。それが、これからの5カ月の君の仕事だ。</p>
+        </div>
+
+        <div class="box box--task">
+          <p class="box__label"><svg><use href="#i-task"/></svg>ふりかえり</p>
+          <div class="field">
+            <label class="field__label" for="w7r1"><span class="num">1</span>AIの提案や質問で、自分の理想が変わった（はっきりした）ところ</label>
+            <input class="input" id="w7r1">
+          </div>
+          <div class="field">
+            <label class="field__label" for="w7r2"><span class="num">2</span>AIの案ではなく、自分で決めたこと</label>
+            <input class="input" id="w7r2">
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="saveWork('w7r', ['w7r1','w7r2'])">保存</button>
+            <span class="status" id="w7rstatus" role="status"></span>
+          </div>
+        </div>
+
+        <p>次回のテーマは「一番の面白さを作る」。目標は<strong>銅</strong>（一番の面白さが動いて、公開されている）だ。</p>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/course.js"></script>
+<script>
+// 3 何でも作れる：予想と答え合わせ
+const ceilingAnswers = () => document.querySelectorAll('#ceiling .js-a');
+const ceilingQuestions = () => document.querySelectorAll('#ceiling .js-q');
+function toggleCeiling() {
+  const btn = document.getElementById('revealBtn');
+  const open = btn.dataset.open !== '1';
+  ceilingAnswers().forEach(el => { el.hidden = !open; });
+  ceilingQuestions().forEach(el => { el.hidden = open; });
+  btn.dataset.open = open ? '1' : '';
+  btn.textContent = open ? '答えをかくす' : '答えを見る';
+  storage.set('guess', document.getElementById('w7guess').value);
+}
+document.getElementById('w7guess').addEventListener('change', e => storage.set('guess', e.target.value));
+
+// 7 理想シートと実況シート
+const VISION_FIELDS = ['w7who', 'w7moment', 'w7why', 'w7sign', 'w7scene', 'w7see', 'w7hear', 'w7do', 'w7feel', 'w7not', 'w7like'];
+function saveVision() {
+  saveWork('w7v', VISION_FIELDS);
+  showStatus('w7sstatus', '保存しました');
+}
+const oneLine = id => (document.getElementById(id).value || '').trim().replace(/\s*\n\s*/g, ' ');
+function buildVisionPrompt() {
+  const who = oneLine('w7who');
+  const moment = oneLine('w7moment');
+  if (!who || !moment) {
+    alert('先に、理想シートの1（誰のために）と2（どんな瞬間）を書いてみよう！');
+    return;
+  }
+  saveVision();
+  const lines = [
+    ['誰のために', who],
+    ['どんな瞬間を体験してほしいか', moment],
+    ['なぜ作りたいか', oneLine('w7why')],
+    ['成功したとわかるサイン', oneLine('w7sign')],
+    ['場面', oneLine('w7scene')],
+    ['見えるもの・動き', oneLine('w7see')],
+    ['聞こえる音', oneLine('w7hear')],
+    ['自分がすること', oneLine('w7do')],
+    ['そのときの気持ち', oneLine('w7feel')],
+    ['こうじゃない', oneLine('w7not')],
+    ['たとえるなら', oneLine('w7like')]
+  ];
+  const pv1 = document.getElementById('pv1');
+  let text = pv1.textContent;
+  lines.forEach(([label, value]) => {
+    text = text.replace(new RegExp('■ ' + label + '：.*'), '■ ' + label + '：' + (value || '（なし）'));
+  });
+  pv1.textContent = text;
+  pv1.closest('.panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showStatus('w7sstatus', '依頼文に入れました');
+}
+
+// 0 自分のキー（tools/set-key.mjs が data-key-* を書き込む）
+// data-key-data は {名前: {salt, iv, data}} をbase64にしたもの。名前を合言葉にして、
+// {"key": 今日のキー, "token": その子のAIの合言葉} を暗号化してある
+const keyBox = document.getElementById('keyBox');
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+function revealKeys(name, key, token) {
+  document.getElementById('apiKey').textContent = key;
+  document.getElementById('keyOwner').textContent = name;
+  document.getElementById('aiToken').textContent = token || '';
+  document.getElementById('aiTokenPanel').hidden = !token;
+  document.getElementById('keyPanels').hidden = false;
+  document.getElementById('keyLock').hidden = true;
+}
+async function showKey() {
+  const name = (document.getElementById('keyName').value || '').trim().toLowerCase();
+  if (!name) { showStatus('keystatus', '名前を入れてね'); return; }
+  let entry;
+  try { entry = JSON.parse(new TextDecoder().decode(b64(keyBox.dataset.keyData)))[name]; } catch (e) {}
+  if (!entry) { showStatus('keystatus', 'その名前は見つからないみたい'); return; }
+  try {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(name), 'PBKDF2', false, ['deriveKey']);
+    const aes = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: b64(entry.salt), iterations: 200000, hash: 'SHA-256' },
+      base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(entry.iv) }, aes, b64(entry.data));
+    const data = JSON.parse(new TextDecoder().decode(plain));
+    storage.set('myName', name);
+    revealKeys(name, data.key, data.token);
+  } catch (e) {
+    showStatus('keystatus', 'うまく表示できなかった。先生を呼んでね');
+  }
+}
+if (keyBox.dataset.keyMode === 'plain') revealKeys('', keyBox.dataset.keyPlain, '');
+else if (keyBox.dataset.keyMode !== 'names') {
+  document.getElementById('keyLock').innerHTML = '<p class="small">キーは、授業の前に先生が用意する。</p>';
+} else if (storage.get('myName')) {
+  document.getElementById('keyName').value = storage.get('myName');
+}
+
+// 前回の入力を戻す
+loadWork('w7t', ['w7t1', 'w7t2', 'w7t3']);
+loadWork('w7v', VISION_FIELDS);
+loadWork('w7r', ['w7r1', 'w7r2']);
+const savedGuess = storage.get('guess');
+if (savedGuess) document.getElementById('w7guess').value = savedGuess;
+</script>
+
+</body>
+</html>
