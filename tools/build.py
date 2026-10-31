@@ -9,6 +9,10 @@
 1. <!--KIT--> 〜 <!--/KIT--> の間を、assets/illustrations.svg の共通イラストで入れかえる
    （<!--KIT--> だけが書かれている場合は、そこに差しこむ）
 2. 教師用から <!--T--> 〜 <!--/T--> を取り除き、生徒用ページ（aiNN-生徒.html）を書き出す
+
+ai07 から：教師用は板書用に要点だけを見せる。くわしい説明には class="s-only" を付け、
+教師用の <head> の <!--T--><style>.s-only { display: none !important; }</style><!--/T--> で隠す
+（生徒用ではこの style が取り除かれるので、全部が見える）。教師用だけの短い文は <!--T--><p>…</p><!--/T-->。
 """
 import pathlib
 import re
