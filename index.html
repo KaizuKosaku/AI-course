@@ -216,6 +216,7 @@
       <p class="cover__lead">
         Akky先生のプログラミング教室「AIコース」のページです。AIのしくみを知り、AIと一緒に考え、自分の作品を創る。学びたい回を選んで、教材を開きましょう。
       </p>
+      <div class="actions"><a class="btn" href="#challenge">課題チャレンジへ ↓</a></div>
     </div>
     <div class="home-cover__art">
       <svg class="il" viewBox="0 0 320 260" role="img" aria-label="生徒とAIのアイラが並び、上に「知る・考える・創る」の3つのマークが浮かんでいる">
@@ -464,6 +465,66 @@
     </ol>
   </section>
 
+  <!-- ========== 課題チャレンジ（中身は assets/challenge/） ========== -->
+  <section class="home-sec" id="challenge">
+    <h2>課題チャレンジ</h2>
+    <p class="home-sec__lead">AIと一緒に取り組む、君だけの7つの課題。授業で手が空いたときや家で、1つずつ進めよう。名前を入れると、君の課題の一覧が出てくる。1つ完了すると、次の課題が開く。</p>
+
+    <div class="chal-intro">
+      <div class="chal-intro__art">
+        <svg class="il" viewBox="0 0 240 150" role="img" aria-label="7段の階段を、生徒が1段ずつのぼっていく。いちばん上に旗がある">
+          <path class="sand o" d="M20 140 H44 V126 H68 V112 H92 V98 H116 V84 H140 V70 H164 V56 H188 V42 H232 V140 Z"/>
+          <g font-size="11" text-anchor="middle">
+            <text x="56" y="138">1</text><text x="80" y="124">2</text><text x="104" y="110">3</text><text x="128" y="96">4</text><text x="152" y="82">5</text><text x="176" y="68">6</text><text x="210" y="56">7</text>
+          </g>
+          <path class="s" d="M222 42 V10"/>
+          <path class="coral o" d="M222 10 h-20 l5 6 l-5 6 h20 z"/>
+          <use href="#kid" x="87" y="40" width="34" height="59" style="color:#ffc830"/>
+          <use href="#aila" x="2" y="92" width="44" height="44"/>
+        </svg>
+      </div>
+      <ol class="flow-list">
+        <li><span>下の欄に自分の名前を入れる。<span class="small">7つの課題と、君のテーマが出てくる。</span></span></li>
+        <li><span>課題1を開いて、課題文と進め方を読み、AIと取り組む。<span class="small">使うのは無料のGeminiでよい。作る課題は「Canvas」をオンにする。</span></span></li>
+        <li><span>完了の条件を全部満たしたら、チェックを入れて「完了にする」。<span class="small">次の課題が開く。進み具合は、このPCのブラウザに残る。</span></span></li>
+      </ol>
+    </div>
+
+    <div class="box box--task" id="chalLogin">
+      <p class="box__label"><svg><use href="#i-task"/></svg>やってみよう　自分の課題を開く</p>
+      <label class="field__label" for="chalName">自分の名前をローマ字で入れる（例：yota）</label>
+      <div class="chal-login">
+        <input class="input" id="chalName" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="btn btn--primary" type="button" id="chalGo">課題を開く</button>
+      </div>
+      <p class="status" id="chalStatus" role="status"></p>
+    </div>
+
+    <div id="chalBoard" hidden>
+      <div class="chal-head">
+        <div>
+          <p class="chal-head__who" id="chalWho"></p>
+          <h3 class="chal-head__theme" id="chalTheme"></h3>
+          <p class="chal-head__desc" id="chalThemeDesc"></p>
+        </div>
+        <button class="btn btn--small" type="button" id="chalOut">名前を変える</button>
+        <div class="chal-progress"><span class="chal-progress__bar" id="chalBar"></span><span id="chalCount"></span></div>
+      </div>
+      <ol class="chal-list" id="chalList"></ol>
+      <article class="chal-detail" id="chalDetail" hidden></article>
+    </div>
+
+    <details class="deep">
+      <summary>すべての課題に共通の約束</summary>
+      <div class="deep__body">
+        <p><b>使うAI。</b>基本は無料のGemini。作る課題では「Canvas」を、調べる課題では「Deep Research」を使ってよい（無料プランは回数が少ないので、Deep Researchは1つの課題で1回まで）。ChatGPTは13歳以上で保護者の同意が必要。Claudeは18歳以上なので使わない。</p>
+        <p><b>作る課題。</b>一度に全部を作らせず、機能を1つずつ足していく。動いたら、そのたびにhtmlファイルで保存する。会話が長くなってAIがおかしくなったら、保存したコードを新しいチャットに貼って続ける。</p>
+        <p><b>疑って確かめる。</b>AIは、もっともらしいうそを言うことがある。数字・人名・論文・史料は、別のチャットや検索で確かめる。</p>
+        <p><b>まとめ方。</b>どの課題も、最後に「仮説（予想）→ 結果 → わかったこと・まだわからないこと」を書くと、ただのまとめではなく探究になる。</p>
+      </div>
+    </details>
+  </section>
+
   <!-- ========== 特別授業 ========== -->
   <section class="home-sec">
     <h2>特別授業</h2>
@@ -512,5 +573,9 @@
 
 </div>
 
+<script src="assets/challenge/tasks-1.js"></script>
+<script src="assets/challenge/tasks-2.js"></script>
+<script src="assets/challenge/tasks-3.js"></script>
+<script src="assets/challenge/challenge.js"></script>
 </body>
 </html>
