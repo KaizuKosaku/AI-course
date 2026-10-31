@@ -37,7 +37,7 @@
     const n = (raw || '').trim().toLowerCase();
     const status = $('chalStatus');
     if (!CHAL.students[n]) {
-      status.textContent = n ? `「${n}」という名前は見つかりません。ローマ字の小文字で入れてね（例：yota）。` : '名前を入れてね。';
+      status.textContent = n ? `「${n}」という名前は見つかりません。ローマ字の小文字で入れてね（例：kosaku）。` : '名前を入れてね。';
       status.classList.add('is-err');
       return;
     }
